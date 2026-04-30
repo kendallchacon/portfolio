@@ -1,1 +1,15 @@
-<h1>Portafolio Kendall</h1>
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/sections/Hero.astro";
+import About from "../components/sections/About.astro";
+import Skills from "../components/sections/Skills.astro";
+---
+
+<BaseLayout
+  title="Kendall Chacón | Desarrollador Backend"
+  description="Desarrollador backend enfocado en Laravel, Node.js, Spring Boot y arquitectura modular."
+>
+  <Hero />
+  <About />
+  <Skills />
+</BaseLayout>
