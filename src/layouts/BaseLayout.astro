@@ -30,7 +30,6 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
 
-    <!-- Favicon (lo agregamos después) -->
     <!-- <link rel="icon" href="/favicon.svg" /> -->
   </head>
 
@@ -53,9 +52,27 @@ const {
     <div class="min-h-screen flex flex-col">
       <Navbar />
 
-      <main class="flex-1 w-full max-w-6xl mx-auto px-6">
+      <main class="flex-1 w-full max-w-6xl mx-auto px-6 page-enter">
         <slot />
       </main>
     </div>
+    <script>
+      const revealElements = document.querySelectorAll(".reveal");
+
+      const revealOnScroll = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+            }
+          });
+        },
+        {
+          threshold: 0.15,
+        },
+      );
+
+      revealElements.forEach((element) => revealOnScroll.observe(element));
+    </script>
   </body>
 </html>
