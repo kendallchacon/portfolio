@@ -1,87 +1,123 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const stack = [
+  { name: "Laravel", icon: "simple-icons:laravel", color: "text-red-500" },
+  { name: "Vue", icon: "simple-icons:vuedotjs", color: "text-green-400" },
+  { name: "MySQL", icon: "simple-icons:mysql", color: "text-blue-500" },
+  {
+    name: "Tailwind",
+    icon: "simple-icons:tailwindcss",
+    color: "text-cyan-400",
+  },
+];
+
+const features = [
+  "Gestión de usuarios y roles",
+  "Sistema de puntos y recompensas",
+  "Panel administrativo con reportes",
+  "Arquitectura modular orientada a mantenimiento",
+];
 ---
 
-<section id="projects" class="reveal border-t border-slate-800 py-24 sm:py-32">
-  <div class="max-w-6xl">
-    <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-      Proyectos
+<section id="proyectos" class="reveal border-t border-slate-800 py-24 sm:py-32">
+  <div class="mx-auto max-w-6xl px-6">
+    <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+      Proyecto destacado
+    </p>
+
+    <h2
+      class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-white sm:text-4xl"
+    >
+      Beto y Más — Sistema de fidelización y gamificación
     </h2>
 
     <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-400">
-      Proyecto destacado enfocado en la construcción de soluciones backend
-      estructuradas, escalables y orientadas a necesidades reales.
+      Proyecto principal enfocado en centralizar clientes, gestionar puntos,
+      recompensas y procesos administrativos dentro de una plataforma web.
     </p>
 
-    <div class="mt-12 grid gap-8 md:grid-cols-2 md:items-center">
-      <!-- Imagen (placeholder) -->
+    <article
+      class="group relative mt-12 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/40 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40"
+    >
+      <!-- Glow -->
       <div
-        class="relative h-72 w-full overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40"
+        class="absolute -top-20 right-0 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl"
       >
+      </div>
+
+      <!-- IMAGEN ARRIBA -->
+      <div class="relative overflow-hidden border-b border-slate-800">
+        <img
+          src="/images/project-preview.jpg"
+          alt="Sistema Beto y Más"
+          class="w-full object-contain bg-slate-950"
+        />
+
         <div
-          class="flex h-full items-center justify-center text-slate-500 text-sm"
+          class="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent"
         >
-          Imagen del proyecto
         </div>
       </div>
 
-      <!-- Información -->
-      <div>
-        <h3 class="text-2xl font-semibold text-white">Beto y Más</h3>
-
-        <p class="mt-2 text-cyan-400 text-sm font-medium">
-          Sistema de fidelización y gamificación
-        </p>
-
-        <p class="mt-6 text-lg leading-8 text-slate-400">
-          Plataforma web orientada a centralizar clientes, gestionar puntos,
-          recompensas, eventos y promociones para una cadena comercial. El
-          sistema permite mejorar la interacción con los clientes y facilita la
-          administración de información para la toma de decisiones.
-        </p>
-
-        <div class="mt-6 flex flex-wrap gap-3">
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:laravel" class="size-7 text-red-500" />
-            <span class="text-base font-medium">Laravel</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:vuedotjs" class="size-7 text-green-400" />
-            <span class="text-base font-medium">Vue</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:inertia" class="size-7 text-purple-400" />
-            <span class="text-base font-medium">Inertia</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:tailwindcss"
-              class="size-7 text-cyan-400"
-            />
-            <span class="text-base font-medium">Tailwind</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:mysql" class="size-7 text-blue-500" />
-            <span class="text-base font-medium">MySQL</span>
-          </div>
+      <!-- CONTENIDO -->
+      <div class="p-8 sm:p-10">
+        <!-- STACK ICONOS -->
+        <div class="flex flex-wrap gap-3">
+          {
+            stack.map((tech) => (
+              <div class="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/60 px-3 py-2 text-sm text-slate-300 transition hover:border-cyan-400/50 hover:text-cyan-300">
+                <Icon name={tech.icon} class={`size-5 ${tech.color}`} />
+                <span>{tech.name}</span>
+              </div>
+            ))
+          }
         </div>
 
-        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+        <!-- TITULO -->
+        <h3 class="mt-8 text-2xl font-semibold text-white">
+          Plataforma para fidelización, puntos y recompensas
+        </h3>
+
+        <!-- DESCRIPCIÓN -->
+        <p class="mt-4 max-w-2xl text-base leading-8 text-slate-400">
+          Sistema web diseñado para mejorar la interacción entre negocios y
+          clientes mediante gamificación, gestión de recompensas y seguimiento
+          de puntos.
+        </p>
+
+        <!-- FEATURES -->
+        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+          {
+            features.map((feature) => (
+              <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
+                <Icon
+                  name="heroicons:check-circle"
+                  class="mt-0.5 size-5 text-cyan-400"
+                />
+                <span>{feature}</span>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-10 flex flex-col gap-4 sm:flex-row">
           <a
             href="#"
-            class="btn-primary-animated inline-flex items-center justify-center rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+            class="inline-flex items-center justify-center rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300"
           >
             Ver proyecto
           </a>
 
           <a
             href="#"
-            class="inline-flex items-center justify-center rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-400 hover:text-cyan-400"
+            class="inline-flex items-center justify-center rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-200 hover:border-cyan-400 hover:text-cyan-400"
           >
-            Repositorio
+            Ver código
           </a>
         </div>
       </div>
-    </div>
+    </article>
   </div>
 </section>

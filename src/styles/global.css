@@ -283,3 +283,31 @@ html {
 .group:hover .card-shimmer::before {
   opacity: 1;
 }
+
+.icon-idle {
+  animation: iconFloat 4s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.card-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: rgb(34, 211, 238);
+  transition: width 0.4s ease;
+}
+
+.group:hover .card-line {
+  width: 100%;
+}
+

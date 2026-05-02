@@ -3,66 +3,148 @@ import { Icon } from "astro-icon/components";
 ---
 
 <section id="contact" class="reveal border-t border-slate-800 py-24 sm:py-32">
-  <div class="mx-auto max-w-3xl text-center">
-    <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-      Contacto
-    </p>
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-14 lg:grid-cols-[1fr_1fr] items-center">
 
-    <h2 class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-      ¿Tienes una idea, proyecto u oportunidad?
-    </h2>
+      <!-- TEXTO -->
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+          Contacto
+        </p>
 
-    <p class="mt-6 text-lg leading-8 text-slate-400">
-      Estoy abierto a conversar sobre proyectos, colaboraciones y oportunidades
-      relacionadas con desarrollo backend, APIs, bases de datos y sistemas web.
-    </p>
+        <h2 class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Hablemos de oportunidades
+        </h2>
 
-    <div class="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-      <a
-        href="mailto:kendallchacon4@gmail.com"
-        class="btn-primary-animated inline-flex items-center justify-center rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-      >
-        Enviarme un correo
-      </a>
-    </div>
+        <p class="mt-6 max-w-xl text-lg leading-8 text-slate-400">
+          Actualmente estoy en búsqueda de mi práctica profesional, pero también
+          estoy abierto a colaborar en proyectos, apoyar equipos de desarrollo o
+          participar en iniciativas donde pueda aportar valor con desarrollo web,
+          backend y APIs.
+        </p>
 
-    <div
-      class="mt-10 flex flex-wrap items-center justify-center gap-8 text-sm text-slate-400"
-    >
-      <a
-        href="https://github.com/kendallchacon"
-        target="_blank"
-        class="flex items-center gap-2 transition hover:text-cyan-400"
-      >
-        <Icon name="simple-icons:github" class="size-5" />
-        <span>GitHub</span>
-      </a>
+        <p class="mt-4 max-w-xl text-sm text-slate-500">
+          Si tienes una idea, necesitas apoyo técnico o simplemente quieres
+          conectar, puedes contactarme por cualquiera de los siguientes medios.
+        </p>
 
-      <a
-        href="https://www.linkedin.com/in/kendall-chacon-molina-884b04307"
-        target="_blank"
-        class="flex items-center gap-2 transition hover:text-cyan-400"
-      >
-        <Icon name="simple-icons:linkedin" class="size-5 text-blue-400" />
-        <span>LinkedIn</span>
-      </a>
+        <!-- TAGS DE INTENCION -->
+        <div class="mt-6 flex flex-wrap gap-2 text-xs">
+          <span class="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-cyan-300">
+            Práctica profesional
+          </span>
+          <span class="rounded-full border border-slate-700 px-3 py-1 text-slate-400">
+            Colaboraciones
+          </span>
+          <span class="rounded-full border border-slate-700 px-3 py-1 text-slate-400">
+            Proyectos web
+          </span>
+        </div>
 
-      <a
-        href="mailto:kendallchacon4@gmail.com"
-        class="flex items-center gap-2 transition hover:text-cyan-400"
-      >
-        <Icon name="simple-icons:gmail" class="size-5 text-red-400" />
-        <span>Email</span>
-      </a>
+        <!-- BOTONES -->
+        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+          <a
+            href="mailto:kendallchacon4@gmail.com"
+            class="inline-flex items-center justify-center rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:-translate-y-1 hover:bg-cyan-300 hover:shadow-lg hover:shadow-cyan-400/20"
+          >
+            Enviar correo
+          </a>
 
-      <a
-        href="https://wa.me/50662712021"
-        target="_blank"
-        class="flex items-center gap-2 transition hover:text-cyan-400"
-      >
-        <Icon name="simple-icons:whatsapp" class="size-5 text-green-400" />
-        <span>WhatsApp</span>
-      </a>
+          <a
+            href="/cv-kendall-chacon.pdf"
+            target="_blank"
+            class="inline-flex items-center justify-center rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-200 transition hover:-translate-y-1 hover:border-cyan-400 hover:text-cyan-400"
+          >
+            Descargar CV
+          </a>
+        </div>
+      </div>
+
+      <!-- CONTACTOS -->
+      <div class="grid gap-4 sm:grid-cols-2">
+
+        <!-- EMAIL -->
+        <a href="mailto:kendallchacon4@gmail.com"
+          class="group card-contact">
+          <Icon name="simple-icons:gmail" class="icon-contact text-red-400"/>
+          <div>
+            <p class="title-contact">Correo</p>
+            <p class="desc-contact">Respuesta rápida</p>
+          </div>
+        </a>
+
+        <!-- LINKEDIN -->
+        <a href="https://www.linkedin.com/in/kendall-chacon-molina-884b04307"
+          target="_blank"
+          class="group card-contact">
+          <Icon name="simple-icons:linkedin" class="icon-contact text-blue-400"/>
+          <div>
+            <p class="title-contact">LinkedIn</p>
+            <p class="desc-contact">Contacto profesional</p>
+          </div>
+        </a>
+
+        <!-- WHATSAPP -->
+        <a href="https://wa.me/50662712021"
+          target="_blank"
+          class="group card-contact">
+          <Icon name="simple-icons:whatsapp" class="icon-contact text-green-400"/>
+          <div>
+            <p class="title-contact">WhatsApp</p>
+            <p class="desc-contact">Respuesta directa</p>
+          </div>
+        </a>
+
+        <!-- GITHUB -->
+        <a href="https://github.com/kendallchacon"
+          target="_blank"
+          class="group card-contact">
+          <Icon name="simple-icons:github" class="icon-contact text-white"/>
+          <div>
+            <p class="title-contact">GitHub</p>
+            <p class="desc-contact">Ver proyectos</p>
+          </div>
+        </a>
+
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+.card-contact {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid #1e293b;
+  background: rgba(15, 23, 42, 0.4);
+  transition: all 0.3s ease;
+}
+
+.card-contact:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+.icon-contact {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.3s ease;
+}
+
+.card-contact:hover .icon-contact {
+  transform: scale(1.2);
+}
+
+.title-contact {
+  font-weight: 600;
+  color: white;
+}
+
+.desc-contact {
+  font-size: 12px;
+  color: #94a3b8;
+}
+</style>
