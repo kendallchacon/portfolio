@@ -1,5 +1,47 @@
 ---
 import { Icon } from "astro-icon/components";
+
+const technologies = [
+  { name: "Laravel", icon: "simple-icons:laravel", color: "text-red-500" },
+  { name: "Node.js", icon: "simple-icons:nodedotjs", color: "text-green-500" },
+  { name: "Vue", icon: "simple-icons:vuedotjs", color: "text-green-400" },
+  { name: "Inertia", icon: "simple-icons:inertia", color: "text-purple-400" },
+  { name: "Spring Boot", icon: "simple-icons:springboot", color: "text-green-400" },
+  { name: "PHP", icon: "simple-icons:php", color: "text-indigo-400" },
+  { name: "JavaScript", icon: "simple-icons:javascript", color: "text-yellow-400" },
+  { name: "TypeScript", icon: "simple-icons:typescript", color: "text-blue-400" },
+  { name: "MySQL", icon: "simple-icons:mysql", color: "text-blue-500" },
+  { name: "SQL Server", icon: "simple-icons:microsoftsqlserver", color: "text-red-600" },
+  { name: "Docker", icon: "simple-icons:docker", color: "text-blue-400" },
+  { name: "Git", icon: "simple-icons:git", color: "text-orange-500" },
+  { name: "GitHub", icon: "simple-icons:github", color: "text-white" },
+  { name: "Postman", icon: "simple-icons:postman", color: "text-orange-400" },
+  { name: "Tailwind", icon: "simple-icons:tailwindcss", color: "text-cyan-400" },
+  { name: "Astro", icon: "simple-icons:astro", color: "text-purple-400" },
+];
+
+const skillCards = [
+  {
+    title: "Backend",
+    description:
+      "Desarrollo APIs y servicios enfocados en claridad, mantenimiento y separación de responsabilidades.",
+  },
+  {
+    title: "Bases de datos",
+    description:
+      "Diseño estructuras relacionales pensando en integridad de datos, consultas claras y escalabilidad.",
+  },
+  {
+    title: "Arquitectura",
+    description:
+      "Aplico organización modular para construir sistemas más fáciles de mantener y extender.",
+  },
+  {
+    title: "Herramientas y trabajo",
+    description:
+      "Uso herramientas modernas de desarrollo y prácticas ágiles para colaborar de forma ordenada.",
+  },
+];
 ---
 
 <section id="skills" class="reveal border-t border-slate-800 py-24 sm:py-32">
@@ -9,234 +51,45 @@ import { Icon } from "astro-icon/components";
     </h2>
 
     <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-400">
-      Tecnologías y herramientas que utilizo para construir soluciones backend
+      Tecnologías y herramientas que utilizo para construir soluciones web
       organizadas, mantenibles y orientadas a necesidades reales.
     </p>
 
-    <div class="mt-10 overflow-hidden opacity-80 hover:opacity-100 transition">
+    <div class="mt-10 overflow-hidden opacity-80 transition hover:opacity-100">
       <div class="flex w-max animate-scroll">
-        <!-- Grupo 1 -->
-        <div class="flex items-center gap-12 pr-12">
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:laravel" class="size-7 text-red-500" />
-            <span class="text-base font-medium">Laravel</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:nodedotjs" class="size-7 text-green-500" />
-            <span class="text-base font-medium">Node.js</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:vuedotjs" class="size-7 text-green-400" />
-            <span class="text-base font-medium">Vue</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:inertia" class="size-7 text-purple-400" />
-            <span class="text-base font-medium">Inertia</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:springboot"
-              class="size-7 text-green-400"
-            />
-            <span class="text-base font-medium">Spring Boot</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:php" class="size-7 text-indigo-400" />
-            <span class="text-base font-medium">PHP</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:javascript"
-              class="size-7 text-yellow-400"
-            />
-            <span class="text-base font-medium">JavaScript</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:typescript" class="size-7 text-blue-400" />
-            <span class="text-base font-medium">TypeScript</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:mysql" class="size-7 text-blue-500" />
-            <span class="text-base font-medium">MySQL</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:microsoftsqlserver"
-              class="size-7 text-red-600"
-            />
-            <span class="text-base font-medium">SQL Server</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:docker" class="size-7 text-blue-400" />
-            <span class="text-base font-medium">Docker</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:git" class="size-7 text-orange-500" />
-            <span class="text-base font-medium">Git</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:github" class="size-7 text-white" />
-            <span class="text-base font-medium">GitHub</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:postman" class="size-7 text-orange-400" />
-            <span class="text-base font-medium">Postman</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:tailwindcss"
-              class="size-7 text-cyan-400"
-            />
-            <span class="text-base font-medium">Tailwind</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:astro" class="size-7 text-purple-400" />
-            <span class="text-base font-medium">Astro</span>
-          </div>
-        </div>
-
-        <!-- Grupo 2 duplicado para loop infinito -->
-        <div class="flex items-center gap-12 pr-12">
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:laravel" class="size-7 text-red-500" />
-            <span class="text-base font-medium">Laravel</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:nodedotjs" class="size-7 text-green-500" />
-            <span class="text-base font-medium">Node.js</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:vuedotjs" class="size-7 text-green-400" />
-            <span class="text-base font-medium">Vue</span>
-          </div>
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:inertia" class="size-7 text-purple-400" />
-            <span class="text-base font-medium">Inertia</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:springboot"
-              class="size-7 text-green-400"
-            />
-            <span class="text-base font-medium">Spring Boot</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:php" class="size-7 text-indigo-400" />
-            <span class="text-base font-medium">PHP</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:javascript"
-              class="size-7 text-yellow-400"
-            />
-            <span class="text-base font-medium">JavaScript</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:typescript" class="size-7 text-blue-400" />
-            <span class="text-base font-medium">TypeScript</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:mysql" class="size-7 text-blue-500" />
-            <span class="text-base font-medium">MySQL</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:microsoftsqlserver"
-              class="size-7 text-red-600"
-            />
-            <span class="text-base font-medium">SQL Server</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:docker" class="size-7 text-blue-400" />
-            <span class="text-base font-medium">Docker</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:git" class="size-7 text-orange-500" />
-            <span class="text-base font-medium">Git</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:github" class="size-7 text-white" />
-            <span class="text-base font-medium">GitHub</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:postman" class="size-7 text-orange-400" />
-            <span class="text-base font-medium">Postman</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon
-              name="simple-icons:tailwindcss"
-              class="size-7 text-cyan-400"
-            />
-            <span class="text-base font-medium">Tailwind</span>
-          </div>
-
-          <div class="flex items-center gap-3 text-slate-300">
-            <Icon name="simple-icons:astro" class="size-7 text-purple-400" />
-            <span class="text-base font-medium">Astro</span>
-          </div>
-        </div>
+        {
+          [0, 1].map(() => (
+            <div class="flex items-center gap-12 pr-12">
+              {technologies.map((tech) => (
+                <div class="flex items-center gap-3 text-slate-300">
+                  <Icon name={tech.icon} class={`size-7 ${tech.color}`} />
+                  <span class="text-base font-medium">{tech.name}</span>
+                </div>
+              ))}
+            </div>
+          ))
+        }
       </div>
     </div>
   </div>
 
   <div class="mt-12 grid gap-6 md:grid-cols-2">
-    <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-semibold text-white">Backend</h3>
+    {
+      skillCards.map((skill) => (
+        <article class="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-slate-900/70">
+          <div class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
+            <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-2xl" />
+          </div>
 
-      <p class="mt-3 text-sm leading-6 text-slate-400">
-        Desarrollo APIs y servicios enfocados en claridad, mantenimiento y
-        separación de responsabilidades.
-      </p>
-    </article>
+          <h3 class="relative text-lg font-semibold text-white">
+            {skill.title}
+          </h3>
 
-    <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-semibold text-white">Bases de datos</h3>
-      <p class="mt-3 text-sm leading-6 text-slate-400">
-        Diseño estructuras relacionales pensando en integridad de datos,
-        consultas claras y escalabilidad.
-      </p>
-    </article>
-
-    <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-semibold text-white">Arquitectura</h3>
-      <p class="mt-3 text-sm leading-6 text-slate-400">
-        Aplico organización modular para construir sistemas más fáciles de
-        mantener y extender.
-      </p>
-    </article>
-
-    <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-      <h3 class="text-lg font-semibold text-white">Herramientas y trabajo</h3>
-      <p class="mt-3 text-sm leading-6 text-slate-400">
-        Uso herramientas modernas de desarrollo y prácticas ágiles para
-        colaborar de forma ordenada.
-      </p>
-    </article>
+          <p class="relative mt-3 text-sm leading-6 text-slate-400">
+            {skill.description}
+          </p>
+        </article>
+      ))
+    }
   </div>
 </section>

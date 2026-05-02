@@ -4,22 +4,71 @@ import { Icon } from "astro-icon/components";
 ---
 
 <BaseLayout title="Perfil | Kendall Chacón">
-  <section class="py-24 sm:py-32">
-    <div class="mx-auto max-w-4xl px-6">
-      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-        Perfil
-      </p>
+  <section class="py-20 sm:py-28">
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-[1.1fr_0.9fr]"
+    >
+      <!-- Texto -->
+      <div class="reveal">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400"
+        >
+          Perfil profesional
+        </p>
 
-      <h1 class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-        Sobre mí
-      </h1>
+        <h1
+          class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl"
+        >
+          Desarrollador web con enfoque en soluciones completas.
+        </h1>
 
-      <p class="mt-6 text-lg leading-8 text-slate-400">
-        Soy estudiante de Ingeniería en Sistemas con enfoque en desarrollo
-        backend. Trabajo con Laravel, Node.js, Spring Boot, bases de datos
-        relacionales y arquitectura modular, buscando construir sistemas
-        escalables y mantenibles.
-      </p>
+        <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+          Soy estudiante de Ingeniería en Sistemas y me enfoco en construir
+          aplicaciones web claras, funcionales y bien estructuradas.
+        </p>
+
+        <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-400">
+          Mi principal fortaleza está en el backend, pero también trabajo la
+          integración con interfaces frontend, bases de datos y flujos pensados
+          para necesidades reales.
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3 text-sm">
+          <span class="tag">Full Stack Developer</span>
+          <span class="tag">Backend enfocado en negocio</span>
+          <span class="tag">Diseño de APIs REST</span>
+          <span class="tag">Arquitectura modular</span>
+        </div>
+      </div>
+
+      <!-- Foto / Card -->
+      <div class="reveal flex justify-center lg:justify-end">
+        <div class="group relative w-full max-w-sm">
+          <div
+            class="absolute -inset-4 rounded-[2rem] bg-cyan-400/10 blur-3xl transition group-hover:bg-cyan-400/20"
+          >
+          </div>
+
+          <div
+            class="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/40 shadow-2xl transition duration-300 group-hover:-translate-y-1 group-hover:border-cyan-400/40"
+          >
+            <img
+              src="/images/kendall-profile.jpg"
+              alt="Kendall Chacón"
+              class="h-96 w-full object-cover object-top"
+            />
+
+            <div class="border-t border-slate-800 p-6">
+              <h2 class="text-lg font-semibold text-white">Kendall Chacón</h2>
+
+              <p class="mt-2 text-sm leading-6 text-slate-400">
+                Estudiante de Ingeniería en Sistemas · Desarrollo web · Backend
+                como punto fuerte.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -37,50 +86,114 @@ import { Icon } from "astro-icon/components";
         Mi perfil combina formación universitaria, práctica en desarrollo de
         software y experiencia apoyando procesos de aprendizaje en programación.
       </p>
-
       <div class="mt-12 grid gap-6 md:grid-cols-3">
-        <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400">
-            <Icon name="heroicons:academic-cap" class="size-7" />
+        <!-- CARD -->
+        <article
+          class="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/70"
+        >
+          <!-- Glow -->
+          <div
+            class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+          >
+            <div
+              class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-2xl"
+            >
+            </div>
           </div>
 
-          <h3 class="text-lg font-semibold text-white">
+          <!-- Icon -->
+          <div
+            class="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:bg-cyan-400/20"
+          >
+            <Icon
+              name="heroicons:academic-cap"
+              class="size-7 transition duration-300 group-hover:rotate-6"
+            />
+          </div>
+
+          <h3
+            class="relative text-lg font-semibold text-white transition group-hover:text-cyan-300"
+          >
             Formación universitaria
           </h3>
 
-          <p class="mt-4 text-sm leading-6 text-slate-400">
+          <p
+            class="relative mt-4 text-sm leading-6 text-slate-400 transition group-hover:text-slate-300"
+          >
             Actualmente estudio Ingeniería en Sistemas en la Universidad
             Nacional, fortaleciendo bases en programación, bases de datos,
             análisis, diseño de sistemas y desarrollo de software.
           </p>
         </article>
 
-        <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400">
-            <Icon name="heroicons:code-bracket" class="size-7" />
+        <!-- CARD -->
+        <article
+          class="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/70"
+        >
+          <div
+            class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+          >
+            <div
+              class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-2xl"
+            >
+            </div>
           </div>
 
-          <h3 class="text-lg font-semibold text-white">
+          <div
+            class="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:bg-cyan-400/20"
+          >
+            <Icon
+              name="heroicons:code-bracket"
+              class="size-7 transition duration-300 group-hover:-rotate-6"
+            />
+          </div>
+
+          <h3
+            class="relative text-lg font-semibold text-white transition group-hover:text-cyan-300"
+          >
             Desarrollo backend
           </h3>
 
-          <p class="mt-4 text-sm leading-6 text-slate-400">
+          <p
+            class="relative mt-4 text-sm leading-6 text-slate-400 transition group-hover:text-slate-300"
+          >
             He trabajado en proyectos web usando Laravel, Node.js y Spring Boot,
             construyendo APIs, flujos administrativos, validaciones y
             estructuras orientadas al mantenimiento del sistema.
           </p>
         </article>
 
-        <article class="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
-          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400">
-            <Icon name="heroicons:user-group" class="size-7" />
+        <!-- CARD -->
+        <article
+          class="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/70"
+        >
+          <div
+            class="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+          >
+            <div
+              class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-cyan-400/10 blur-2xl"
+            >
+            </div>
           </div>
 
-          <h3 class="text-lg font-semibold text-white">
+          <div
+            class="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:bg-cyan-400/20"
+          >
+            <Icon
+              name="heroicons:user-group"
+              class="size-7 transition duration-300 group-hover:rotate-3"
+            />
+          </div>
+
+          <h3
+            class="relative text-lg font-semibold text-white transition group-hover:text-cyan-300"
+          >
             Tutorías y trabajo en equipo
           </h3>
 
-          <p class="mt-4 text-sm leading-6 text-slate-400">
+          <p
+            class="relative mt-4 text-sm leading-6 text-slate-400 transition group-hover:text-slate-300"
+          >
             También he apoyado a estudiantes en fundamentos de informática,
             reforzando comunicación, liderazgo, paciencia y capacidad para
             explicar conceptos técnicos de forma clara.
@@ -106,7 +219,9 @@ import { Icon } from "astro-icon/components";
       </p>
 
       <div class="mt-12 grid gap-6 md:grid-cols-2">
-        <article class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40">
+        <article
+          class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40"
+        >
           <img
             src="/images/evento-tutores.jpg"
             class="h-64 w-full object-cover object-[center_35%]"
@@ -131,7 +246,9 @@ import { Icon } from "astro-icon/components";
           </div>
         </article>
 
-        <article class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40">
+        <article
+          class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40"
+        >
           <img
             src="/images/puertas-abiertas.jpg"
             class="h-64 w-full object-cover object-[center_52%]"
@@ -145,8 +262,8 @@ import { Icon } from "astro-icon/components";
 
             <p class="mt-4 text-sm leading-6 text-slate-400">
               Participación en actividades de orientación a estudiantes de
-              colegios, presentando la carrera y explicando conceptos básicos
-              de informática, fortaleciendo habilidades de comunicación técnica.
+              colegios, presentando la carrera y explicando conceptos básicos de
+              informática, fortaleciendo habilidades de comunicación técnica.
             </p>
 
             <div class="mt-6 flex items-center gap-2 text-sm text-slate-500">
