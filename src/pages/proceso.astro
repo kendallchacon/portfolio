@@ -1,5 +1,4 @@
 ---
-import { Icon } from "astro-icon/components";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ButtonLink from "../components/common/ButtonLink.astro";
 import Card from "../components/common/Card.astro";
@@ -56,33 +55,6 @@ const technicalDecisions = [
     description:
       "Las secciones usan grids, espaciados y estados pensados para funcionar bien en pantallas pequeñas y grandes.",
     icon: "heroicons:device-phone-mobile",
-  },
-];
-
-const projectFolders = [
-  {
-    path: "src/pages",
-    description: "Rutas públicas del sitio.",
-  },
-  {
-    path: "src/layouts",
-    description: "Estructura base compartida.",
-  },
-  {
-    path: "src/components",
-    description: "UI común, layout y secciones.",
-  },
-  {
-    path: "src/data",
-    description: "Contenido estructurado en TypeScript.",
-  },
-  {
-    path: "src/styles",
-    description: "Estilos globales y animaciones.",
-  },
-  {
-    path: "src/scripts",
-    description: "Interacciones pequeñas del cliente.",
   },
 ];
 
@@ -192,48 +164,6 @@ const learnings = [
           <IconCard {...decision} reveal delay={index * 0.1} />
         ))
       }
-    </div>
-  </section>
-
-  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
-    <div class="grid gap-10 lg:grid-cols-[0.85fr_1fr]">
-      <SectionHeader
-        eyebrow="Estructura del proyecto"
-        title="Carpetas principales"
-        description="La organización apunta a que cada parte del sitio tenga un lugar predecible."
-      />
-
-      <div
-        class="rounded-3xl border border-slate-800 bg-slate-950/70 p-5 shadow-2xl sm:p-6"
-      >
-        <div class="mb-5 flex items-center gap-2 border-b border-slate-800 pb-4">
-          <span class="h-3 w-3 rounded-full bg-red-400"></span>
-          <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
-          <span class="h-3 w-3 rounded-full bg-green-400"></span>
-          <span class="ml-auto font-mono text-xs text-slate-500">src/</span>
-        </div>
-
-        <div class="grid gap-3">
-          {
-            projectFolders.map((folder) => (
-              <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-                <Icon
-                  name="heroicons:folder"
-                  class="mt-0.5 size-5 shrink-0 text-cyan-400"
-                />
-                <div>
-                  <p class="font-mono text-sm font-semibold text-white">
-                    {folder.path}
-                  </p>
-                  <p class="mt-1 text-sm text-slate-400">
-                    {folder.description}
-                  </p>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
     </div>
   </section>
 

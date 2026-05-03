@@ -7,7 +7,7 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://portfolio-kendall-chacon.vercel.app',
+  site: 'https://kendallchacon.dev',
 
   integrations: [
     mdx(),
