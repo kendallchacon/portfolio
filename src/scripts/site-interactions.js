@@ -16,6 +16,39 @@ const revealOnScroll = new IntersectionObserver(
 
 revealElements.forEach((element) => revealOnScroll.observe(element));
 
+const siteHeader = document.getElementById("site-header");
+let lastScrollY = window.scrollY;
+let ticking = false;
+
+const updateHeaderVisibility = () => {
+  if (!(siteHeader instanceof HTMLElement)) return;
+
+  const currentScrollY = window.scrollY;
+  const isScrollingDown = currentScrollY > lastScrollY;
+  const isMobileMenuOpen =
+    mobileMenuButton?.getAttribute("aria-expanded") === "true";
+
+  if (currentScrollY < 80 || !isScrollingDown || isMobileMenuOpen) {
+    siteHeader.classList.remove("-translate-y-full");
+  } else {
+    siteHeader.classList.add("-translate-y-full");
+  }
+
+  lastScrollY = Math.max(currentScrollY, 0);
+  ticking = false;
+};
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!ticking) {
+      window.requestAnimationFrame(updateHeaderVisibility);
+      ticking = true;
+    }
+  },
+  { passive: true },
+);
+
 const heroWords = ["ideas", "negocios", "sistemas", "usuarios"];
 let heroWordIndex = 0;
 const heroWord = document.getElementById("hero-word");

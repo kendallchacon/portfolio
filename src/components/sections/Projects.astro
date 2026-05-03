@@ -19,12 +19,12 @@ import { featuredProject } from "../../data/projects";
       {featuredProject.title}
     </h2>
 
-    <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+    <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-200">
       {featuredProject.summary}
     </p>
 
     <article
-      class="group relative mt-12 overflow-hidden rounded-3xl border border-slate-700 bg-slate-900/50 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40"
+      class="group relative mt-14 overflow-hidden rounded-3xl border border-slate-700 bg-slate-900/50 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 sm:mt-16"
     >
       <div
         class="absolute -top-20 right-0 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl"
@@ -57,18 +57,18 @@ import { featuredProject } from "../../data/projects";
           {featuredProject.overview.title}
         </h3>
 
-        <p class="mt-4 max-w-3xl text-base leading-8 text-slate-300">
+        <p class="mt-4 max-w-3xl text-base leading-8 text-slate-200">
           {featuredProject.overview.description}
         </p>
 
-        <div class="mt-10 grid gap-4 md:grid-cols-2">
+        <div class="mt-12 grid gap-5 md:grid-cols-2">
           {
             featuredProject.caseStudy.map((item) => (
-              <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400">
+              <div class="rounded-2xl border border-slate-700/80 bg-slate-950/50 p-5 sm:p-6">
+                <h4 class="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
                   {item.title}
                 </h4>
-                <p class="mt-3 text-sm leading-6 text-slate-300">
+                <p class="mt-4 text-sm leading-6 text-slate-200">
                   {item.description}
                 </p>
               </div>
@@ -76,13 +76,13 @@ import { featuredProject } from "../../data/projects";
           }
         </div>
 
-        <div class="mt-10 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div class="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <h4 class="text-lg font-semibold text-white">Módulos</h4>
-            <div class="mt-4 grid gap-3">
+            <h4 class="text-lg font-bold text-white">Módulos</h4>
+            <div class="mt-5 grid gap-4">
               {
                 featuredProject.modules.map((module) => (
-                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
+                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-200">
                     <Icon
                       name="heroicons:check-circle"
                       class="mt-0.5 size-5 text-cyan-400"
@@ -95,13 +95,13 @@ import { featuredProject } from "../../data/projects";
           </div>
 
           <div>
-            <h4 class="text-lg font-semibold text-white">
+            <h4 class="text-lg font-bold text-white">
               Decisiones técnicas
             </h4>
-            <div class="mt-4 grid gap-3">
+            <div class="mt-5 grid gap-4">
               {
                 featuredProject.technicalDecisions.map((decision) => (
-                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
+                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-200">
                     <Icon
                       name="heroicons:code-bracket-square"
                       class="mt-0.5 size-5 text-cyan-400"
@@ -114,20 +114,20 @@ import { featuredProject } from "../../data/projects";
           </div>
         </div>
 
-        <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        <div class="mt-12 grid gap-8 lg:grid-cols-2">
           <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-5">
-            <h4 class="text-lg font-semibold text-white">Base de datos</h4>
-            <p class="mt-3 text-sm leading-6 text-slate-300">
+            <h4 class="text-lg font-bold text-white">Base de datos</h4>
+            <p class="mt-4 text-sm leading-6 text-slate-200">
               {featuredProject.database}
             </p>
           </div>
 
           <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-5">
-            <h4 class="text-lg font-semibold text-white">Seguridad</h4>
-            <div class="mt-4 grid gap-3">
+            <h4 class="text-lg font-bold text-white">Seguridad</h4>
+            <div class="mt-5 grid gap-4">
               {
                 featuredProject.security.map((item) => (
-                  <div class="flex items-start gap-3 text-sm text-slate-300">
+                  <div class="flex items-start gap-3 text-sm text-slate-200">
                     <Icon
                       name="heroicons:shield-check"
                       class="mt-0.5 size-5 text-cyan-400"
@@ -140,7 +140,7 @@ import { featuredProject } from "../../data/projects";
           </div>
         </div>
 
-        <p class="mt-8 text-sm leading-6 text-slate-400">
+        <p class="mt-10 text-sm leading-6 text-slate-300">
           El código del sistema no se publica como repositorio abierto. La
           evidencia principal se presenta aquí como caso de estudio técnico.
         </p>
