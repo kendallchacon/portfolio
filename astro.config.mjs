@@ -9,7 +9,7 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   integrations: [
     mdx(),
-    icon(), // 👈 aquí lo agregas
+    icon(),
   ],
 
   vite: {

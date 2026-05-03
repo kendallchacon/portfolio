@@ -1,0 +1,33 @@
+---
+import { Icon } from "astro-icon/components";
+import Card from "./Card.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  delay?: number;
+  reveal?: boolean;
+}
+
+const { title, description, icon, delay, reveal = false } = Astro.props;
+---
+
+<Card reveal={reveal} delay={delay} class="p-6">
+  {
+    icon && (
+      <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/10 text-cyan-400 transition duration-300 group-hover:scale-110 group-hover:bg-cyan-400/20">
+        <Icon name={icon} class="size-7 icon-idle" />
+      </div>
+    )
+  }
+
+  <h3 class="relative text-lg font-semibold text-white transition group-hover:text-cyan-300">
+    {title}
+  </h3>
+
+  <p class="relative mt-4 text-sm leading-6 text-slate-400 transition group-hover:text-slate-300">
+    {description}
+  </p>
+</Card>
+

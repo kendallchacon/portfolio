@@ -1,0 +1,54 @@
+---
+import Card from "./Card.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  imageClass?: string;
+  highlights: string[];
+  year: string;
+  delay?: number;
+}
+
+const {
+  title,
+  description,
+  image,
+  imageAlt,
+  imageClass = "",
+  highlights,
+  year,
+  delay,
+} = Astro.props;
+---
+
+<Card reveal delay={delay}>
+  <div class="relative overflow-hidden">
+    <img
+      src={image}
+      alt={imageAlt}
+      class:list={[
+        "h-64 w-full object-cover transition duration-500 group-hover:scale-105",
+        imageClass,
+      ]}
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 to-transparent">
+    </div>
+  </div>
+
+  <div class="p-6">
+    <h3 class="text-lg font-semibold text-white group-hover:text-cyan-300">
+      {title}
+    </h3>
+
+    <p class="mt-4 text-sm text-slate-400">{description}</p>
+
+    <ul class="mt-4 space-y-2 text-sm text-slate-400">
+      {highlights.map((highlight) => <li>• {highlight}</li>)}
+    </ul>
+
+    <span class="mt-4 block text-xs text-slate-500">{year}</span>
+  </div>
+</Card>

@@ -1,0 +1,21 @@
+---
+interface Props {
+  featured?: boolean;
+  size?: "sm" | "md";
+}
+
+const { featured = false, size = "md" } = Astro.props;
+---
+
+<span
+  class:list={[
+    "rounded-full border transition",
+    size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-2",
+    featured
+      ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-300"
+      : "border-slate-700 bg-slate-900/50 text-slate-400 hover:border-cyan-400 hover:text-cyan-400",
+  ]}
+>
+  <slot />
+</span>
+

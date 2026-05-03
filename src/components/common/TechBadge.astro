@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  name: string;
+  icon: string;
+  color?: string;
+  compact?: boolean;
+}
+
+const { name, icon, color = "text-cyan-400", compact = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    "group flex items-center gap-3 border border-slate-800 bg-slate-950/50 text-slate-300 transition hover:border-cyan-400/40 hover:bg-slate-900/70 hover:text-cyan-300",
+    compact
+      ? "rounded-full px-3 py-2 text-sm"
+      : "rounded-2xl p-4 hover:-translate-y-1",
+  ]}
+>
+  <div
+    class:list={[
+      "flex items-center justify-center transition group-hover:scale-110",
+      compact
+        ? ""
+        : "h-11 w-11 rounded-2xl border border-slate-800 bg-slate-900/70 group-hover:border-cyan-400/40",
+    ]}
+  >
+    <Icon name={icon} class:list={[compact ? "size-5" : "size-6", color]} />
+  </div>
+
+  <span class="font-medium">{name}</span>
+</div>
+

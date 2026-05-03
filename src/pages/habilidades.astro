@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import IconCard from "../components/common/IconCard.astro";
+import SectionHeader from "../components/common/SectionHeader.astro";
+import Tag from "../components/common/Tag.astro";
+import TechBadge from "../components/common/TechBadge.astro";
+import { technologies, workAreas } from "../data/skills";
+
+const overviewBars = [
+  { label: "Backend", status: "strong", width: "90%" },
+  { label: "Frontend", status: "functional", width: "72%" },
+  { label: "Databases", status: "structured", width: "82%" },
+];
+---
+
+<BaseLayout
+  title="Habilidades | Kendall Chacón"
+  description="Habilidades técnicas de Kendall Chacón en desarrollo web, backend, APIs, bases de datos y arquitectura modular."
+>
+  <section id="skills" class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid items-center gap-12 lg:grid-cols-[1fr_0.85fr]">
+        <div>
+          <SectionHeader
+            eyebrow="Habilidades"
+            title="Cómo construyo soluciones web"
+            titleTag="h1"
+            description="Más allá de usar tecnologías, me enfoco en construir sistemas claros, mantenibles y preparados para crecer."
+          />
+
+          <div class="mt-8 flex flex-wrap gap-3 text-sm">
+            <Tag>Full Stack</Tag>
+            <Tag>Backend como fortaleza</Tag>
+            <Tag>APIs REST</Tag>
+            <Tag>Bases de datos</Tag>
+          </div>
+        </div>
+
+        <div class="group relative hidden lg:block">
+          <div
+            class="absolute -inset-4 rounded-[2rem] bg-cyan-400/10 blur-3xl transition group-hover:bg-cyan-400/20"
+          >
+          </div>
+
+          <div
+            class="relative rounded-3xl border border-slate-800 bg-slate-950/70 p-6 shadow-2xl transition duration-300 group-hover:-translate-y-1 group-hover:border-cyan-400/40"
+          >
+            <p class="font-mono text-sm text-slate-500">
+              <span class="text-cyan-400">$</span> skills --overview
+            </p>
+
+            <div class="mt-6 space-y-4">
+              {
+                overviewBars.map((item) => (
+                  <div>
+                    <div class="flex justify-between text-sm">
+                      <span class="text-slate-300">{item.label}</span>
+                      <span class="text-cyan-400">{item.status}</span>
+                    </div>
+                    <div class="mt-2 h-1.5 rounded-full bg-slate-800">
+                      <div
+                        class="h-full rounded-full bg-cyan-400"
+                        style={`width: ${item.width};`}
+                      />
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <p class="mt-6 font-mono text-sm text-slate-500">
+              <span class="text-cyan-400">✓</span> enfoque claro y mantenible
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 grid gap-6 md:grid-cols-2">
+        {
+          workAreas.map((area, index) => (
+            <IconCard {...area} reveal delay={index * 0.1} />
+          ))
+        }
+      </div>
+
+      <div
+        class="reveal mt-16 rounded-3xl border border-slate-800 bg-slate-900/30 p-6 sm:p-8"
+      >
+        <div
+          class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+        >
+          <div>
+            <p
+              class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400"
+            >
+              Stack técnico
+            </p>
+
+            <h2 class="mt-3 text-2xl font-bold text-white">
+              Tecnologías con las que trabajo
+            </h2>
+          </div>
+
+          <p class="max-w-md text-sm leading-6 text-slate-400">
+            Herramientas que utilizo para construir, integrar y mantener
+            aplicaciones web.
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {technologies.map((tech) => <TechBadge {...tech} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

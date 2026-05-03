@@ -1,46 +1,90 @@
-# Astro Starter Kit: Basics
+# Portafolio de Kendall Chacón
 
-```sh
-npm create astro@latest -- --template basics
-```
+Portafolio personal construido con Astro y Tailwind CSS para presentar perfil profesional, habilidades técnicas, proyectos destacados y medios de contacto.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+El sitio está pensado como una base simple, clara y escalable para seguir agregando contenido sin duplicar estructura visual ni mezclar datos con marcado.
 
-## 🚀 Project Structure
+## Stack utilizado
 
-Inside of your Astro project, you'll see the following folders and files:
+- Astro 6
+- Tailwind CSS 4
+- TypeScript para datos estructurados del sitio
+- astro-icon
+- Iconify con colecciones Heroicons y Simple Icons
+- MDX, disponible para futuras páginas de contenido
+
+## Estructura del proyecto
 
 ```text
 /
 ├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+│   ├── favicon.svg
+│   └── images/
+├── src/
+│   ├── components/
+│   │   ├── common/       # Componentes reutilizables de UI
+│   │   ├── layout/       # Navegación y piezas de layout
+│   │   └── sections/     # Secciones principales del portafolio
+│   ├── data/             # Arrays y contenido estructurado
+│   ├── layouts/          # Layout base del sitio
+│   ├── pages/            # Rutas públicas de Astro
+│   ├── scripts/          # Interacciones pequeñas del cliente
+│   └── styles/           # Estilos globales y animaciones
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Instalación
 
-## 🧞 Commands
+```sh
+npm install
+```
 
-All commands are run from the root of the project, from a terminal:
+## Ejecutar en desarrollo
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```sh
+npm run dev
+```
 
-## 👀 Want to learn more?
+Por defecto Astro levanta el servidor en `http://localhost:4321`.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Build de producción
+
+```sh
+npm run build
+```
+
+El resultado se genera en `dist/`.
+
+## Vista previa del build
+
+```sh
+npm run preview
+```
+
+## Scripts disponibles
+
+| Script | Descripción |
+| --- | --- |
+| `npm run dev` | Inicia el servidor local de desarrollo |
+| `npm run build` | Genera el sitio para producción |
+| `npm run preview` | Sirve localmente el build generado |
+| `npm run astro` | Ejecuta comandos de la CLI de Astro |
+
+## Decisiones técnicas principales
+
+- Las páginas viven en `src/pages` para mantener rutas públicas claras: `/`, `/perfil`, `/habilidades`, `/proyectos` y `/contacto`.
+- Los componentes reutilizables se agrupan en `src/components/common` para evitar repetir botones, tags, cards y badges técnicos.
+- El contenido repetible se centraliza en archivos `.ts` dentro de `src/data`, lo que facilita agregar tecnologías, contactos, experiencias o proyectos sin tocar demasiado HTML.
+- Las secciones grandes se mantienen en `src/components/sections` para que la página principal pueda componerse de bloques legibles.
+- Las animaciones globales y utilidades transversales viven en `src/styles/global.css`; la lógica pequeña del cliente se separó en `src/scripts/site-interactions.js`.
+- El CV descargable se sirve desde `public/cv-kendall-chacon.pdf` para mantener una URL pública directa y simple.
+- Se mantuvo el diseño visual principal y se priorizó una arquitectura simple, suficiente para un portafolio personal.
+
+## Próximas mejoras
+
+- Agregar proyectos reales adicionales con enlaces finales a demo y repositorio.
+- Mejorar SEO con URL canónica, imagen Open Graph y metadatos específicos por página.
+- Considerar contenido en MDX para escribir casos de estudio o notas técnicas.
+- Agregar validación visual responsive antes de publicar cambios importantes.

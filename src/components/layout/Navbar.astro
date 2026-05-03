@@ -1,5 +1,6 @@
 ---
-import { Icon } from "astro-icon/components";
+import ButtonLink from "../common/ButtonLink.astro";
+import { navigationItems } from "../../data/navigation";
 ---
 
 <header
@@ -13,21 +14,17 @@ import { Icon } from "astro-icon/components";
     <div
       class="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex"
     >
-      <a href="/" class="transition hover:text-cyan-400">Inicio</a>
-      <a href="/perfil" class="transition hover:text-cyan-400">Perfil</a>
-      <a href="/habilidades" class="transition hover:text-cyan-400"
-        >Habilidades</a
-      >
-      <a href="/proyectos" class="transition hover:text-cyan-400">Proyectos</a>
-      <a href="/contacto" class="transition hover:text-cyan-400">Contacto</a>
+      {
+        navigationItems.map((item) => (
+          <a href={item.href} class="transition hover:text-cyan-400">
+            {item.label}
+          </a>
+        ))
+      }
 
-      <a
-        href="/cv-kendall-chacon.pdf"
-        download
-        class="btn-primary-animated inline-flex items-center justify-center rounded-full bg-cyan-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-      >
-        <span>Descargar CV</span>
-      </a>
+      <ButtonLink href="/cv-kendall-chacon.pdf" download="cv-kendall-chacon.pdf">
+        Descargar CV
+      </ButtonLink>
     </div>
   </nav>
 </header>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  titleTag?: "h1" | "h2";
+  class?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  titleTag = "h2",
+  class: className = "",
+} = Astro.props;
+const TitleTag = titleTag;
+---
+
+<div class={className}>
+  <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+    {eyebrow}
+  </p>
+
+  <TitleTag
+    class:list={[
+      "mt-4 font-bold tracking-tight text-white",
+      titleTag === "h1" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl",
+    ]}
+  >
+    {title}
+  </TitleTag>
+
+  {
+    description && (
+      <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-400">
+        {description}
+      </p>
+    )
+  }
+</div>
+

@@ -1,9 +1,10 @@
 @import "tailwindcss";
+
 html {
   scroll-behavior: smooth;
 }
 
-@keyframes scroll {
+@keyframes marqueeScroll {
   from {
     transform: translateX(0);
   }
@@ -14,7 +15,7 @@ html {
 }
 
 .animate-scroll {
-  animation: scroll 30s linear infinite;
+  animation: marqueeScroll 30s linear infinite;
 }
 
 @keyframes float {
@@ -23,29 +24,20 @@ html {
   }
 
   50% {
-    transform: translateY(24px);
+    transform: translateY(-10px);
   }
 }
 
 .animate-float {
-  animation: float 8s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
 }
 
 .animate-float-slow {
   animation: float 12s ease-in-out infinite;
 }
 
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.icon-idle {
+  animation: float 4s ease-in-out infinite;
 }
 
 @keyframes fadeInPage {
@@ -62,6 +54,19 @@ html {
 
 .page-enter {
   animation: fadeInPage 0.6s ease forwards;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .btn-primary-animated {
@@ -99,38 +104,6 @@ html {
 .btn-primary-animated span {
   position: relative;
   z-index: 1;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-
-.delay-200 {
-  animation-delay: 1s;
 }
 
 .terminal-line {
@@ -218,7 +191,9 @@ html {
 
 .hero-word {
   display: inline-block;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .hero-word.hide {
@@ -229,16 +204,6 @@ html {
 .hero-word.show {
   opacity: 1;
   transform: translateY(0);
-}
-
-@keyframes wordGlow {
-  0%, 100% {
-    text-shadow: 0 0 0 rgba(34, 211, 238, 0);
-  }
-
-  50% {
-    text-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
-  }
 }
 
 .terminal-cursor {
@@ -258,45 +223,6 @@ html {
   }
 }
 
-.tag {
-  @apply rounded-full border border-slate-800 bg-slate-900/50 px-4 py-2 text-slate-300 transition;
-}
-
-.tag:hover {
-  @apply border-cyan-400 text-cyan-400;
-}
-
-.card-shimmer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(34, 211, 238, 0.08),
-    transparent
-  );
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.group:hover .card-shimmer::before {
-  opacity: 1;
-}
-
-.icon-idle {
-  animation: iconFloat 4s ease-in-out infinite;
-}
-
-@keyframes iconFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
 .card-line {
   position: absolute;
   bottom: 0;
@@ -310,4 +236,3 @@ html {
 .group:hover .card-line {
   width: 100%;
 }
-
