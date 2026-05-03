@@ -1,0 +1,283 @@
+---
+import { Icon } from "astro-icon/components";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ButtonLink from "../components/common/ButtonLink.astro";
+import Card from "../components/common/Card.astro";
+import IconCard from "../components/common/IconCard.astro";
+import SectionHeader from "../components/common/SectionHeader.astro";
+import TechBadge from "../components/common/TechBadge.astro";
+import { contactLinks } from "../data/contact";
+
+const githubLink = contactLinks.find((link) => link.label === "GitHub");
+
+const stack = [
+  { name: "Astro", icon: "simple-icons:astro", color: "text-purple-400" },
+  {
+    name: "Tailwind CSS",
+    icon: "simple-icons:tailwindcss",
+    color: "text-cyan-400",
+  },
+  {
+    name: "TypeScript",
+    icon: "simple-icons:typescript",
+    color: "text-blue-400",
+  },
+  { name: "astro-icon", icon: "heroicons:sparkles", color: "text-cyan-300" },
+  { name: "MDX preparado", icon: "simple-icons:mdx", color: "text-white" },
+];
+
+const technicalDecisions = [
+  {
+    title: "Layout base reutilizable",
+    description:
+      "El sitio comparte metadatos, navegación, fondo visual, contenedor principal y footer desde un layout común.",
+    icon: "heroicons:rectangle-group",
+  },
+  {
+    title: "Componentes por responsabilidad",
+    description:
+      "Las piezas comunes, secciones y elementos de layout viven en carpetas separadas para mantener cada archivo enfocado.",
+    icon: "heroicons:squares-2x2",
+  },
+  {
+    title: "Datos centralizados",
+    description:
+      "Listas como navegación, contacto, habilidades y proyectos se guardan en `src/data` para evitar repetir contenido.",
+    icon: "heroicons:circle-stack",
+  },
+  {
+    title: "Interacciones separadas",
+    description:
+      "Las animaciones globales viven en estilos y la lógica pequeña del cliente se mantiene en scripts dedicados.",
+    icon: "heroicons:bolt",
+  },
+  {
+    title: "Responsive desde el inicio",
+    description:
+      "Las secciones usan grids, espaciados y estados pensados para funcionar bien en pantallas pequeñas y grandes.",
+    icon: "heroicons:device-phone-mobile",
+  },
+];
+
+const projectFolders = [
+  {
+    path: "src/pages",
+    description: "Rutas públicas del sitio.",
+  },
+  {
+    path: "src/layouts",
+    description: "Estructura base compartida.",
+  },
+  {
+    path: "src/components",
+    description: "UI común, layout y secciones.",
+  },
+  {
+    path: "src/data",
+    description: "Contenido estructurado en TypeScript.",
+  },
+  {
+    path: "src/styles",
+    description: "Estilos globales y animaciones.",
+  },
+  {
+    path: "src/scripts",
+    description: "Interacciones pequeñas del cliente.",
+  },
+];
+
+const learnings = [
+  {
+    title: "Organización frontend",
+    description:
+      "Una estructura clara ayuda a ubicar rápido dónde vive cada responsabilidad del sitio.",
+    icon: "heroicons:folder-open",
+  },
+  {
+    title: "Reutilización sin exceso",
+    description:
+      "Los componentes comunes reducen duplicación sin convertir el portafolio en algo innecesariamente complejo.",
+    icon: "heroicons:arrow-path",
+  },
+  {
+    title: "Mantenibilidad",
+    description:
+      "Separar contenido, presentación e interacciones facilita crecer con nuevas páginas o secciones.",
+    icon: "heroicons:wrench-screwdriver",
+  },
+  {
+    title: "Comunicación profesional",
+    description:
+      "El sitio no solo muestra información: también comunica criterio técnico, orden y cuidado visual.",
+    icon: "heroicons:chat-bubble-left-right",
+  },
+];
+---
+
+<BaseLayout
+  title="Proceso | Kendall Chacón"
+  description="Cómo fue construido el portafolio de Kendall Chacón con Astro, Tailwind CSS, componentes reutilizables y una arquitectura simple."
+>
+  <section class="py-20 sm:py-28">
+    <div class="grid items-center gap-12 lg:grid-cols-[1fr_0.8fr]">
+      <div class="reveal">
+        <SectionHeader
+          eyebrow="Proceso"
+          title="Cómo construí este portafolio"
+          titleTag="h1"
+          description="Este sitio fue creado como una base personal clara y mantenible para presentar mi perfil, mis habilidades, algunos proyectos y mi forma de organizar una interfaz frontend."
+        />
+
+        <div class="mt-10 flex flex-col gap-4 sm:flex-row">
+          <ButtonLink href="/contacto">Contactarme</ButtonLink>
+          {
+            githubLink && (
+              <ButtonLink
+                href={githubLink.href}
+                target="_blank"
+                variant="secondary"
+              >
+                Ver GitHub
+              </ButtonLink>
+            )
+          }
+        </div>
+      </div>
+
+      <Card class="reveal p-6">
+        <p class="font-mono text-sm text-slate-500">
+          <span class="text-cyan-400">$</span> portfolio --architecture
+        </p>
+
+        <div class="mt-6 space-y-3 font-mono text-sm">
+          <p class="text-slate-300">
+            <span class="text-cyan-400">✓</span> Astro + Tailwind CSS
+          </p>
+          <p class="text-slate-300">
+            <span class="text-cyan-400">✓</span> Componentes reutilizables
+          </p>
+          <p class="text-slate-300">
+            <span class="text-cyan-400">✓</span> Datos centralizados
+          </p>
+          <p class="text-slate-300">
+            <span class="text-cyan-400">✓</span> Preparado para crecer
+          </p>
+        </div>
+      </Card>
+    </div>
+  </section>
+
+  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <SectionHeader
+      eyebrow="Stack utilizado"
+      title="Herramientas simples para un sitio mantenible"
+      description="El stack se eligió por velocidad, claridad y buen encaje con un portafolio estático que puede crecer con contenido nuevo."
+    />
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {stack.map((tech) => <TechBadge {...tech} />)}
+    </div>
+  </section>
+
+  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <SectionHeader
+      eyebrow="Decisiones técnicas"
+      title="Arquitectura sin sobreingeniería"
+      description="La intención fue separar responsabilidades lo suficiente para trabajar cómodo, sin añadir capas innecesarias."
+    />
+
+    <div class="mt-12 grid gap-6 md:grid-cols-2">
+      {
+        technicalDecisions.map((decision, index) => (
+          <IconCard {...decision} reveal delay={index * 0.1} />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <div class="grid gap-10 lg:grid-cols-[0.85fr_1fr]">
+      <SectionHeader
+        eyebrow="Estructura del proyecto"
+        title="Carpetas principales"
+        description="La organización apunta a que cada parte del sitio tenga un lugar predecible."
+      />
+
+      <div
+        class="rounded-3xl border border-slate-800 bg-slate-950/70 p-5 shadow-2xl sm:p-6"
+      >
+        <div class="mb-5 flex items-center gap-2 border-b border-slate-800 pb-4">
+          <span class="h-3 w-3 rounded-full bg-red-400"></span>
+          <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
+          <span class="h-3 w-3 rounded-full bg-green-400"></span>
+          <span class="ml-auto font-mono text-xs text-slate-500">src/</span>
+        </div>
+
+        <div class="grid gap-3">
+          {
+            projectFolders.map((folder) => (
+              <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
+                <Icon
+                  name="heroicons:folder"
+                  class="mt-0.5 size-5 shrink-0 text-cyan-400"
+                />
+                <div>
+                  <p class="font-mono text-sm font-semibold text-white">
+                    {folder.path}
+                  </p>
+                  <p class="mt-1 text-sm text-slate-400">
+                    {folder.description}
+                  </p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <SectionHeader
+      eyebrow="Qué demuestra"
+      title="Buenas prácticas aplicadas a un proyecto personal"
+      description="No es un producto grande ni pretende serlo. Es una muestra concreta de criterio frontend, orden visual y comunicación técnica."
+    />
+
+    <div class="mt-12 grid gap-6 md:grid-cols-2">
+      {
+        learnings.map((learning, index) => (
+          <IconCard {...learning} reveal delay={index * 0.1} />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
+    <div
+      class="rounded-3xl border border-slate-800 bg-slate-900/40 p-5 sm:p-10"
+    >
+      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+        Siguiente paso
+      </p>
+      <h2 class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-white">
+        Si quieres conversar sobre mi perfil o revisar el código, aquí están los enlaces.
+      </h2>
+
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+        <ButtonLink href="/contacto">Ir a contacto</ButtonLink>
+        {
+          githubLink && (
+            <ButtonLink
+              href={githubLink.href}
+              target="_blank"
+              variant="secondary"
+            >
+              Ver GitHub
+            </ButtonLink>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

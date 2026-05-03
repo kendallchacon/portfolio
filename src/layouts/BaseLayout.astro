@@ -6,12 +6,19 @@ import Footer from "../components/sections/Footer.astro";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  type?: "website" | "profile" | "article";
 }
 
 const {
   title = "Kendall Chacón | Developer",
   description = "Desarrollador backend especializado en Laravel, Node.js, Spring Boot y sistemas escalables.",
+  image = "/images/project-preview.jpg",
+  type = "website",
 } = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL(image, Astro.site).toString();
 ---
 
 <!doctype html>
@@ -22,17 +29,26 @@ const {
 
     <title>{title}</title>
     <meta name="description" content={description} />
-
     <meta name="author" content="Kendall Chacón" />
+    <link rel="canonical" href={canonicalUrl} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Portafolio de Kendall Chacón" />
+    <meta property="og:locale" content="es_CR" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <link rel="icon" href="/favicon.svg" />
   </head>
 
-  <body class="bg-slate-950 text-slate-100 antialiased">
+  <body class="overflow-x-hidden bg-slate-950 text-slate-100 antialiased">
     <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <div
         class="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-400/10 blur-3xl animate-float"
@@ -51,7 +67,7 @@ const {
     <div class="min-h-screen flex flex-col">
       <Navbar />
 
-      <main class="flex-1 w-full max-w-6xl mx-auto px-6 page-enter">
+      <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter">
         <slot />
       </main>
       <Footer />

@@ -74,17 +74,17 @@ npm run preview
 
 ## Decisiones técnicas principales
 
-- Las páginas viven en `src/pages` para mantener rutas públicas claras: `/`, `/perfil`, `/habilidades`, `/proyectos` y `/contacto`.
+- Las páginas viven en `src/pages` para mantener rutas públicas claras: `/`, `/perfil`, `/habilidades`, `/proceso`, `/proyectos` y `/contacto`.
 - Los componentes reutilizables se agrupan en `src/components/common` para evitar repetir botones, tags, cards y badges técnicos.
 - El contenido repetible se centraliza en archivos `.ts` dentro de `src/data`, lo que facilita agregar tecnologías, contactos, experiencias o proyectos sin tocar demasiado HTML.
 - Las secciones grandes se mantienen en `src/components/sections` para que la página principal pueda componerse de bloques legibles.
 - Las animaciones globales y utilidades transversales viven en `src/styles/global.css`; la lógica pequeña del cliente se separó en `src/scripts/site-interactions.js`.
 - El CV descargable se sirve desde `public/cv-kendall-chacon.pdf` para mantener una URL pública directa y simple.
+- El layout base define metadatos SEO, URL canónica, Open Graph y Twitter Card para todas las páginas.
+- La navegación incluye una versión móvil para mejorar la experiencia responsive en pantallas pequeñas.
 - Se mantuvo el diseño visual principal y se priorizó una arquitectura simple, suficiente para un portafolio personal.
 
 ## Próximas mejoras
 
 - Agregar proyectos reales adicionales con enlaces finales a demo y repositorio.
-- Mejorar SEO con URL canónica, imagen Open Graph y metadatos específicos por página.
 - Considerar contenido en MDX para escribir casos de estudio o notas técnicas.
-- Agregar validación visual responsive antes de publicar cambios importantes.
