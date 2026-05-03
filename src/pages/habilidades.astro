@@ -7,15 +7,15 @@ import TechBadge from "../components/common/TechBadge.astro";
 import { technologies, workAreas } from "../data/skills";
 
 const overviewBars = [
-  { label: "Backend", status: "strong", width: "90%" },
-  { label: "Frontend", status: "functional", width: "72%" },
-  { label: "Databases", status: "structured", width: "82%" },
+  { label: "Backend", status: "APIs + roles", width: "90%" },
+  { label: "Frontend", status: "Vue + estados", width: "72%" },
+  { label: "Datos", status: "relacional", width: "82%" },
 ];
 ---
 
 <BaseLayout
   title="Habilidades | Kendall Chacón"
-  description="Habilidades técnicas de Kendall Chacón en desarrollo web, backend, APIs, bases de datos y arquitectura modular."
+  description="Habilidades técnicas de Kendall Chacón en APIs REST, Laravel, bases de datos relacionales, validaciones backend y arquitectura modular."
 >
   <section id="skills" class="reveal border-t border-slate-800 py-20 sm:py-28">
     <div class="mx-auto max-w-6xl px-0 sm:px-6">
@@ -23,9 +23,9 @@ const overviewBars = [
         <div>
           <SectionHeader
             eyebrow="Habilidades"
-            title="Cómo construyo soluciones web"
+            title="Cómo construyo sistemas web"
             titleTag="h1"
-            description="Más allá de usar tecnologías, me enfoco en construir sistemas claros, mantenibles y preparados para crecer."
+            description="Trabajo desde la lógica de negocio: endpoints, validaciones backend, relaciones de base de datos, autenticación y control de roles."
           />
 
           <div class="mt-8 flex flex-wrap gap-3 text-sm">
@@ -45,7 +45,7 @@ const overviewBars = [
           <div
             class="relative rounded-3xl border border-slate-800 bg-slate-950/70 p-6 shadow-2xl transition duration-300 group-hover:-translate-y-1 group-hover:border-cyan-400/40"
           >
-            <p class="font-mono text-sm text-slate-500">
+            <p class="font-mono text-sm text-slate-400">
               <span class="text-cyan-400">$</span> skills --overview
             </p>
 
@@ -68,8 +68,8 @@ const overviewBars = [
               }
             </div>
 
-            <p class="mt-6 font-mono text-sm text-slate-500">
-              <span class="text-cyan-400">✓</span> enfoque claro y mantenible
+            <p class="mt-6 font-mono text-sm text-slate-400">
+              <span class="text-cyan-400">✓</span> validaciones y permisos
             </p>
           </div>
         </div>
@@ -102,8 +102,8 @@ const overviewBars = [
           </div>
 
           <p class="max-w-md text-sm leading-6 text-slate-400">
-            Herramientas que utilizo para construir, integrar y mantener
-            aplicaciones web.
+            Herramientas que utilizo para implementar backend, integrar
+            interfaces, probar endpoints y versionar cambios.
           </p>
         </div>
 

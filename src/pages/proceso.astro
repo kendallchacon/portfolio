@@ -41,7 +41,7 @@ const technicalDecisions = [
   {
     title: "Datos centralizados",
     description:
-      "Listas como navegación, contacto, habilidades y proyectos se guardan en `src/data` para evitar repetir contenido.",
+      "Listas como navegación, contacto, habilidades y proyecto principal se guardan en `src/data` para evitar repetir contenido.",
     icon: "heroicons:circle-stack",
   },
   {
@@ -97,7 +97,7 @@ const learnings = [
           eyebrow="Proceso"
           title="Cómo construí este portafolio"
           titleTag="h1"
-          description="Este sitio fue creado como una base personal clara y mantenible para presentar mi perfil, mis habilidades, algunos proyectos y mi forma de organizar una interfaz frontend."
+          description="Este sitio fue creado como una base personal para presentar mi perfil, mis habilidades, un caso de estudio principal y mi forma de organizar una interfaz frontend."
         />
 
         <div class="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -142,8 +142,8 @@ const learnings = [
   <section class="reveal border-t border-slate-800 py-20 sm:py-28">
     <SectionHeader
       eyebrow="Stack utilizado"
-      title="Herramientas simples para un sitio mantenible"
-      description="El stack se eligió por velocidad, claridad y buen encaje con un portafolio estático que puede crecer con contenido nuevo."
+      title="Herramientas simples para un sitio de contenido técnico"
+      description="El stack se eligió por velocidad, bajo costo de mantenimiento y buen encaje con un portafolio estático centrado en lectura."
     />
 
     <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -180,34 +180,6 @@ const learnings = [
           <IconCard {...learning} reveal delay={index * 0.1} />
         ))
       }
-    </div>
-  </section>
-
-  <section class="reveal border-t border-slate-800 py-20 sm:py-28">
-    <div
-      class="rounded-3xl border border-slate-800 bg-slate-900/40 p-5 sm:p-10"
-    >
-      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-        Siguiente paso
-      </p>
-      <h2 class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-white">
-        Si quieres conversar sobre mi perfil o revisar el código, aquí están los enlaces.
-      </h2>
-
-      <div class="mt-8 flex flex-col gap-4 sm:flex-row">
-        <ButtonLink href="/contacto">Ir a contacto</ButtonLink>
-        {
-          githubLink && (
-            <ButtonLink
-              href={githubLink.href}
-              target="_blank"
-              variant="secondary"
-            >
-              Ver GitHub
-            </ButtonLink>
-          )
-        }
-      </div>
     </div>
   </section>
 </BaseLayout>

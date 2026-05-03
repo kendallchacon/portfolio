@@ -41,22 +41,22 @@ export const skillCards = [
   {
     title: "Backend",
     description:
-      "Desarrollo APIs y servicios enfocados en claridad, mantenimiento y separación de responsabilidades.",
+      "Implemento APIs, validaciones del lado servidor y reglas de negocio separadas por responsabilidad.",
   },
   {
     title: "Bases de datos",
     description:
-      "Diseño estructuras relacionales pensando en integridad de datos, consultas claras y escalabilidad.",
+      "Modelo relaciones, entidades y consultas para representar usuarios, roles, puntos, recompensas y procesos administrativos.",
   },
   {
     title: "Arquitectura",
     description:
-      "Aplico organización modular para construir sistemas más fáciles de mantener y extender.",
+      "Organizo módulos, servicios y componentes para aislar cambios y reducir duplicación en flujos de negocio.",
   },
   {
     title: "Herramientas y trabajo",
     description:
-      "Uso herramientas modernas de desarrollo y prácticas ágiles para colaborar de forma ordenada.",
+      "Uso Git, GitHub, Postman y Docker para versionar, probar endpoints y preparar entornos de desarrollo.",
   },
 ];
 
@@ -64,26 +64,25 @@ export const workAreas = [
   {
     title: "Diseño de APIs",
     description:
-      "Defino endpoints, validaciones y estructuras claras para facilitar integración, mantenimiento y evolución del sistema.",
+      "Defino endpoints, requests, respuestas y validaciones para integrar backend e interfaz sin duplicar reglas de negocio.",
     icon: "heroicons:code-bracket",
   },
   {
     title: "Arquitectura modular",
     description:
-      "Organizo el código en partes independientes para que el sistema sea más fácil de entender, cambiar y escalar.",
+      "Separo responsabilidades por módulos para usuarios, permisos, datos y procesos administrativos.",
     icon: "heroicons:cube-transparent",
   },
   {
     title: "Modelado de datos",
     description:
-      "Diseño estructuras relacionales cuidando integridad, claridad en consultas y coherencia con la lógica del negocio.",
+      "Trabajo con tablas relacionales, claves, integridad de datos y consultas alineadas con la lógica del negocio.",
     icon: "heroicons:circle-stack",
   },
   {
     title: "Integración completa",
     description:
-      "Conecto backend, base de datos e interfaces frontend para construir aplicaciones funcionales y bien integradas.",
+      "Conecto backend, base de datos e interfaces frontend cuidando autenticación, roles y manejo de estados.",
     icon: "heroicons:link",
   },
 ];
-
