@@ -49,25 +49,108 @@ window.addEventListener(
   { passive: true },
 );
 
-const heroWords = ["ideas", "negocios", "sistemas", "usuarios"];
-let heroWordIndex = 0;
-const heroWord = document.getElementById("hero-word");
+// --- Terminal del hero ---
+// Tipeo de las líneas una sola vez (basado en requestAnimationFrame para
+// garantizar una duración total acotada, independiente del nº de caracteres)
+// más una status bar permanente con shimmer CSS.
+// El contenido completo ya vive en el DOM, por lo que es legible sin JS.
+// Respeta prefers-reduced-motion mostrando todo de forma estática.
+const terminal = document.querySelector("[data-terminal]");
 
-if (heroWord instanceof HTMLElement) {
-  heroWord.classList.add("show");
+if (terminal instanceof HTMLElement) {
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-  setInterval(() => {
-    heroWord.classList.remove("show");
-    heroWord.classList.add("hide");
+  // --- Limpieza explícita de la animación en curso ---
+  let rafId = 0;
 
-    setTimeout(() => {
-      heroWordIndex = (heroWordIndex + 1) % heroWords.length;
-      heroWord.textContent = heroWords[heroWordIndex];
+  const cleanup = () => {
+    if (rafId) {
+      window.cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  };
 
-      heroWord.classList.remove("hide");
-      heroWord.classList.add("show");
-    }, 500);
-  }, 3000);
+  // Cancela el tipeo si la página se descarta o navega (view transitions).
+  window.addEventListener("pagehide", cleanup, { once: true });
+  document.addEventListener("astro:before-swap", cleanup, { once: true });
+
+  // --- Datos del tipeo ---
+  const lineEls = Array.from(terminal.querySelectorAll(".term-line"));
+
+  const setActive = (activeLine) => {
+    lineEls.forEach((line) => line.classList.remove("is-active"));
+    activeLine?.classList.add("is-active");
+  };
+
+  // Solo las líneas con texto se tipean; las "blank" sirven de separador.
+  const segments = [];
+  let charOffset = 0;
+  lineEls.forEach((line) => {
+    const txt = line.querySelector(".term-txt");
+    if (!txt) return;
+    const full = txt.textContent ?? "";
+    segments.push({ line, txt, full, start: charOffset });
+    charOffset += full.length;
+  });
+  const totalChars = charOffset;
+
+  if (prefersReducedMotion || segments.length === 0) {
+    // Sin animación: contenido completo visible y estático desde el inicio.
+    setActive(lineEls[lineEls.length - 1]);
+    terminal.setAttribute("data-terminal-state", "done");
+  } else {
+    // Tipeo con duración total acotada (< 3.5 s).
+    const DURATION_MS = 3200;
+
+    // Vaciamos el texto antes de revelar para que el tipeo empiece desde cero.
+    segments.forEach((seg) => {
+      seg.txt.textContent = "";
+    });
+    terminal.setAttribute("data-terminal-state", "running");
+
+    let startTime = 0;
+    const typeFrame = (now) => {
+      if (!startTime) startTime = now;
+      const progress = Math.min(1, (now - startTime) / DURATION_MS);
+      const target = Math.round(progress * totalChars);
+
+      let activeLine = segments[0].line;
+      for (const seg of segments) {
+        const reveal = Math.max(
+          0,
+          Math.min(seg.full.length, target - seg.start),
+        );
+        seg.txt.textContent = seg.full.slice(0, reveal);
+        if (reveal > 0) activeLine = seg.line;
+      }
+      setActive(activeLine);
+
+      if (progress < 1) {
+        rafId = window.requestAnimationFrame(typeFrame);
+      } else {
+        rafId = 0;
+        setActive(segments[segments.length - 1].line);
+        terminal.setAttribute("data-terminal-state", "done");
+      }
+    };
+
+    rafId = window.requestAnimationFrame(typeFrame);
+  }
+
+  // --- Spotlight: la terminal sigue el puntero (solo pointer fino) ---
+  if (window.matchMedia("(pointer: fine)").matches) {
+    terminal.addEventListener(
+      "pointermove",
+      (event) => {
+        const rect = terminal.getBoundingClientRect();
+        terminal.style.setProperty("--spot-x", `${event.clientX - rect.left}px`);
+        terminal.style.setProperty("--spot-y", `${event.clientY - rect.top}px`);
+      },
+      { passive: true },
+    );
+  }
 }
 
 const mobileMenuButton = document.getElementById("mobile-menu-button");

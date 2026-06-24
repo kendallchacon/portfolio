@@ -24,6 +24,9 @@ const ogImageUrl = new URL(image, Astro.site).toString();
 <!doctype html>
 <html lang="es">
   <head>
+    {/* Marca temprano que hay JS para permitir el anti-parpadeo de la terminal
+        sin penalizar a quien navega sin JavaScript. */}
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

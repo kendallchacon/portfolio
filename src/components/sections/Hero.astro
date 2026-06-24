@@ -1,129 +1,58 @@
 ---
 import ButtonLink from "../common/ButtonLink.astro";
+import Terminal from "../common/Terminal.astro";
+import { hero } from "../../data/hero";
 ---
 
 <section id="home" class="py-16 sm:py-24">
-  <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-    <div>
-      <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-        Backend - APIs REST - Laravel - Bases de datos
-      </p>
-
-      <h1
-        class="mt-6 max-w-[22rem] text-3xl font-bold leading-[1.12] tracking-tight text-white sm:max-w-4xl sm:text-5xl sm:leading-tight lg:text-6xl"
+  <div class="grid items-stretch gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <!-- Columna izquierda: jerarquía de mayor a menor peso visual -->
+    <div class="hero-intro flex flex-col justify-center">
+      <!-- Etiqueta de especialidad: categoría editorial discreta sobre el h1 -->
+      <p
+        class="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-500 sm:text-sm"
       >
-        <span class="block sm:inline">Desarrollador backend / full stack</span>
-        <span class="block sm:inline"> enfocado en APIs REST, Laravel</span>
-        <span class="block sm:inline"> y sistemas web mantenibles.</span>
-      </h1>
-      <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-200">
-        Construyo aplicaciones con lógica de negocio clara, bases de datos
-        relacionales, autenticación, control de roles y estructuras preparadas
-        para crecer.
+        {hero.eyebrow}
       </p>
 
-      <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-        <ButtonLink href="#proyecto-principal">Ver caso de estudio</ButtonLink>
+      <!-- 1. Titular profesional: el elemento dominante -->
+      <h1
+        class="mt-4 max-w-2xl text-3xl font-bold leading-[1.12] tracking-tight text-white sm:text-4xl lg:text-5xl"
+      >
+        {hero.title}
+      </h1>
 
-        <ButtonLink href="/contacto" variant="secondary">
-          Contactarme para práctica profesional
-        </ButtonLink>
+      <!-- 2. Descripción: qué construye -->
+      <p class="mt-6 max-w-xl text-base leading-7 text-slate-300 sm:text-lg">
+        {hero.description}
+      </p>
+
+      <!-- 3. CTA orientados a conversión -->
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        {
+          hero.ctas.map((cta) => (
+            <ButtonLink href={cta.href} variant={cta.variant}>
+              {cta.label}
+            </ButtonLink>
+          ))
+        }
       </div>
     </div>
 
-    <div class="group relative">
+    <!-- Columna derecha: terminal como foco dominante -->
+    <!-- Altura natural: muestra todo el contenido sin corte en cualquier pantalla.
+         En desktop (lg) la columna estira la tarjeta y min-h-120 actúa de suelo. -->
+    <div class="relative flex">
       <div
-        class="absolute -inset-4 rounded-[2rem] bg-cyan-400/10 blur-3xl transition duration-500 group-hover:bg-cyan-400/20"
+        class="pointer-events-none absolute -inset-4 rounded-4xl bg-cyan-400/5 blur-3xl"
+        aria-hidden="true"
       >
       </div>
-
-      <div
-        class="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-950/80 shadow-2xl transition duration-500 group-hover:-translate-y-2 group-hover:border-cyan-400/40"
-      >
-        <div
-          class="flex items-center gap-2 border-b border-slate-800 px-5 py-4"
-        >
-          <span class="h-3 w-3 rounded-full bg-red-400"></span>
-          <span class="h-3 w-3 rounded-full bg-yellow-400"></span>
-          <span class="h-3 w-3 rounded-full bg-green-400"></span>
-          <span class="ml-auto text-xs text-slate-300">backend-system.ts</span>
-        </div>
-
-        <div class="space-y-5 p-6 font-mono text-sm">
-          <p class="terminal-line terminal-delay-1 text-slate-300">
-            <span class="text-cyan-400">$</span> init backend-workflow<span
-              class="terminal-cursor">_</span
-            >
-          </p>
-
-          <div
-            class="terminal-line terminal-delay-2 rounded-2xl border border-slate-800 bg-slate-900/50 p-4 transition group-hover:border-cyan-400/30"
-          >
-            <p class="text-cyan-400">const stack = &#123;</p>
-            <p class="pl-4 text-slate-200">backend: "Laravel | Node | Spring",</p>
-            <p class="pl-4 text-slate-200">database: "MySQL | SQL Server",</p>
-            <p class="pl-4 text-slate-200">tools: "Git | Postman | Docker"</p>
-            <p class="text-cyan-400">&#125;</p>
-          </div>
-
-          <div class="grid gap-3 text-slate-200">
-            <div
-              class="terminal-line terminal-delay-3 rounded-xl border border-slate-800 px-4 py-3 transition group-hover:border-cyan-400/30"
-            >
-              <div class="flex items-center justify-between gap-4">
-                <span>APIs REST</span>
-                <span class="terminal-status status-delay-1 text-cyan-400"
-                  >ready</span
-                >
-              </div>
-              <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                <div
-                  class="load-bar load-delay-1 h-full rounded-full bg-cyan-400"
-                >
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="terminal-line terminal-delay-4 rounded-xl border border-slate-800 px-4 py-3 transition group-hover:border-cyan-400/30"
-            >
-              <div class="flex items-center justify-between gap-4">
-                <span>Autenticación y roles</span>
-                <span class="terminal-status status-delay-2 text-cyan-400"
-                  >secured</span
-                >
-              </div>
-              <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                <div
-                  class="load-bar load-delay-2 h-full rounded-full bg-cyan-400"
-                >
-                </div>
-              </div>
-            </div>
-
-            <div
-              class="terminal-line terminal-delay-5 rounded-xl border border-slate-800 px-4 py-3 transition group-hover:border-cyan-400/30"
-            >
-              <div class="flex items-center justify-between gap-4">
-                <span>Validaciones backend</span>
-                <span class="terminal-status status-delay-3 text-cyan-400"
-                  >checked</span
-                >
-              </div>
-              <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-800">
-                <div
-                  class="load-bar load-delay-3 h-full rounded-full bg-cyan-400"
-                >
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <p class="terminal-line terminal-delay-6 text-slate-300">
-            <span class="text-cyan-400">✓</span> flujo listo para integración
-          </p>
-        </div>
-      </div>
+      <Terminal
+        fileName={hero.terminal.fileName}
+        lines={hero.terminal.lines}
+        statusBar={hero.terminal.statusBar}
+      />
     </div>
   </div>
 </section>
