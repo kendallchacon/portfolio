@@ -67,10 +67,15 @@ const ogImageUrl = new URL(image, Astro.site).toString();
       </div>
     </div>
 
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
     <div class="min-h-screen flex flex-col">
       <Navbar />
 
-      <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter">
+      <main
+        id="main-content"
+        class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter"
+      >
         <slot />
       </main>
       <Footer />

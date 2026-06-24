@@ -260,6 +260,74 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   width: 100%;
 }
 
+/* --- Skip link: visible solo al recibir foco con teclado --- */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  border-radius: 0.5rem;
+  background: rgb(34, 211, 238);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(2, 6, 23);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* --- Foco visible explícito en la navegación y CTA --- */
+.nav-focus:focus-visible {
+  outline: 2px solid rgb(34, 211, 238);
+  outline-offset: 2px;
+}
+
+/* --- Navbar tubelight: lámpara cian en el ítem activo y al hover --- */
+.nav-lamp {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 9999px;
+  background: rgba(34, 211, 238, 0.08);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-pill:hover .nav-lamp,
+.nav-pill.is-active .nav-lamp {
+  opacity: 1;
+}
+
+/* Barra superior brillante (el "tubo de luz") con su resplandor. */
+.nav-lamp__bar {
+  position: absolute;
+  top: -0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.75rem;
+  height: 0.25rem;
+  border-radius: 0 0 9999px 9999px;
+  background: rgb(34, 211, 238);
+}
+
+.nav-lamp__bar::before {
+  content: "";
+  position: absolute;
+  top: -0.4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: rgba(34, 211, 238, 0.35);
+  filter: blur(0.5rem);
+}
+
 /* Política global de movimiento reducido: desactiva animaciones continuas,
    desplazamientos suaves y transiciones largas para quien lo solicita. */
 @media (prefers-reduced-motion: reduce) {

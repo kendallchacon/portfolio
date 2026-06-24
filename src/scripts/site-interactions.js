@@ -153,33 +153,89 @@ if (terminal instanceof HTMLElement) {
   }
 }
 
+// --- Menú móvil accesible ---
+// Cierra con: clic fuera (backdrop), Escape y al navegar (astro:after-swap).
+// Atrapa el foco mientras está abierto y lo devuelve al botón al cerrar.
 const mobileMenuButton = document.getElementById("mobile-menu-button");
 const mobileMenu = document.getElementById("mobile-menu");
+const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
 
 if (mobileMenuButton instanceof HTMLButtonElement && mobileMenu) {
   const openIcon = mobileMenuButton.querySelector(".menu-open-icon");
   const closeIcon = mobileMenuButton.querySelector(".menu-close-icon");
 
+  const isOpen = () => mobileMenuButton.getAttribute("aria-expanded") === "true";
+
+  // Elementos enfocables del menú (incluye el botón para mantenerlo en el ciclo).
+  const getFocusable = () => [
+    mobileMenuButton,
+    ...mobileMenu.querySelectorAll("a[href]"),
+  ];
+
+  const onKeydown = (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+
+    if (event.key !== "Tab") return;
+
+    const focusable = getFocusable();
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  function openMenu() {
+    mobileMenuButton.setAttribute("aria-expanded", "true");
+    mobileMenuButton.setAttribute("aria-label", "Cerrar navegación");
+    mobileMenu.classList.remove("hidden");
+    openIcon?.classList.add("hidden");
+    closeIcon?.classList.remove("hidden");
+
+    document.addEventListener("keydown", onKeydown);
+
+    // Foco al primer enlace del panel.
+    const firstLink = mobileMenu.querySelector("a[href]");
+    if (firstLink instanceof HTMLElement) firstLink.focus();
+  }
+
+  function closeMenu({ returnFocus = true } = {}) {
+    if (!isOpen()) return;
+
+    mobileMenuButton.setAttribute("aria-expanded", "false");
+    mobileMenuButton.setAttribute("aria-label", "Abrir navegación");
+    mobileMenu.classList.add("hidden");
+    openIcon?.classList.remove("hidden");
+    closeIcon?.classList.add("hidden");
+
+    document.removeEventListener("keydown", onKeydown);
+
+    if (returnFocus) mobileMenuButton.focus();
+  }
+
   mobileMenuButton.addEventListener("click", () => {
-    const isOpen = mobileMenuButton.getAttribute("aria-expanded") === "true";
-
-    mobileMenuButton.setAttribute("aria-expanded", String(!isOpen));
-    mobileMenuButton.setAttribute(
-      "aria-label",
-      isOpen ? "Abrir navegación" : "Cerrar navegación",
-    );
-    mobileMenu.classList.toggle("hidden", isOpen);
-    openIcon?.classList.toggle("hidden", !isOpen);
-    closeIcon?.classList.toggle("hidden", isOpen);
+    if (isOpen()) closeMenu();
+    else openMenu();
   });
 
-  mobileMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      mobileMenuButton.setAttribute("aria-expanded", "false");
-      mobileMenuButton.setAttribute("aria-label", "Abrir navegación");
-      mobileMenu.classList.add("hidden");
-      openIcon?.classList.remove("hidden");
-      closeIcon?.classList.add("hidden");
-    });
+  mobileMenuBackdrop?.addEventListener("click", () => closeMenu());
+
+  // Cierra al seguir un enlace (sin robar el foco al destino).
+  mobileMenu.querySelectorAll("a[href]").forEach((link) => {
+    link.addEventListener("click", () => closeMenu({ returnFocus: false }));
   });
+
+  // Cierra tras una navegación con view transitions de Astro.
+  document.addEventListener("astro:after-swap", () =>
+    closeMenu({ returnFocus: false }),
+  );
 }

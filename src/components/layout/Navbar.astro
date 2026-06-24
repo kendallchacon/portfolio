@@ -2,6 +2,14 @@
 import { Icon } from "astro-icon/components";
 import ButtonLink from "../common/ButtonLink.astro";
 import { navigationItems } from "../../data/navigation";
+
+// Ítem activo detectado con la ruta actual de Astro (normalizada sin barra final).
+const current = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const isActive = (href: string): boolean => {
+  const target = href.replace(/\/+$/, "") || "/";
+  if (target === "/") return current === "/";
+  return current === target || current.startsWith(`${target}/`);
+};
 ---
 
 <header
@@ -9,62 +17,115 @@ import { navigationItems } from "../../data/navigation";
   class="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur transition-transform duration-300 ease-out"
 >
   <nav
-    class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6"
+    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6"
+    role="navigation"
     aria-label="Navegación principal"
   >
-    <a href="/" class="text-lg font-bold tracking-tight text-white">
+    <a
+      href="/"
+      class="nav-focus rounded-md text-lg font-bold tracking-tight text-white"
+    >
       Kendall Chacón
     </a>
 
-    <div
-      class="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex"
+    <!-- Navegación desktop: tubelight pill -->
+    <ul
+      class="tubelight hidden items-center gap-1 rounded-full border border-slate-800 bg-slate-900/50 p-1 backdrop-blur md:flex"
     >
       {
-        navigationItems.map((item) => (
-          <a href={item.href} class="transition hover:text-cyan-400">
-            {item.label}
-          </a>
-        ))
+        navigationItems.map((item) => {
+          const active = isActive(item.href);
+          return (
+            <li>
+              <a
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                class:list={[
+                  "nav-pill nav-focus relative block rounded-full px-5 py-2 text-sm font-semibold transition-colors",
+                  active
+                    ? "is-active text-cyan-300"
+                    : "text-slate-300 hover:text-cyan-300",
+                ]}
+              >
+                <span class="relative z-10">{item.label}</span>
+                <span class="nav-lamp" aria-hidden="true">
+                  <span class="nav-lamp__bar" />
+                </span>
+              </a>
+            </li>
+          );
+        })
       }
+    </ul>
 
-      <ButtonLink href="/cv-kendall-chacon.pdf" download="cv-kendall-chacon.pdf">
+    <div class="flex items-center gap-3">
+      <ButtonLink
+        href="/cv-kendall-chacon.pdf"
+        download="cv-kendall-chacon.pdf"
+        class="hidden md:inline-flex"
+      >
         Descargar CV
       </ButtonLink>
-    </div>
 
-    <button
-      type="button"
-      id="mobile-menu-button"
-      class="inline-flex size-11 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60 text-slate-200 transition hover:border-cyan-400 hover:text-cyan-400 md:hidden"
-      aria-controls="mobile-menu"
-      aria-expanded="false"
-      aria-label="Abrir navegación"
-    >
-      <Icon name="heroicons:bars-3" class="menu-open-icon size-5" />
-      <Icon name="heroicons:x-mark" class="menu-close-icon hidden size-5" />
-    </button>
+      <button
+        type="button"
+        id="mobile-menu-button"
+        class="nav-focus inline-flex size-11 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60 text-slate-200 transition hover:border-cyan-400 hover:text-cyan-400 md:hidden"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        aria-label="Abrir navegación"
+      >
+        <Icon name="heroicons:bars-3" class="menu-open-icon size-5" />
+        <Icon name="heroicons:x-mark" class="menu-close-icon hidden size-5" />
+      </button>
+    </div>
   </nav>
 
-  <div
-    id="mobile-menu"
-    class="hidden border-t border-slate-800 bg-slate-950/95 px-4 py-4 shadow-2xl shadow-slate-950/40 md:hidden"
-  >
-    <div class="mx-auto grid max-w-6xl gap-2 text-sm font-medium text-slate-300">
-      {
-        navigationItems.map((item) => (
-          <a
-            href={item.href}
-            class="rounded-2xl border border-transparent px-4 py-3 transition hover:border-slate-800 hover:bg-slate-900/60 hover:text-cyan-400"
-          >
-            {item.label}
-          </a>
-        ))
-      }
+  <!-- Navegación móvil: drawer con backdrop -->
+  <div id="mobile-menu" class="hidden md:hidden">
+    <button
+      id="mobile-menu-backdrop"
+      type="button"
+      tabindex="-1"
+      aria-hidden="true"
+      class="fixed inset-0 z-40 cursor-default bg-slate-950/70 backdrop-blur-sm"
+    >
+    </button>
+
+    <div
+      class="relative z-50 border-t border-slate-800 bg-slate-950/95 px-4 py-4 shadow-2xl shadow-slate-950/40"
+    >
+      <ul class="mx-auto grid max-w-6xl gap-1.5">
+        {
+          navigationItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class:list={[
+                    "nav-focus flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium transition",
+                    active
+                      ? "border-cyan-400/40 bg-cyan-400/10 text-cyan-300"
+                      : "border-transparent text-slate-300 hover:border-slate-800 hover:bg-slate-900/60 hover:text-cyan-300",
+                  ]}
+                >
+                  {item.icon && (
+                    <Icon name={item.icon} class="size-5 shrink-0" aria-hidden="true" />
+                  )}
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
 
       <ButtonLink
         href="/cv-kendall-chacon.pdf"
         download="cv-kendall-chacon.pdf"
-        class="mt-2 w-full"
+        class="mx-auto mt-3 flex w-full max-w-6xl"
       >
         Descargar CV
       </ButtonLink>
