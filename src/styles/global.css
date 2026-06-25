@@ -343,3 +343,22 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
     scroll-behavior: auto !important;
   }
 }
+
+.card-glow-hover {
+  transition: border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+.card-glow-hover:hover {
+  border-color: rgba(34, 211, 238, 0.4);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.12);
+}
+
+@media (max-width: 767px) {
+  [data-carousel] {
+    height: 300px;
+  }
+
+  [data-carousel] img {
+    object-position: center top;
+  }
+}

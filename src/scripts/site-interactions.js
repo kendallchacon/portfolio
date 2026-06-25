@@ -153,6 +153,78 @@ if (terminal instanceof HTMLElement) {
   }
 }
 
+// --- Carrusel de galería de proyectos ---
+const carouselEl = document.querySelector("[data-carousel]");
+
+if (carouselEl instanceof HTMLElement) {
+  const slides = Array.from(carouselEl.querySelectorAll("[data-carousel-slide]"));
+  const dots = Array.from(carouselEl.querySelectorAll("[data-carousel-dot]"));
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DURATION = reducedMotion ? 0 : 1000;
+  const AUTOPLAY_MS = 6000;
+
+  let current = 0;
+  let timer = 0;
+  let isTransitioning = false;
+
+  const goTo = (index) => {
+    if (isTransitioning) return;
+    current = (index + slides.length) % slides.length;
+
+    if (DURATION) {
+      isTransitioning = true;
+      window.setTimeout(() => { isTransitioning = false; }, DURATION);
+    }
+
+    slides.forEach((s, i) => {
+      s.style.transition = DURATION ? `opacity ${DURATION}ms ease-in-out` : "none";
+      s.style.opacity = i === current ? "1" : "0";
+    });
+
+    dots.forEach((d, i) => {
+      const isActive = i === current;
+      d.style.width = isActive ? "1.5rem" : "0.5rem";
+      d.style.opacity = isActive ? "1" : "0.4";
+    });
+  };
+
+  const startAutoplay = () => {
+    if (reducedMotion) return;
+    timer = window.setInterval(() => goTo(current + 1), AUTOPLAY_MS);
+  };
+
+  const stopAutoplay = () => window.clearInterval(timer);
+
+  dots.forEach((d, i) => d.addEventListener("click", () => { stopAutoplay(); goTo(i); startAutoplay(); }));
+
+  carouselEl.addEventListener("mouseenter", stopAutoplay);
+  carouselEl.addEventListener("mouseleave", startAutoplay);
+
+  // Swipe táctil
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  carouselEl.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  carouselEl.addEventListener("touchend", (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+    if (deltaX > 50) { stopAutoplay(); goTo(current - 1); startAutoplay(); }
+    else if (deltaX < -50) { stopAutoplay(); goTo(current + 1); startAutoplay(); }
+  }, { passive: true });
+
+  const cleanup = () => stopAutoplay();
+  window.addEventListener("pagehide", cleanup, { once: true });
+  document.addEventListener("astro:before-swap", cleanup, { once: true });
+
+  goTo(0);
+  startAutoplay();
+}
+
 // --- Menú móvil accesible ---
 // Cierra con: clic fuera (backdrop), Escape y al navegar (astro:after-swap).
 // Atrapa el foco mientras está abierto y lo devuelve al botón al cerrar.
