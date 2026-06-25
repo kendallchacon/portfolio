@@ -298,7 +298,6 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   pointer-events: none;
 }
 
-.nav-pill:hover .nav-lamp,
 .nav-pill.is-active .nav-lamp {
   opacity: 1;
 }
