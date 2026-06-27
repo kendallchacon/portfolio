@@ -11,11 +11,6 @@ export interface Project {
   imageAlt?: string;
 }
 
-export interface MetricaItem {
-  valor: string;
-  label: string;
-}
-
 export interface ContribucionItem {
   titulo: string;
   descripcion: string;
@@ -24,6 +19,8 @@ export interface ContribucionItem {
 export interface GaleriaItem {
   imagen: string;
   label: string;
+  titulo: string;
+  descripcion: string;
 }
 
 export interface DecisionItem {
@@ -120,14 +117,20 @@ export const betoYMas = {
     {
       imagen: "/images/beto-landing.jpg",
       label: "Landing pública — propuesta de valor al usuario",
+      titulo: "Landing pública",
+      descripcion: "Propuesta de valor al usuario final con acceso a recompensas y registro.",
     },
     {
       imagen: "/images/beto-inicio.jpg",
       label: "Dashboard cliente — puntos, progreso y accesos rápidos",
+      titulo: "Dashboard del cliente",
+      descripcion: "Puntos acumulados, progreso semanal y accesos rápidos a módulos.",
     },
     {
       imagen: "/images/beto-juegos.jpg",
       label: "Catálogo de juegos — Bubble Shooter destacado",
+      titulo: "Catálogo de juegos",
+      descripcion: "Bubble Shooter con sistema de puntuación validado en backend.",
     },
   ] satisfies GaleriaItem[],
   decisiones: [
