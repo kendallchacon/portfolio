@@ -4,27 +4,56 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Tag from "../components/common/Tag.astro";
 import { betoYMas, projects } from "../data/projects";
 
-const pendientes = projects.filter((p) => p.estado !== "completado");
-
-const badgeMap = {
-  "en-desarrollo": {
-    label: "En desarrollo",
-    class: "bg-yellow-500/10 text-yellow-400 border border-yellow-500/30",
-    opacity: "opacity-70",
-  },
-  proximo: {
-    label: "Próximamente",
-    class: "bg-slate-500/10 text-slate-400 border border-slate-500/30",
-    opacity: "opacity-50",
-  },
-};
-
-const pendientesMeta = [
-  { numero: "02", label: "EN DESARROLLO", lineColor: "bg-slate-500", textColor: "text-slate-500" },
-  { numero: "03", label: "PRÓXIMAMENTE",  lineColor: "bg-slate-600", textColor: "text-slate-600" },
-];
-
 const carouselSlides = betoYMas.galeria;
+
+const allProjects = [
+  {
+    id: "beto",
+    numero: "01",
+    numeroLabel: "PROYECTO PRINCIPAL",
+    lineColor: "bg-cyan-500",
+    textColor: "text-cyan-500",
+    nombre: betoYMas.nombre,
+    subtitulo: "Plataforma web de fidelización, juegos y recompensas",
+    periodo: betoYMas.periodo,
+    stack: betoYMas.stack,
+    badges: [
+      { label: "Completado", class: "border border-cyan-500/30 bg-cyan-500/10 text-cyan-400" },
+      { label: "Proyecto académico", class: "border border-slate-600/40 bg-slate-700/60 text-slate-300" },
+    ],
+    isBeto: true,
+  },
+  {
+    id: "movil",
+    numero: "02",
+    numeroLabel: "EN DESARROLLO",
+    lineColor: "bg-slate-500",
+    textColor: "text-slate-500",
+    nombre: "Aplicación móvil",
+    subtitulo: projects[1].tipo,
+    periodo: null,
+    stack: projects[1].stack.map((s) => ({ label: s, icon: null, color: null })),
+    badges: [
+      { label: "En desarrollo", class: "border border-yellow-500/30 bg-yellow-500/10 text-yellow-400" },
+    ],
+    isBeto: false,
+  },
+  {
+    id: "personal",
+    numero: "03",
+    numeroLabel: "PRÓXIMAMENTE",
+    lineColor: "bg-slate-600",
+    textColor: "text-slate-600",
+    nombre: "Proyecto personal",
+    subtitulo: projects[2].tipo,
+    periodo: null,
+    stack: [],
+    badges: [
+      { label: "Próximamente", class: "border border-slate-500/30 bg-slate-500/10 text-slate-400" },
+    ],
+    isBeto: false,
+  },
+];
 ---
 
 <BaseLayout
@@ -32,7 +61,7 @@ const carouselSlides = betoYMas.galeria;
   description="Proyectos reales con problema definido, aporte individual verificable y decisiones técnicas explicables."
   image="/images/beto-landing.jpg"
 >
-  <!-- SECCIÓN 1 — Header (una columna) -->
+  <!-- SECCIÓN 1 — Header -->
   <section class="py-20 sm:py-28">
     <div class="mx-auto max-w-6xl px-0 sm:px-6">
       <div class="reveal max-w-2xl">
@@ -53,202 +82,183 @@ const carouselSlides = betoYMas.galeria;
     </div>
   </section>
 
-  <!-- SECCIÓN 2 — Beto y Más -->
+  <!-- SECCIÓN 2 — Acordeón de proyectos -->
   <section class="border-t border-slate-800 pb-24 sm:pb-32">
-    <div class="mx-auto max-w-6xl space-y-12 px-0 pt-16 sm:px-6">
-
-      <!-- BLOQUE A — Presentación -->
-      <div class="reveal max-w-3xl py-12">
-        <!-- C5: Número de proyecto -->
-        <div class="mb-4 flex items-center gap-3">
-          <span class="h-px w-8 bg-cyan-500"></span>
-          <p class="text-xs uppercase tracking-widest text-cyan-500">01 — PROYECTO PRINCIPAL</p>
-        </div>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-400">
-            Completado
-          </span>
-          <span class="rounded-full border border-slate-600/40 bg-slate-700/60 px-3 py-1 text-xs font-medium text-slate-300">
-            Proyecto académico
-          </span>
-        </div>
-
-        <h2 class="mt-4 text-4xl font-bold text-white md:text-5xl">
-          {betoYMas.nombre}
-        </h2>
-        <p class="mt-3 text-lg text-slate-300">
-          Plataforma web de fidelización, juegos y recompensas
-        </p>
-        <p class="mt-1 text-sm text-slate-500">{betoYMas.periodo}</p>
-
-        <div class="mt-6 flex flex-wrap gap-2">
-          {betoYMas.stack.map((tech) => (
-            <span class="flex items-center gap-1.5 rounded-full border border-slate-600/50 bg-slate-800/80 px-3 py-1 text-sm text-slate-300 transition-all duration-200 hover:border-cyan-500/50 hover:bg-slate-700/50 hover:text-cyan-300">
-              {tech.icon
-                ? <Icon name={tech.icon} class:list={["h-4 w-4 shrink-0", tech.color]} />
-                : <span class="leading-none text-cyan-400">·</span>
-              }
-              {tech.label}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div class="border-b border-slate-800"></div>
-
-      <!-- BLOQUE B — Problema y solución -->
-      <div class="grid gap-6 md:grid-cols-2">
-        <div class="reveal rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6">
-          <p class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Problema</p>
-          <p class="mt-3 text-sm leading-7 text-slate-300">{betoYMas.problema}</p>
-        </div>
-        <div class="reveal rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6" style="transition-delay: 0.15s;">
-          <p class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Solución</p>
-          <p class="mt-3 text-sm leading-7 text-slate-300">{betoYMas.solucion}</p>
-        </div>
-      </div>
-
-      <!-- BLOQUE D — Mi aporte individual -->
-      <div>
-        <h3 class="reveal text-xl font-semibold text-white">Mi aporte individual</h3>
-        <!-- C2: items-stretch, h-full, line-clamp-3 -->
-        <div class="mt-6 grid items-stretch gap-4 md:grid-cols-2">
-          {betoYMas.contribuciones.map((c, i) => (
-            <div
-              class="card-glow-hover reveal flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:-translate-y-2 hover:bg-slate-900/70"
-              style={`transition-delay: ${i * 0.1}s;`}
-            >
-              <div class="flex grow items-start gap-3">
-                <span class="shrink-0 text-lg font-bold tabular-nums leading-tight text-cyan-400">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div class="flex flex-col">
-                  <h4 class="shrink-0 text-sm font-semibold text-white">{c.titulo}</h4>
-                  <p class="mt-1 grow line-clamp-3 text-sm leading-6 text-slate-300">
-                    {c.descripcion}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- BLOQUE E — Carrusel -->
-      <div class="reveal">
-        <h3 class="text-xl font-semibold text-white">Vistas del sistema</h3>
-
-        <div
-          class="relative mt-6 h-105 w-full overflow-hidden rounded-2xl md:h-130"
-          data-carousel
-          aria-label="Galería de capturas de Beto y Más"
-        >
-          {carouselSlides.map((slide, i) => (
-            <div
-              data-carousel-slide
-              class="absolute inset-0 h-full w-full"
-              style={`opacity: ${i === 0 ? 1 : 0};`}
-            >
-              <img
-                src={slide.imagen}
-                alt={slide.titulo}
-                class="h-full w-full object-cover"
-              />
-              <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent" />
-              <!-- C3: título cian, descripción slate-200 -->
-              <div class="absolute bottom-0 p-6">
-                <p class="text-lg font-semibold text-cyan-400">{slide.titulo}</p>
-                <p class="mt-1 text-sm text-slate-200">{slide.descripcion}</p>
-              </div>
-            </div>
-          ))}
-
-          <!-- Dots con fondo -->
-          <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-slate-950/50 px-3 py-1.5 backdrop-blur-sm">
-            {carouselSlides.map((_, i) => (
-              <button
-                data-carousel-dot
-                type="button"
-                aria-label={`Ir a imagen ${i + 1}`}
-                class="h-2 rounded-full bg-white transition-all duration-300"
-                style={`width: ${i === 0 ? "1.5rem" : "0.5rem"}; opacity: ${i === 0 ? 1 : 0.4};`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <!-- BLOQUE F — Decisiones técnicas -->
-      <div>
-        <h3 class="reveal text-xl font-semibold text-white">Decisiones técnicas</h3>
-        <div class="mt-6 grid gap-4 md:grid-cols-2">
-          {betoYMas.decisiones.map((d, i) => (
-            <div
-              class="card-glow-hover reveal border-l-2 border-cyan-500 py-2 pl-4"
-              style={`transition-delay: ${i * 0.1}s;`}
-            >
-              <h4 class="text-sm font-semibold text-white">{d.titulo}</h4>
-              <p class="mt-1 line-clamp-2 text-sm leading-6 text-slate-400">{d.descripcion}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SECCIÓN 3 — Próximos proyectos -->
-  <section class="border-t border-slate-800 py-24 sm:py-32">
     <div class="mx-auto max-w-6xl px-0 sm:px-6">
-      <h2 class="reveal text-2xl font-bold text-white">Próximos proyectos</h2>
+      <div class="divide-y divide-slate-800" data-accordion>
 
-      <div class="mt-8 grid gap-6 md:grid-cols-2">
-        {pendientes.map((p, i) => {
-          const badge = badgeMap[p.estado as keyof typeof badgeMap];
-          const meta = pendientesMeta[i];
-          return (
-            <article
-              class:list={[
-                "reveal rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition-transform duration-200 hover:scale-[1.01]",
-                badge.opacity,
-              ]}
-              style={`transition-delay: ${(i + 1) * 0.1}s;`}
+        {allProjects.map((proj) => (
+          <div class="reveal">
+
+            <!-- HEADER -->
+            <button
+              type="button"
+              data-accordion-trigger
+              aria-expanded="false"
+              aria-controls={`project-${proj.id}`}
+              class="group w-full cursor-pointer px-0 py-6 text-left transition-colors duration-200 hover:bg-slate-800/30 sm:px-4"
             >
-              <!-- C5: número de proyecto -->
-              {meta && (
-                <div class="mb-3 flex items-center gap-3">
-                  <span class:list={["h-px w-8", meta.lineColor]}></span>
-                  <p class:list={["text-xs uppercase tracking-widest", meta.textColor]}>
-                    {meta.numero} — {meta.label}
+              <div class="flex items-center justify-between gap-4">
+                <!-- Lado izquierdo -->
+                <div class="flex-1">
+                  <!-- Número -->
+                  <div class="mb-3 flex items-center gap-3">
+                    <span class:list={["h-px w-8 shrink-0", proj.lineColor]}></span>
+                    <p class:list={["text-xs uppercase tracking-widest", proj.textColor]}>
+                      {proj.numero} — {proj.numeroLabel}
+                    </p>
+                  </div>
+
+                  <!-- Título y badges -->
+                  <div class="flex flex-wrap items-center gap-3">
+                    <h2 class="text-2xl font-bold text-white md:text-3xl">{proj.nombre}</h2>
+                    {proj.badges.map((b) => (
+                      <span class:list={["shrink-0 rounded-full px-3 py-1 text-xs font-medium", b.class]}>
+                        {b.label}
+                      </span>
+                    ))}
+                  </div>
+
+                  <!-- Subtítulo -->
+                  {proj.subtitulo && (
+                    <p class="mt-1 text-sm text-slate-500">{proj.subtitulo}</p>
+                  )}
+
+                  <!-- Stack tags -->
+                  {proj.stack.length > 0 && (
+                    <div class="mt-3 flex flex-wrap gap-2">
+                      {proj.stack.map((tech) => (
+                        <span class="flex items-center gap-1.5 rounded-full border border-slate-600/50 bg-slate-800/80 px-3 py-1 text-sm text-slate-300">
+                          {tech.icon
+                            ? <Icon name={tech.icon} class:list={["h-4 w-4 shrink-0", tech.color ?? ""]} />
+                            : null
+                          }
+                          {tech.label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <!-- Lado derecho — chevron -->
+                <Icon
+                  name="heroicons:chevron-down"
+                  class="size-5 shrink-0 text-slate-400 transition-transform duration-300 group-aria-expanded:rotate-180"
+                />
+              </div>
+            </button>
+
+            <!-- CONTENIDO DESPLEGABLE -->
+            <div
+              id={`project-${proj.id}`}
+              data-accordion-content
+              role="region"
+              class="overflow-hidden transition-all duration-500 ease-in-out"
+              style="max-height: 0; opacity: 0;"
+            >
+              <div class="px-0 pb-8 pt-6 sm:px-4">
+                {proj.isBeto ? (
+                  <div class="space-y-12">
+
+                    <!-- Problema y solución -->
+                    <div class="grid gap-6 md:grid-cols-2">
+                      <div class="rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Problema</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-300">{betoYMas.problema}</p>
+                      </div>
+                      <div class="rounded-2xl border border-slate-700/50 bg-slate-900/50 p-6">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-cyan-400">Solución</p>
+                        <p class="mt-3 text-sm leading-7 text-slate-300">{betoYMas.solucion}</p>
+                      </div>
+                    </div>
+
+                    <!-- Mi aporte individual -->
+                    <div>
+                      <h3 class="text-xl font-semibold text-white">Mi aporte individual</h3>
+                      <div class="mt-6 grid items-stretch gap-4 md:grid-cols-2">
+                        {betoYMas.contribuciones.map((c, i) => (
+                          <div class="card-glow-hover flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:-translate-y-2 hover:bg-slate-900/70">
+                            <div class="flex grow items-start gap-3">
+                              <span class="shrink-0 text-lg font-bold tabular-nums leading-tight text-cyan-400">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                              <div class="flex flex-col">
+                                <h4 class="shrink-0 text-sm font-semibold text-white">{c.titulo}</h4>
+                                <p class="mt-1 grow line-clamp-3 text-sm leading-6 text-slate-300">
+                                  {c.descripcion}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <!-- Carrusel -->
+                    <div>
+                      <h3 class="text-xl font-semibold text-white">Vistas del sistema</h3>
+                      <div
+                        class="relative mt-6 h-105 w-full overflow-hidden rounded-2xl md:h-130"
+                        data-carousel
+                        aria-label="Galería de capturas de Beto y Más"
+                      >
+                        {carouselSlides.map((slide, i) => (
+                          <div
+                            data-carousel-slide
+                            class="absolute inset-0 h-full w-full"
+                            style={`opacity: ${i === 0 ? 1 : 0};`}
+                          >
+                            <img
+                              src={slide.imagen}
+                              alt={slide.titulo}
+                              class="h-full w-full object-cover"
+                            />
+                            <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-transparent to-transparent" />
+                            <div class="absolute bottom-0 p-6">
+                              <p class="text-lg font-semibold text-cyan-400">{slide.titulo}</p>
+                              <p class="mt-1 text-sm text-slate-200">{slide.descripcion}</p>
+                            </div>
+                          </div>
+                        ))}
+                        <div class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-slate-950/50 px-3 py-1.5 backdrop-blur-sm">
+                          {carouselSlides.map((_, i) => (
+                            <button
+                              data-carousel-dot
+                              type="button"
+                              aria-label={`Ir a imagen ${i + 1}`}
+                              class="h-2 rounded-full bg-white transition-all duration-300"
+                              style={`width: ${i === 0 ? "1.5rem" : "0.5rem"}; opacity: ${i === 0 ? 1 : 0.4};`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Decisiones técnicas -->
+                    <div>
+                      <h3 class="text-xl font-semibold text-white">Decisiones técnicas</h3>
+                      <div class="mt-6 grid gap-4 md:grid-cols-2">
+                        {betoYMas.decisiones.map((d) => (
+                          <div class="card-glow-hover border-l-2 border-cyan-500 py-2 pl-4">
+                            <h4 class="text-sm font-semibold text-white">{d.titulo}</h4>
+                            <p class="mt-1 line-clamp-2 text-sm leading-6 text-slate-400">{d.descripcion}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+                ) : (
+                  <p class="py-8 text-center text-sm text-slate-500">
+                    Documentación disponible próximamente.
                   </p>
-                </div>
-              )}
-
-              <div class="flex items-start justify-between gap-3">
-                <h3 class="text-lg font-bold text-white">{p.nombre}</h3>
-                <span class:list={["shrink-0 rounded-full px-3 py-1 text-xs font-medium", badge.class]}>
-                  {badge.label}
-                </span>
+                )}
               </div>
+            </div>
 
-              {p.tipo && <p class="mt-1 text-xs text-slate-500">{p.tipo}</p>}
+          </div>
+        ))}
 
-              {p.stack.length > 0 && (
-                <div class="mt-4 flex flex-wrap gap-2">
-                  {p.stack.map((tech) => <Tag size="sm">{tech}</Tag>)}
-                </div>
-              )}
-
-              <p class="mt-4 text-sm text-slate-400">{p.problema}</p>
-
-              <div class="mt-6">
-                <span class="inline-flex cursor-not-allowed rounded-full border border-slate-700 px-5 py-2.5 text-sm font-semibold text-slate-500 opacity-50">
-                  {p.cta.label}
-                </span>
-              </div>
-            </article>
-          );
-        })}
       </div>
     </div>
   </section>

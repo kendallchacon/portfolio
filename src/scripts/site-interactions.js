@@ -153,6 +153,61 @@ if (terminal instanceof HTMLElement) {
   }
 }
 
+// --- Acordeón de proyectos ---
+const accordionEl = document.querySelector("[data-accordion]");
+
+if (accordionEl instanceof HTMLElement) {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const triggers = Array.from(accordionEl.querySelectorAll("[data-accordion-trigger]"));
+
+  const openItem = (trigger) => {
+    const content = trigger.nextElementSibling;
+    if (!(content instanceof HTMLElement)) return;
+    trigger.setAttribute("aria-expanded", "true");
+    if (reducedMotion) {
+      content.style.transition = "none";
+      content.style.maxHeight = "5000px";
+      content.style.opacity = "1";
+    } else {
+      content.style.transition = "max-height 500ms ease-in-out, opacity 300ms ease-in-out 100ms";
+      content.style.maxHeight = "5000px";
+      content.style.opacity = "1";
+    }
+  };
+
+  const closeItem = (trigger) => {
+    const content = trigger.nextElementSibling;
+    if (!(content instanceof HTMLElement)) return;
+    trigger.setAttribute("aria-expanded", "false");
+    if (reducedMotion) {
+      content.style.transition = "none";
+      content.style.maxHeight = "0";
+      content.style.opacity = "0";
+    } else {
+      content.style.transition = "max-height 500ms ease-in-out, opacity 150ms ease-in-out";
+      content.style.maxHeight = "0";
+      content.style.opacity = "0";
+    }
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      // Cerrar todos
+      triggers.forEach((t) => { if (t !== trigger) closeItem(t); });
+      // Alternar el clickeado
+      if (isOpen) closeItem(trigger);
+      else openItem(trigger);
+    });
+  });
+
+  const accordionCleanup = () => {};
+  window.addEventListener("pagehide", accordionCleanup, { once: true });
+  document.addEventListener("astro:before-swap", () => {
+    triggers.forEach((t) => closeItem(t));
+  }, { once: true });
+}
+
 // --- Carrusel de galería de proyectos ---
 const carouselEl = document.querySelector("[data-carousel]");
 

@@ -64,11 +64,11 @@ import { contactFull } from "../../data/contact";
               href={canal.href}
               target={canal.external ? "_blank" : undefined}
               rel={canal.external ? "noreferrer" : undefined}
-              class="group flex items-center gap-4 rounded-xl border border-slate-700/50 bg-slate-900/50 p-4 transition duration-300 hover:translate-x-1 hover:border-cyan-500/40"
+              class="group flex items-center gap-4 rounded-xl border border-slate-700/50 bg-slate-900/50 p-4 transition-all duration-300 hover:translate-x-1 hover:border-cyan-500/40"
             >
               <Icon
                 name={canal.icon}
-                class:list={["size-5 shrink-0 transition duration-300", canal.iconClass]}
+                class:list={["size-5 shrink-0 transition duration-300 group-hover:scale-110", canal.iconClass]}
               />
               <div>
                 <p class="font-semibold text-white">{canal.label}</p>
