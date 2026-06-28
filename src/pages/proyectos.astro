@@ -1,7 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Tag from "../components/common/Tag.astro";
 import { betoYMas, projects } from "../data/projects";
 
 const carouselSlides = betoYMas.galeria;
@@ -96,7 +95,7 @@ const allProjects = [
               data-accordion-trigger
               aria-expanded="false"
               aria-controls={`project-${proj.id}`}
-              class="group w-full cursor-pointer px-0 py-6 text-left transition-colors duration-200 hover:bg-slate-800/30 sm:px-4"
+              class="group relative w-full cursor-pointer px-0 py-6 text-left transition-colors duration-200 hover:bg-slate-800/30 sm:px-4"
             >
               <div class="flex items-center justify-between gap-4">
                 <!-- Lado izquierdo -->

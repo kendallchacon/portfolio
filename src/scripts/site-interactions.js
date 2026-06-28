@@ -160,9 +160,114 @@ if (accordionEl instanceof HTMLElement) {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const triggers = Array.from(accordionEl.querySelectorAll("[data-accordion-trigger]"));
 
+  // Div flotante fijo — creado una vez, vive en <body>
+  const floatingHeader = document.createElement("div");
+  floatingHeader.id = "project-sticky-header";
+  floatingHeader.style.cssText = `
+    position: fixed; left: 0; right: 0; z-index: 49;
+    background: rgb(2,8,23);
+    border-bottom: 1px solid rgba(51,65,85,0.5);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    padding: 12px 24px;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-100%);
+    transition: ${reducedMotion ? "none" : "opacity 300ms ease-out, transform 300ms ease-out"};
+  `;
+  document.body.appendChild(floatingHeader);
+
+  let activeTrigger = null;
+  let headerAbove = false;
+  let floatingVisible = false;
+  let scrollListenerActive = false;
+  let acLastScrollY = window.scrollY;
+  let headerObserver = null;
+
+  const getNavbarHeight = () => {
+    const nav = document.getElementById("site-header");
+    return nav instanceof HTMLElement ? nav.offsetHeight : 64;
+  };
+
+  const showFloating = () => {
+    if (floatingVisible) return;
+    floatingHeader.style.top = getNavbarHeight() + "px";
+    if (reducedMotion) {
+      floatingHeader.style.transition = "none";
+    } else {
+      floatingHeader.style.transition = "opacity 300ms ease-out, transform 300ms ease-out";
+    }
+    floatingHeader.style.opacity = "1";
+    floatingHeader.style.transform = "translateY(0)";
+    floatingHeader.style.pointerEvents = "auto";
+    floatingVisible = true;
+  };
+
+  const hideFloating = (fast = false) => {
+    if (!floatingVisible) return;
+    if (reducedMotion) {
+      floatingHeader.style.transition = "none";
+    } else {
+      floatingHeader.style.transition = `opacity ${fast ? 150 : 200}ms ease-in, transform ${fast ? 150 : 200}ms ease-in`;
+    }
+    floatingHeader.style.opacity = "0";
+    floatingHeader.style.transform = "translateY(-100%)";
+    floatingHeader.style.pointerEvents = "none";
+    floatingVisible = false;
+  };
+
+  const updateFloatingContent = (trigger) => {
+    // Clone the trigger content and wire the click to close
+    floatingHeader.innerHTML = trigger.innerHTML;
+    // The cloned chevron rotates via aria-expanded on the original — mirror it
+    const chevron = floatingHeader.querySelector("svg");
+    if (chevron) chevron.style.transform = "rotate(180deg)";
+    floatingHeader.style.cursor = "pointer";
+    floatingHeader.onclick = () => {
+      if (!activeTrigger) return;
+      closeItem(activeTrigger);
+      activeTrigger.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    };
+  };
+
+  const onScroll = () => {
+    const currentScrollY = window.scrollY;
+    const delta = currentScrollY - acLastScrollY;
+    acLastScrollY = currentScrollY;
+    if (!activeTrigger || !headerAbove) return;
+    if (delta < -8 && !floatingVisible) showFloating();
+    if (delta > 8 && floatingVisible) hideFloating();
+  };
+
+  const startScrollListener = () => {
+    if (scrollListenerActive) return;
+    acLastScrollY = window.scrollY;
+    window.addEventListener("scroll", onScroll, { passive: true });
+    scrollListenerActive = true;
+  };
+
+  const stopScrollListener = () => {
+    window.removeEventListener("scroll", onScroll);
+    scrollListenerActive = false;
+  };
+
+  const disconnectObserver = () => {
+    if (headerObserver) { headerObserver.disconnect(); headerObserver = null; }
+  };
+
+  const watchHeader = (trigger) => {
+    disconnectObserver();
+    headerObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      headerAbove = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      if (!headerAbove) hideFloating();
+    }, { threshold: 0 });
+    headerObserver.observe(trigger);
+  };
+
   const openItem = (trigger) => {
     const content = trigger.nextElementSibling;
     if (!(content instanceof HTMLElement)) return;
+    activeTrigger = trigger;
+    headerAbove = false;
     trigger.setAttribute("aria-expanded", "true");
     if (reducedMotion) {
       content.style.transition = "none";
@@ -173,6 +278,9 @@ if (accordionEl instanceof HTMLElement) {
       content.style.maxHeight = "5000px";
       content.style.opacity = "1";
     }
+    updateFloatingContent(trigger);
+    watchHeader(trigger);
+    startScrollListener();
   };
 
   const closeItem = (trigger) => {
@@ -188,24 +296,34 @@ if (accordionEl instanceof HTMLElement) {
       content.style.maxHeight = "0";
       content.style.opacity = "0";
     }
+    if (activeTrigger === trigger) {
+      activeTrigger = null;
+      headerAbove = false;
+      hideFloating(true);
+      stopScrollListener();
+      disconnectObserver();
+    }
   };
 
   triggers.forEach((trigger) => {
     trigger.addEventListener("click", () => {
       const isOpen = trigger.getAttribute("aria-expanded") === "true";
-      // Cerrar todos
       triggers.forEach((t) => { if (t !== trigger) closeItem(t); });
-      // Alternar el clickeado
       if (isOpen) closeItem(trigger);
       else openItem(trigger);
     });
   });
 
-  const accordionCleanup = () => {};
-  window.addEventListener("pagehide", accordionCleanup, { once: true });
-  document.addEventListener("astro:before-swap", () => {
+  const accordionCleanup = () => {
+    hideFloating(true);
+    stopScrollListener();
+    disconnectObserver();
+    activeTrigger = null;
+    headerAbove = false;
     triggers.forEach((t) => closeItem(t));
-  }, { once: true });
+  };
+  window.addEventListener("pagehide", accordionCleanup, { once: true });
+  document.addEventListener("astro:before-swap", accordionCleanup, { once: true });
 }
 
 // --- Carrusel de galería de proyectos ---
