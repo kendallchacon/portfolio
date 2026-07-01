@@ -18,9 +18,12 @@ const TitleTag = titleTag;
 ---
 
 <div class={className}>
-  <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-    {eyebrow}
-  </p>
+  <div class="flex items-center gap-3">
+    <span class="h-px w-6 bg-cyan-400"></span>
+    <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-400">
+      {eyebrow}
+    </p>
+  </div>
 
   <TitleTag
     class:list={[
