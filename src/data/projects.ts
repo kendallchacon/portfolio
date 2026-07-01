@@ -180,7 +180,7 @@ export const featuredPreview = {
   ],
   image: "/images/beto-landing.jpg",
   imageAlt: "Vista previa de Beto y Más",
-  cta: { label: "Ver caso de estudio completo →", href: "/proyectos" },
+  cta: { label: "Ver proyecto completo →", href: "/proyectos" },
 };
 
 export const featuredProject = {
