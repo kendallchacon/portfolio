@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from "./config";
+
 export interface ContactCta {
   label: string;
   href: string;
@@ -22,12 +24,12 @@ export const contactCompact = {
   ctas: [
     {
       label: "Escribirme al correo",
-      href: "mailto:kendallchacon4@gmail.com",
+      href: SITE_CONFIG.email,
       variant: "primary" as const,
     },
     {
       label: "Ver LinkedIn",
-      href: "https://www.linkedin.com/in/kendall-chacon-molina-884b04307",
+      href: SITE_CONFIG.linkedin,
       variant: "secondary" as const,
       external: true,
     },
@@ -47,25 +49,25 @@ export const contactFull = {
   ],
   ctaPrincipal: {
     label: "Contactarme por correo",
-    href: "mailto:kendallchacon4@gmail.com",
+    href: SITE_CONFIG.email,
   },
   ctaSecundario: {
     label: "También puedes descargar mi CV →",
-    href: "/cv-kendall-chacon.pdf",
+    href: SITE_CONFIG.cv,
   },
   canalesTitulo: "Canales disponibles",
   canales: [
     {
       label: "Correo electrónico",
       description: "kendallchacon4@gmail.com",
-      href: "mailto:kendallchacon4@gmail.com",
+      href: SITE_CONFIG.email,
       icon: "simple-icons:gmail",
       iconClass: "text-red-400",
     },
     {
       label: "LinkedIn",
       description: "Perfil profesional",
-      href: "https://www.linkedin.com/in/kendall-chacon-molina-884b04307/",
+      href: SITE_CONFIG.linkedin,
       icon: "simple-icons:linkedin",
       iconClass: "text-blue-400",
       external: true,
@@ -73,7 +75,7 @@ export const contactFull = {
     {
       label: "GitHub",
       description: "Repositorios y actividad",
-      href: "https://github.com/kendallchacon",
+      href: SITE_CONFIG.github,
       icon: "simple-icons:github",
       iconClass: "text-white",
       external: true,
@@ -81,7 +83,7 @@ export const contactFull = {
     {
       label: "WhatsApp",
       description: "Respuesta directa",
-      href: "https://wa.me/50662712021",
+      href: SITE_CONFIG.whatsapp,
       icon: "simple-icons:whatsapp",
       iconClass: "text-green-400",
       external: true,

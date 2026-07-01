@@ -1,3 +1,5 @@
+import { SITE_CONFIG } from "./config";
+
 export interface Project {
   nombre: string;
   tipo: string;
@@ -85,7 +87,7 @@ export const betoYMas = {
     "Plataforma web con módulos para usuarios, roles, puntos, recompensas y reportes, conectando la lógica del backend con una interfaz administrativa en Vue.",
   image: "/images/beto-landing.jpg",
   imageAlt: "Vista previa de Beto y Más",
-  cta: { label: "Ver experiencia →", href: "/experiencia" },
+  cta: { label: "Ver proyecto →", href: SITE_CONFIG.betoYMas },
   contribuciones: [
     {
       titulo: "Bubble Shooter end-to-end",

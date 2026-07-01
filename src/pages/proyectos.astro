@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { betoYMas, projects } from "../data/projects";
+import { SITE_CONFIG } from "../data/config";
 
 const carouselSlides = betoYMas.galeria;
 
@@ -158,6 +159,21 @@ const allProjects = [
               <div class="px-0 pb-8 pt-6 sm:px-4">
                 {proj.isBeto ? (
                   <div class="space-y-12">
+
+                    <!-- CTA externo -->
+                    <div>
+                      <a
+                        href={SITE_CONFIG.betoYMas}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="text-sm text-cyan-400 underline-offset-4 transition-colors hover:text-cyan-300 hover:underline"
+                      >
+                        Ver proyecto →
+                      </a>
+                      <p class="mt-1 text-xs text-slate-500">
+                        Plataforma activa · Requiere registro para el sistema completo
+                      </p>
+                    </div>
 
                     <!-- Problema y solución -->
                     <div class="grid gap-6 md:grid-cols-2">

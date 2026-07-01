@@ -2,6 +2,7 @@
 import { Icon } from "astro-icon/components";
 import ButtonLink from "../common/ButtonLink.astro";
 import { navigationItems } from "../../data/navigation";
+import { SITE_CONFIG } from "../../data/config";
 
 // Ítem activo detectado con la ruta actual de Astro (normalizada sin barra final).
 const current = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -60,8 +61,8 @@ const isActive = (href: string): boolean => {
 
     <div class="flex items-center gap-3">
       <ButtonLink
-        href="/cv-kendall-chacon.pdf"
-        download="cv-kendall-chacon.pdf"
+        href={SITE_CONFIG.cv}
+        download
         class="hidden md:inline-flex"
       >
         Descargar CV
@@ -123,8 +124,8 @@ const isActive = (href: string): boolean => {
       </ul>
 
       <ButtonLink
-        href="/cv-kendall-chacon.pdf"
-        download="cv-kendall-chacon.pdf"
+        href={SITE_CONFIG.cv}
+        download
         class="mx-auto mt-3 flex w-full max-w-6xl"
       >
         Descargar CV
