@@ -358,6 +358,13 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   box-shadow: 0 0 16px rgba(14, 116, 144, 0.15);
 }
 
+/* Variante para cards cuyo trigger de hover vive en un wrapper exterior
+   (evita el loop de mouseenter/mouseleave al levantar la card). */
+.group:hover .card-glow-hover-nested {
+  border-color: rgba(14, 116, 144, 0.4);
+  box-shadow: 0 0 16px rgba(14, 116, 144, 0.15);
+}
+
 @media (max-width: 767px) {
   [data-carousel] {
     height: 300px;

@@ -194,19 +194,21 @@ const allProjects = [
                       <h3 class="text-xl font-semibold text-white">Mi aporte individual</h3>
                       <div class="mt-6 grid items-stretch gap-4 md:grid-cols-2">
                         {betoYMas.contribuciones.map((c, i) => (
-                          <div class="card-glow-hover group relative overflow-hidden flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/40 p-4 hover:-translate-y-2 hover:bg-slate-900/70">
-                            <div class="flex grow items-start gap-3">
-                              <span class="shrink-0 text-lg font-bold tabular-nums leading-tight text-(--accent)">
-                                {String(i + 1).padStart(2, "0")}
-                              </span>
-                              <div class="flex flex-col">
-                                <h4 class="shrink-0 text-sm font-semibold text-white">{c.titulo}</h4>
-                                <p class="mt-1 grow line-clamp-3 text-sm leading-6 text-slate-300">
-                                  {c.descripcion}
-                                </p>
+                          <div class="group relative h-full">
+                            <div class="card-glow-hover-nested relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40 p-4 transition duration-300 group-hover:-translate-y-1 group-hover:bg-slate-900/70">
+                              <div class="flex grow items-start gap-3">
+                                <span class="shrink-0 text-lg font-bold tabular-nums leading-tight text-(--accent)">
+                                  {String(i + 1).padStart(2, "0")}
+                                </span>
+                                <div class="flex flex-col">
+                                  <h4 class="shrink-0 text-sm font-semibold text-white">{c.titulo}</h4>
+                                  <p class="mt-1 grow line-clamp-3 text-sm leading-6 text-slate-300">
+                                    {c.descripcion}
+                                  </p>
+                                </div>
                               </div>
+                              <div class="card-line"></div>
                             </div>
-                            <div class="card-line"></div>
                           </div>
                         ))}
                       </div>
