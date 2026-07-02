@@ -9,14 +9,17 @@ const { class: className = "", reveal = false, delay } = Astro.props;
 ---
 
 <article
-  class:list={[
-    reveal && "reveal",
-    "group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 transition duration-300 hover:-translate-y-2 hover:border-cyan-400/40 hover:bg-slate-900/70",
-    className,
-  ]}
+  class:list={[reveal && "reveal", "group relative rounded-2xl"]}
   style={delay !== undefined ? `transition-delay: ${delay}s;` : undefined}
 >
-  <slot />
-  <div class="card-line"></div>
+  <div
+    class:list={[
+      "relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 transition duration-300 group-hover:-translate-y-1 group-hover:border-(--accent)/40 group-hover:bg-slate-900/70",
+      className,
+    ]}
+  >
+    <slot />
+    <div class="card-line"></div>
+  </div>
 </article>
 

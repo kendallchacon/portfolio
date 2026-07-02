@@ -1,150 +1,98 @@
 ---
 import { Icon } from "astro-icon/components";
-import TechBadge from "../common/TechBadge.astro";
-import { featuredProject } from "../../data/projects";
+import ButtonLink from "../common/ButtonLink.astro";
+import { featuredPreview } from "../../data/projects";
 ---
 
 <section
   id="proyecto-principal"
-  class="reveal border-t border-slate-800 py-24 sm:py-32"
+  class="border-t border-slate-800 py-24 sm:py-32"
 >
   <div class="mx-auto max-w-6xl px-0 sm:px-6">
-    <p class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-      {featuredProject.eyebrow}
-    </p>
-
-    <h2
-      class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-white sm:text-4xl"
-    >
-      {featuredProject.title}
-    </h2>
-
-    <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-200">
-      {featuredProject.summary}
-    </p>
-
-    <article
-      class="group relative mt-14 overflow-hidden rounded-3xl border border-slate-700 bg-slate-900/50 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 sm:mt-16"
-    >
-      <div
-        class="absolute -top-20 right-0 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl"
-      >
-      </div>
-
-      <div class="relative overflow-hidden border-b border-slate-800">
-        <img
-          src={featuredProject.image}
-          alt={featuredProject.imageAlt}
-          class="w-full bg-slate-950 object-contain"
-        />
-
-        <div
-          class="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent"
-        >
-        </div>
-      </div>
-
-      <div class="relative p-5 sm:p-10">
-        <div class="flex flex-wrap gap-3">
-          {
-            featuredProject.stack.map((tech) => (
-              <TechBadge {...tech} compact />
-            ))
-          }
-        </div>
-
-        <h3 class="mt-8 text-2xl font-semibold text-white">
-          {featuredProject.overview.title}
-        </h3>
-
-        <p class="mt-4 max-w-3xl text-base leading-8 text-slate-200">
-          {featuredProject.overview.description}
+    <!-- Header de sección -->
+    <div class="reveal mb-12">
+      <div class="flex items-center gap-3">
+        <span class="h-px w-6 bg-(--accent)"></span>
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-(--accent)">
+          {featuredPreview.eyebrow}
         </p>
+      </div>
+      <h2 class="mt-4 text-3xl font-bold tracking-tight text-white">
+        Trabajo real en producción
+      </h2>
+      <p class="mt-4 max-w-2xl text-base text-slate-400">
+        Un proyecto académico con impacto real — arquitectura, lógica de negocio
+        y experiencia de usuario construidos en equipo.
+      </p>
+    </div>
 
-        <div class="mt-12 grid gap-5 md:grid-cols-2">
-          {
-            featuredProject.caseStudy.map((item) => (
-              <div class="rounded-2xl border border-slate-700/80 bg-slate-950/50 p-5 sm:p-6">
-                <h4 class="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">
-                  {item.title}
-                </h4>
-                <p class="mt-4 text-sm leading-6 text-slate-200">
-                  {item.description}
+    <!-- Tarjeta de preview -->
+    <article
+      class="reveal spotlight-card group relative overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/40 transition duration-300 hover:border-(--accent)/40"
+      style="transition-delay: 0.1s;"
+    >
+      <div class="grid lg:grid-cols-[3fr_2fr]">
+        <!-- Columna izquierda: información -->
+        <div class="flex flex-col justify-center p-8 md:p-12">
+          <h3 class="text-2xl font-bold text-white transition group-hover:text-(--accent)">
+            {featuredPreview.nombre}
+          </h3>
+
+          <p class="mt-1 text-base text-slate-400">
+            {featuredPreview.subtitulo}
+          </p>
+
+          <p class="mt-4 text-sm leading-6 text-slate-300">
+            Laravel + Vue + TypeScript — arquitectura modular, APIs REST y experiencia de cliente completa.
+          </p>
+
+          <!-- Métricas -->
+          <div class="mt-6 flex items-center gap-0 divide-x divide-slate-700/60">
+            {featuredPreview.metricas.map((m) => (
+              <div class="pr-6 first:pl-0 not-first:pl-6">
+                <p class="text-3xl font-bold text-(--accent)">{m.valor}</p>
+                <p class="mt-0.5 text-xs uppercase tracking-wider text-slate-500">
+                  {m.label}
                 </p>
               </div>
-            ))
-          }
-        </div>
-
-        <div class="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <h4 class="text-lg font-bold text-white">Módulos</h4>
-            <div class="mt-5 grid gap-4">
-              {
-                featuredProject.modules.map((module) => (
-                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-200">
-                    <Icon
-                      name="heroicons:check-circle"
-                      class="mt-0.5 size-5 text-cyan-400"
-                    />
-                    <span>{module}</span>
-                  </div>
-                ))
-              }
-            </div>
+            ))}
           </div>
 
-          <div>
-            <h4 class="text-lg font-bold text-white">
-              Decisiones técnicas
-            </h4>
-            <div class="mt-5 grid gap-4">
-              {
-                featuredProject.technicalDecisions.map((decision) => (
-                  <div class="flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/50 px-4 py-3 text-sm text-slate-200">
-                    <Icon
-                      name="heroicons:code-bracket-square"
-                      class="mt-0.5 size-5 text-cyan-400"
-                    />
-                    <span>{decision}</span>
-                  </div>
-                ))
-              }
-            </div>
+          <!-- Stack tags con iconos -->
+          <div class="mt-6 flex flex-wrap gap-2">
+            {featuredPreview.stack.map((tech) => (
+              <span class="flex items-center gap-1.5 rounded-full border border-slate-600/50 bg-slate-800/80 px-3 py-1 text-sm text-slate-300 transition-all duration-200 hover:border-(--accent)/50 hover:bg-slate-700/50 hover:text-(--accent)">
+                {tech.icon
+                  ? <Icon name={tech.icon} class:list={["h-4 w-4 shrink-0", tech.color ?? ""]} />
+                  : <span class="text-(--accent) leading-none">·</span>
+                }
+                {tech.label}
+              </span>
+            ))}
+          </div>
+
+          <div class="mt-7">
+            <ButtonLink href={featuredPreview.cta.href}>
+              {featuredPreview.cta.label}
+            </ButtonLink>
           </div>
         </div>
 
-        <div class="mt-12 grid gap-8 lg:grid-cols-2">
-          <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-5">
-            <h4 class="text-lg font-bold text-white">Base de datos</h4>
-            <p class="mt-4 text-sm leading-6 text-slate-200">
-              {featuredProject.database}
-            </p>
-          </div>
-
-          <div class="rounded-2xl border border-slate-800 bg-slate-950/50 p-5">
-            <h4 class="text-lg font-bold text-white">Seguridad</h4>
-            <div class="mt-5 grid gap-4">
-              {
-                featuredProject.security.map((item) => (
-                  <div class="flex items-start gap-3 text-sm text-slate-200">
-                    <Icon
-                      name="heroicons:shield-check"
-                      class="mt-0.5 size-5 text-cyan-400"
-                    />
-                    <span>{item}</span>
-                  </div>
-                ))
-              }
-            </div>
+        <!-- Columna derecha: imagen -->
+        <div class="relative min-h-64 overflow-hidden md:min-h-80 lg:rounded-r-2xl">
+          <img
+            src={featuredPreview.image}
+            alt={featuredPreview.imageAlt}
+            class="absolute inset-0 h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+          />
+          <div
+            class="absolute inset-0 bg-linear-to-r from-slate-900/60 to-transparent lg:bg-linear-to-l"
+          >
           </div>
         </div>
-
-        <p class="mt-10 text-sm leading-6 text-slate-300">
-          El código del sistema no se publica como repositorio abierto. La
-          evidencia principal se presenta aquí como caso de estudio técnico.
-        </p>
       </div>
+
+      <div class="card-line"></div>
     </article>
   </div>
 </section>

@@ -24,6 +24,9 @@ const ogImageUrl = new URL(image, Astro.site).toString();
 <!doctype html>
 <html lang="es">
   <head>
+    {/* Marca temprano que hay JS para permitir el anti-parpadeo de la terminal
+        sin penalizar a quien navega sin JavaScript. */}
+    <script is:inline>document.documentElement.classList.add("js");</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -51,7 +54,7 @@ const ogImageUrl = new URL(image, Astro.site).toString();
   <body class="overflow-x-hidden bg-slate-950 text-slate-100 antialiased">
     <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <div
-        class="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-400/10 blur-3xl animate-float"
+        class="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-(--accent)/10 blur-3xl animate-float"
       >
       </div>
       <div
@@ -59,15 +62,20 @@ const ogImageUrl = new URL(image, Astro.site).toString();
       >
       </div>
       <div
-        class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl animate-float"
+        class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl animate-float-slower"
       >
       </div>
     </div>
 
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
     <div class="min-h-screen flex flex-col">
       <Navbar />
 
-      <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter">
+      <main
+        id="main-content"
+        class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter"
+      >
         <slot />
       </main>
       <Footer />

@@ -2,84 +2,89 @@
 import { Icon } from "astro-icon/components";
 import ButtonLink from "../common/ButtonLink.astro";
 import Tag from "../common/Tag.astro";
-import { contactLinks, contactTags } from "../../data/contact";
+import { contactFull } from "../../data/contact";
 ---
 
-<section id="contact" class="reveal border-t border-slate-800 py-24 sm:py-32">
+<section id="contact" class="border-t border-slate-800 py-24 sm:py-32">
   <div class="mx-auto max-w-6xl px-0 sm:px-6">
-    <div class="grid items-center gap-14 lg:grid-cols-[1fr_1fr]">
-      <div>
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400"
-        >
-          Contacto
-        </p>
 
-        <h2
-          class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
-        >
-          Disponible para práctica profesional en desarrollo backend / full
-          stack
-        </h2>
+    <div class="grid items-start gap-14 lg:grid-cols-2">
 
-        <p class="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-          Busco integrarme a un equipo donde pueda aportar en APIs REST,
-          bases de datos relacionales, validaciones backend, autenticación,
-          roles y flujos de negocio con Laravel y tecnologías web.
-        </p>
-
-        <p class="mt-4 max-w-xl text-sm leading-6 text-slate-300">
-          Puedes contactarme para revisar mi perfil, conversar sobre una
-          práctica profesional o coordinar una entrevista técnica.
-        </p>
-
-        <div class="mt-6 flex flex-wrap gap-2">
-          {
-            contactTags.map((tag) => (
-              <Tag size="sm" featured={tag.featured}>{tag.label}</Tag>
-            ))
-          }
+      <!-- Columna izquierda -->
+      <div class="reveal">
+        <div class="flex items-center gap-3">
+          <span class="h-px w-6 bg-(--accent)"></span>
+          <p class="text-sm font-semibold uppercase tracking-[0.25em] text-(--accent)">
+            Contacto
+          </p>
         </div>
 
-        <div class="mt-8 flex flex-col gap-4 sm:flex-row">
-          <ButtonLink href="mailto:kendallchacon4@gmail.com">
-            Contactarme para práctica profesional
-          </ButtonLink>
+        <h1 class="mt-4 text-4xl font-bold tracking-tight text-white">
+          {contactFull.titulo}
+        </h1>
 
-          <ButtonLink
-            href="/cv-kendall-chacon.pdf"
-            download="cv-kendall-chacon.pdf"
-            variant="secondary"
-          >
-            Descargar CV
+        <p class="mt-4 max-w-md text-lg leading-8 text-slate-300">
+          {contactFull.descripcion}
+        </p>
+
+        <p class="mt-4 text-sm text-slate-400">{contactFull.disponibilidad}</p>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          {contactFull.chips.map((chip) => (
+            <Tag size="sm" featured={chip.featured}>{chip.label}</Tag>
+          ))}
+        </div>
+
+        <div class="mt-8">
+          <ButtonLink href={contactFull.ctaPrincipal.href}>
+            {contactFull.ctaPrincipal.label}
           </ButtonLink>
+        </div>
+
+        <div class="mt-4">
+          <a
+            href={contactFull.ctaSecundario.href}
+            download
+            class="text-sm text-slate-400 underline-offset-4 transition-colors hover:text-slate-300 hover:underline"
+          >
+            {contactFull.ctaSecundario.label}
+          </a>
         </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2">
-        {
-          contactLinks.map((link) => (
+      <!-- Columna derecha — canales -->
+      <div class="reveal" style="transition-delay: 0.15s;">
+        <p class="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-500">
+          {contactFull.canalesTitulo}
+        </p>
+
+        <div class="flex flex-col gap-3">
+          {contactFull.canales.map((canal) => (
             <a
-              href={link.href}
-              target={link.external ? "_blank" : undefined}
-              rel={link.external ? "noreferrer" : undefined}
-              class="group flex items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/40 p-5 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40"
+              href={canal.href}
+              target={canal.external ? "_blank" : undefined}
+              rel={canal.external ? "noreferrer" : undefined}
+              class="group relative overflow-hidden flex items-center gap-4 rounded-xl border border-slate-700/50 bg-slate-900/50 p-4 transition-all duration-300 hover:translate-x-1 hover:border-(--accent)/40"
             >
               <Icon
-                name={link.icon}
-                class:list={[
-                  "size-[22px] transition duration-300 group-hover:scale-125",
-                  link.iconClass,
-                ]}
+                name={canal.icon}
+                class:list={["size-5 shrink-0 transition duration-300 group-hover:scale-110", canal.iconClass]}
               />
               <div>
-                <p class="font-semibold text-white">{link.label}</p>
-                <p class="text-xs text-slate-300">{link.description}</p>
+                <p class="font-semibold text-white">{canal.label}</p>
+                <p class="text-sm text-slate-400">{canal.description}</p>
               </div>
+              <div class="card-line"></div>
             </a>
-          ))
-        }
+          ))}
+        </div>
       </div>
     </div>
+
+    <!-- Bloque de cierre -->
+    <p class="reveal mt-16 text-center text-sm text-slate-500" style="transition-delay: 0.1s;">
+      {contactFull.cierreTexto}
+    </p>
+
   </div>
 </section>

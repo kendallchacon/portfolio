@@ -4,6 +4,16 @@ Portafolio personal construido con Astro y Tailwind CSS para presentar perfil pr
 
 El sitio está pensado como una base simple, clara y escalable para seguir agregando contenido sin duplicar estructura visual ni mezclar datos con marcado.
 
+🔗 [Ver portafolio en vivo](https://portfolio-kendall-chacon.vercel.app/)
+
+## Proyecto destacado: Beto y Más
+
+Plataforma web real construida junto a un equipo de 5 personas a lo largo de 3 semestres, con módulos de recompensas, perfiles de usuario, dashboards administrativos y juegos interactivos.
+
+Mi mayor contribución y reto fue liderar Bubble Shooter: ni yo ni el equipo teníamos experiencia previa desarrollando juegos, así que tuvimos que aprender sobre la marcha a integrar Phaser con Vue y TypeScript, resolver soporte táctil, validar resultados en el backend con Laravel, y estabilizar el ciclo de vida completo del juego. Fue, con diferencia, el módulo más trabajado del proyecto — y terminó siendo uno de los más sólidos.
+
+🔗 [Ver Beto y Más en producción](https://betoymas.com/) (requiere cuenta para explorar)
+
 ## Stack utilizado
 
 - Astro 6
@@ -74,7 +84,7 @@ npm run preview
 
 ## Decisiones técnicas principales
 
-- Las páginas viven en `src/pages` para mantener rutas públicas claras: `/`, `/perfil`, `/habilidades`, `/proceso`, `/proyectos` y `/contacto`.
+- Las páginas viven en `src/pages` para mantener rutas públicas claras: `/`, `/experiencia`, `/proyectos`, `/certificaciones` y `/contacto`.
 - Los componentes reutilizables se agrupan en `src/components/common` para evitar repetir botones, tags, cards y badges técnicos.
 - El contenido repetible se centraliza en archivos `.ts` dentro de `src/data`, lo que facilita agregar tecnologías, contactos, experiencias o proyectos sin tocar demasiado HTML.
 - Las secciones grandes se mantienen en `src/components/sections` para que la página principal pueda componerse de bloques legibles.
@@ -82,9 +92,4 @@ npm run preview
 - El CV descargable se sirve desde `public/cv-kendall-chacon.pdf` para mantener una URL pública directa y simple.
 - El layout base define metadatos SEO, URL canónica, Open Graph y Twitter Card para todas las páginas.
 - La navegación incluye una versión móvil para mejorar la experiencia responsive en pantallas pequeñas.
-- Se mantuvo el diseño visual principal y se priorizó una arquitectura simple, suficiente para un portafolio personal.
-
-## Próximas mejoras
-
-- Agregar proyectos reales adicionales con enlaces finales a demo y repositorio.
-- Considerar contenido en MDX para escribir casos de estudio o notas técnicas.
+- Se priorizó una arquitectura estática simple: es la elección correcta para un portafolio personal, sin sobreingeniería ni dependencias innecesarias.
