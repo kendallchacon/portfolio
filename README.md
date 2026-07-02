@@ -4,6 +4,16 @@ Portafolio personal construido con Astro y Tailwind CSS para presentar perfil pr
 
 El sitio está pensado como una base simple, clara y escalable para seguir agregando contenido sin duplicar estructura visual ni mezclar datos con marcado.
 
+🔗 [Ver portafolio en vivo](https://portfolio-kendall-chacon.vercel.app/)
+
+## Proyecto destacado: Beto y Más
+
+Plataforma web real construida junto a un equipo de 5 personas a lo largo de 3 semestres, con módulos de recompensas, perfiles de usuario, dashboards administrativos y juegos interactivos.
+
+Mi mayor contribución y reto fue liderar Bubble Shooter: ni yo ni el equipo teníamos experiencia previa desarrollando juegos, así que tuvimos que aprender sobre la marcha a integrar Phaser con Vue y TypeScript, resolver soporte táctil, validar resultados en el backend con Laravel, y estabilizar el ciclo de vida completo del juego. Fue, con diferencia, el módulo más trabajado del proyecto — y terminó siendo uno de los más sólidos.
+
+🔗 [Ver Beto y Más en producción](https://betoymas.com/) (requiere cuenta para explorar)
+
 ## Stack utilizado
 
 - Astro 6
@@ -83,8 +93,3 @@ npm run preview
 - El layout base define metadatos SEO, URL canónica, Open Graph y Twitter Card para todas las páginas.
 - La navegación incluye una versión móvil para mejorar la experiencia responsive en pantallas pequeñas.
 - Se mantuvo el diseño visual principal y se priorizó una arquitectura simple, suficiente para un portafolio personal.
-
-## Próximas mejoras
-
-- Agregar proyectos reales adicionales con enlaces finales a demo y repositorio.
-- Considerar contenido en MDX para escribir casos de estudio o notas técnicas.
