@@ -24,22 +24,40 @@ html {
   animation: marqueeScroll 30s linear infinite;
 }
 
-@keyframes float {
+@keyframes blobDrift {
   0%, 100% {
-    transform: translateY(0);
+    transform: translate(0, 0);
+    opacity: 0.9;
   }
 
   50% {
-    transform: translateY(-10px);
+    transform: translate(15px, -20px);
+    opacity: 1;
   }
 }
 
-.animate-float {
-  animation: float 5s ease-in-out infinite;
+@media (prefers-reduced-motion: no-preference) {
+  .animate-float {
+    animation: blobDrift 20s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: blobDrift 25s ease-in-out infinite;
+    animation-delay: -8s;
+  }
+
+  .animate-float-slower {
+    animation: blobDrift 22s ease-in-out infinite;
+    animation-delay: -14s;
+  }
 }
 
-.animate-float-slow {
-  animation: float 12s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-slow,
+  .animate-float-slower {
+    animation: none;
+  }
 }
 
 @keyframes fadeInPage {
@@ -73,34 +91,19 @@ html {
 
 .btn-primary-animated {
   position: relative;
-  overflow: hidden;
+  box-shadow: 0 0 0 0 rgba(14, 116, 144, 0);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
     background-color 0.25s ease;
 }
 
-.btn-primary-animated:hover {
+.btn-primary-animated:hover,
+.btn-primary-animated:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(14, 116, 144, 0.25);
-}
-
-.btn-primary-animated::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-120%);
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255, 255, 255, 0.35),
-    transparent
-  );
-  transition: transform 0.6s ease;
-}
-
-.btn-primary-animated:hover::before {
-  transform: translateX(120%);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.5),
+    0 0 16px 2px rgba(14, 116, 144, 0.4);
 }
 
 .btn-primary-animated span {
@@ -304,7 +307,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   opacity: 1;
 }
 
-/* Barra superior brillante (el "tubo de luz") con su resplandor. */
+/* Barra superior brillante (el "tubo de luz") con su resplandor, cayendo hacia el texto. */
 .nav-lamp__bar {
   position: absolute;
   top: -0.3rem;
@@ -312,14 +315,14 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   transform: translateX(-50%);
   width: 1.75rem;
   height: 0.25rem;
-  border-radius: 0 0 9999px 9999px;
+  border-radius: 9999px 9999px 0 0;
   background: var(--accent);
 }
 
 .nav-lamp__bar::before {
   content: "";
   position: absolute;
-  top: -0.4rem;
+  top: 0.05rem;
   left: 50%;
   transform: translateX(-50%);
   width: 3rem;
