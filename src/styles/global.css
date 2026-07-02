@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+:root {
+  --accent-bright: #22d3ee;
+  --accent: #0e7490;
+  --accent-glow: rgba(34, 211, 238, 0.12);
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -76,7 +82,7 @@ html {
 
 .btn-primary-animated:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(34, 211, 238, 0.25);
+  box-shadow: 0 12px 32px rgba(14, 116, 144, 0.25);
 }
 
 .btn-primary-animated::before {
@@ -130,8 +136,8 @@ html.js [data-terminal][data-terminal-state="idle"] .term-txt {
    contenido; baja intensidad, sin hover ni pulso). */
 .terminal-card {
   box-shadow:
-    0 0 0 1px rgba(34, 211, 238, 0.06),
-    0 0 28px -10px rgba(34, 211, 238, 0.22),
+    0 0 0 1px rgba(14, 116, 144, 0.06),
+    0 0 28px -10px rgba(14, 116, 144, 0.22),
     0 30px 60px -28px rgba(2, 6, 23, 0.9);
 }
 
@@ -149,7 +155,7 @@ html.js [data-terminal][data-terminal-state="idle"] .term-txt {
     background: linear-gradient(
       110deg,
       transparent 35%,
-      rgba(34, 211, 238, 0.1) 50%,
+      rgba(14, 116, 144, 0.1) 50%,
       transparent 65%
     );
     transform: translateX(-100%);
@@ -173,7 +179,7 @@ html.js [data-terminal][data-terminal-state="idle"] .term-txt {
   width: 0.55ch;
   height: 1.05em;
   margin-left: 2px;
-  background: rgb(34, 211, 238);
+  background: var(--accent-bright);
   transform: translateY(0.18em);
 }
 
@@ -223,7 +229,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   border-radius: inherit;
   background: radial-gradient(
     240px 240px at var(--spot-x) var(--spot-y),
-    rgba(34, 211, 238, 0.12),
+    rgba(14, 116, 144, 0.15),
     transparent 70%
   );
   opacity: 0;
@@ -233,7 +239,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
 
 @media (pointer: fine) {
   .spotlight-card:hover {
-    border-color: rgba(34, 211, 238, 0.35);
+    border-color: rgba(14, 116, 144, 0.35);
     transform: translateY(-4px);
   }
 
@@ -248,7 +254,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   left: 0;
   height: 2px;
   width: 0;
-  background: rgb(34, 211, 238);
+  background: var(--accent);
   transition: width 0.4s ease;
 }
 
@@ -264,7 +270,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   z-index: 100;
   transform: translateY(-150%);
   border-radius: 0.5rem;
-  background: rgb(34, 211, 238);
+  background: var(--accent);
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -278,7 +284,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
 
 /* --- Foco visible explícito en la navegación y CTA --- */
 .nav-focus:focus-visible {
-  outline: 2px solid rgb(34, 211, 238);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -288,7 +294,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   inset: 0;
   z-index: 0;
   border-radius: 9999px;
-  background: rgba(34, 211, 238, 0.08);
+  background: rgba(14, 116, 144, 0.08);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -307,7 +313,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   width: 1.75rem;
   height: 0.25rem;
   border-radius: 0 0 9999px 9999px;
-  background: rgb(34, 211, 238);
+  background: var(--accent);
 }
 
 .nav-lamp__bar::before {
@@ -319,7 +325,7 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
   width: 3rem;
   height: 1.5rem;
   border-radius: 9999px;
-  background: rgba(34, 211, 238, 0.35);
+  background: rgba(14, 116, 144, 0.35);
   filter: blur(0.5rem);
 }
 
@@ -345,8 +351,8 @@ html.js [data-terminal] .term-line.is-active > .term-cursor {
 }
 
 .card-glow-hover:hover {
-  border-color: rgba(34, 211, 238, 0.4);
-  box-shadow: 0 0 16px rgba(34, 211, 238, 0.12);
+  border-color: rgba(14, 116, 144, 0.4);
+  box-shadow: 0 0 16px rgba(14, 116, 144, 0.15);
 }
 
 @media (max-width: 767px) {

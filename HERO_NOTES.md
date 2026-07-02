@@ -191,8 +191,10 @@ dos columnas, efectos visuales ni lógica de tipeo.
   eliminó**).
 - **Etiqueta de especialidad** (kicker) sobre el `h1`:
   `Backend · APIs REST · Laravel · Bases de datos` — `text-xs`/`sm:text-sm`,
-  `uppercase`, `tracking-[0.2em]`, **cian apagado** (`text-cyan-500`, no el cian
-  brillante del acento). Discreta, no compite con el titular.
+  `uppercase`, `tracking-[0.2em]`, **cian apagado** (`text-(--accent)`, nivel
+  bajo de la jerarquía de dos tonos — el cian brillante `--accent-bright` está
+  reservado al cursor y prompt `$` del terminal). Discreta, no compite con el
+  titular.
 - **Párrafo descriptivo** entre `h1` y CTA: "Construyo sistemas con lógica de
   negocio clara, …" (`text-base`/`sm:text-lg`, `text-slate-300`, `max-w-xl`).
 - La etiqueta y el párrafo viven tipados en `hero.ts` (`eyebrow`,

@@ -32,7 +32,7 @@ export const technologies = [
   {
     name: "Tailwind",
     icon: "simple-icons:tailwindcss",
-    color: "text-cyan-400",
+    color: "text-(--accent)",
   },
   { name: "Astro", icon: "simple-icons:astro", color: "text-purple-400" },
 ];

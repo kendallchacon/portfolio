@@ -11,7 +11,7 @@ const { fileName, lines, statusBar } = Astro.props;
 
 const toneClass: Record<NonNullable<TerminalLine["tone"]>, string> = {
   default: "text-slate-200",
-  accent: "text-cyan-300",
+  accent: "text-(--accent)",
   success: "text-emerald-300",
   muted: "text-slate-500",
 };
@@ -63,7 +63,7 @@ const toneClass: Record<NonNullable<TerminalLine["tone"]>, string> = {
               <span
                 class:list={[
                   "term-prompt mr-2 shrink-0 select-none",
-                  line.kind === "command" ? "text-cyan-400" : "text-slate-600",
+                  line.kind === "command" ? "text-(--accent-bright)" : "text-slate-600",
                 ]}
                 aria-hidden="true"
               >

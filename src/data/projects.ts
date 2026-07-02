@@ -196,7 +196,7 @@ export const featuredProject = {
     { name: "Laravel", icon: "simple-icons:laravel", color: "text-red-500" },
     { name: "Vue", icon: "simple-icons:vuedotjs", color: "text-green-400" },
     { name: "MySQL", icon: "simple-icons:mysql", color: "text-blue-500" },
-    { name: "Tailwind", icon: "simple-icons:tailwindcss", color: "text-cyan-400" },
+    { name: "Tailwind", icon: "simple-icons:tailwindcss", color: "text-(--accent)" },
   ],
   overview: {
     title: "Plataforma para fidelización, puntos y recompensas",
