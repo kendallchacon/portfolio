@@ -47,10 +47,10 @@ import { featuredPreview } from "../../data/projects";
           </p>
 
           <!-- Métricas -->
-          <div class="mt-6 flex items-center gap-0 divide-x divide-slate-700/60">
+          <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 lg:flex lg:items-center lg:gap-0 lg:divide-x lg:divide-slate-700/60">
             {featuredPreview.metricas.map((m) => (
-              <div class="pr-6 first:pl-0 not-first:pl-6">
-                <p class="text-3xl font-bold text-(--accent)">{m.valor}</p>
+              <div class="lg:pr-6 lg:first:pl-0 lg:not-first:pl-6">
+                <p class="text-2xl font-bold text-(--accent) lg:text-3xl">{m.valor}</p>
                 <p class="mt-0.5 text-xs uppercase tracking-wider text-slate-500">
                   {m.label}
                 </p>
