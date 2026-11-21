@@ -1,104 +1,59 @@
-import { SITE_CONFIG } from "./config";
+import { both, type HttpsUrl, type Localized } from "./types";
 
-export interface ContactCta {
-  label: string;
-  href: string;
-  variant: "primary" | "secondary";
+export type ContactChannelId = "linkedin" | "github" | "whatsapp" | "cv";
+
+export type ContactChannel = {
+  id: ContactChannelId;
+  label: Localized;
+  /** Texto secundario visible (usuario, teléfono o indicación de descarga). */
+  value: Localized;
+  href: HttpsUrl | `/${string}`;
+  icon: `simple-icons:${string}` | `heroicons:${string}`;
+  /** `external`: el enlace sale del sitio. `download`: descarga un archivo propio. */
   external?: boolean;
-}
-
-export interface Canal {
-  label: string;
-  description: string;
-  href: string;
-  icon: string;
-  iconClass: string;
-  external?: boolean;
-}
-
-// Versión compacta — usada en el inicio
-export const contactCompact = {
-  titulo: "¿Te interesa lo que ves?",
-  subtitulo:
-    "Estoy disponible para prácticas y posiciones junior en desarrollo backend y full stack.",
-  ctas: [
-    {
-      label: "Escribirme al correo",
-      href: SITE_CONFIG.email,
-      variant: "primary" as const,
-    },
-    {
-      label: "Ver LinkedIn",
-      href: SITE_CONFIG.linkedin,
-      variant: "secondary" as const,
-      external: true,
-    },
-  ] satisfies ContactCta[],
+  download?: boolean;
 };
 
-// Versión completa — usada en /contacto
-export const contactFull = {
-  titulo: "Hablemos sobre una oportunidad.",
-  descripcion:
-    "Busco una práctica profesional o posición junior donde pueda aportar desde el primer día. Trabajo con Laravel, Vue y TypeScript sobre datos relacionales bien modelados.",
-  disponibilidad: "📍 Costa Rica · Modalidad presencial o remota",
-  chips: [
-    { label: "Práctica profesional", featured: true },
-    { label: "Backend" },
-    { label: "Full stack" },
-  ],
-  ctaPrincipal: {
-    label: "Contactarme por correo",
-    href: SITE_CONFIG.email,
+export const contact = {
+  email: {
+    address: "kendallchacon4@gmail.com",
+    href: "mailto:kendallchacon4@gmail.com",
   },
-  ctaSecundario: {
-    label: "También puedes descargar mi CV →",
-    href: SITE_CONFIG.cv,
-  },
-  canalesTitulo: "Canales disponibles",
-  canales: [
+  channels: [
     {
-      label: "Correo electrónico",
-      description: "kendallchacon4@gmail.com",
-      href: SITE_CONFIG.email,
-      icon: "simple-icons:gmail",
-      iconClass: "text-red-400",
-    },
-    {
-      label: "LinkedIn",
-      description: "Perfil profesional",
-      href: SITE_CONFIG.linkedin,
+      id: "linkedin",
+      label: both("LinkedIn"),
+      value: both("kendall-chacon-molina"),
+      href: "https://www.linkedin.com/in/kendall-chacon-molina-884b04307/",
       icon: "simple-icons:linkedin",
-      iconClass: "text-blue-400",
       external: true,
     },
     {
-      label: "GitHub",
-      description: "Repositorios y actividad",
-      href: SITE_CONFIG.github,
+      id: "github",
+      label: both("GitHub"),
+      value: both("github.com/kendallchacon"),
+      href: "https://github.com/kendallchacon",
       icon: "simple-icons:github",
-      iconClass: "text-white",
       external: true,
     },
     {
-      label: "WhatsApp",
-      description: "Respuesta directa",
-      href: SITE_CONFIG.whatsapp,
+      id: "whatsapp",
+      label: both("WhatsApp"),
+      value: both("+506 6271 2021"),
+      href: "https://wa.me/50662712021",
       icon: "simple-icons:whatsapp",
-      iconClass: "text-green-400",
       external: true,
     },
-  ] satisfies Canal[],
-  cierreTexto: "Tiempo de respuesta habitual: menos de 24 horas.",
+    {
+      id: "cv",
+      label: both("CV"),
+      value: { es: "Descargar PDF", en: "Download PDF" },
+      href: "/Kendall_Chacon_CV_2026.pdf",
+      icon: "heroicons:document-arrow-down",
+      download: true,
+    },
+  ],
+} as const satisfies {
+  email: { address: string; href: `mailto:${string}` };
+  channels: readonly ContactChannel[];
 };
-
-// Exports de compatibilidad — usados por código existente
-export const contactTags = contactFull.chips;
-export const contactLinks = contactFull.canales.map((c) => ({
-  label: c.label === "Correo electrónico" ? "Correo" : c.label,
-  description: c.description,
-  href: c.href,
-  icon: c.icon,
-  iconClass: c.iconClass,
-  external: c.external,
-}));

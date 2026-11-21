@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 export const SITE_CONFIG = {
   url: "https://portfolio-kendallchacon.vercel.app",
   cv: "/Kendall_Chacon_CV_2026.pdf",

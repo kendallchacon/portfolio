@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 // Ítems de la navegación principal. Única fuente de verdad para el orden, las
 // etiquetas, las rutas y los iconos; el componente Navbar los consume tipados.
 export interface NavItem {

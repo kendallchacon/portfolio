@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 // Contenido específico de /experiencia — datos que difieren de profile.ts.
 
 // Bloque 1 — titular del hero (trayectoria humana, no stack técnico)

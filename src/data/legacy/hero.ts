@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 // Datos del Hero. Única fuente de verdad para etiqueta, titular, descripción,
 // CTA y todo el contenido de la terminal (comandos y status bar). Mantener el
 // copy aquí evita tocar los componentes y conserva el tipado.
