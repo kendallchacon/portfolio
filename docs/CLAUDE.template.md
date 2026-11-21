@@ -1,7 +1,7 @@
 # CLAUDE.md — Portafolio Kendall Chacón
 
 ## Contexto
-Portafolio personal en Astro 6 + Tailwind 4, desplegado en Vercel. Diseño aprobado en `docs/prototype/index.html` y especificado en `docs/HANDOFF_DESARROLLO.md`. Léelos antes de cambiar UI.
+Portafolio personal en Astro 7 + Tailwind 4, desplegado en Vercel. Diseño aprobado en `docs/prototype/index.html` y especificado en `docs/HANDOFF_DESARROLLO.md`. Léelos antes de cambiar UI.
 
 ## Ramas y commits
 - No trabajes ni hagas commit en `master` ni en `dev`. Cada tarea va en su rama desde `dev` (`feat/`, `fix/`, `chore/`, `content/`, `perf/`, `docs/`).
