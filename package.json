@@ -20,5 +20,9 @@
     "astro": "^6.1.10",
     "astro-icon": "^1.1.5",
     "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
   }
 }
