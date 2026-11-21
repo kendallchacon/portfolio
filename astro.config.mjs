@@ -10,6 +10,14 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://portfolio-kendall-chacon.vercel.app',
 
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+
   integrations: [
     mdx(),
     icon(),

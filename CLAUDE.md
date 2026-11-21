@@ -15,6 +15,7 @@ Portafolio personal en Astro 6 + Tailwind 4, desplegado en Vercel. Diseño aprob
 - JavaScript solo para interacción, en `<script>` de Astro o una island mínima; sin frameworks extra salvo justificación.
 - Imágenes con `astro:assets`; videos con `preload="none"`, poster y carga diferida.
 - Todo efecto respeta `prefers-reduced-motion` y no bloquea la lectura.
+- Con compressHTML 'jsx' (Astro 7) no se renderizan los espacios entre elementos en línea: sepáralos con gap/flex o {' '} explícito.
 
 ## Contenido (no inventar)
 - Kendall es bachiller (promedio 9,0), práctica concluida en Flameware, disponible para empleo y proyectos. No decir que busca práctica.

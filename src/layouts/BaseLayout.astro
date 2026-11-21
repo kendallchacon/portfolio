@@ -2,27 +2,27 @@
 import "../styles/global.css";
 import Navbar from "../components/layout/Navbar.astro";
 import Footer from "../components/sections/Footer.astro";
+import { alternateUrls, ogLocale, useTranslations, type Lang } from "../i18n/ui";
 
 interface Props {
+  lang?: Lang;
   title?: string;
   description?: string;
   image?: string;
   type?: "website" | "profile" | "article";
 }
 
-const {
-  title = "Kendall Chacón | Desarrollador Backend",
-  description = "Desarrollador backend / full stack enfocado en APIs REST, Laravel, bases de datos relacionales y control de roles.",
-  image = "/images/project-preview.jpg",
-  type = "website",
-} = Astro.props;
+const { lang = "es", image = "/images/project-preview.jpg", type = "website" } = Astro.props;
+const t = useTranslations(lang);
+const { title = t("meta.title"), description = t("meta.description") } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const ogImageUrl = new URL(image, Astro.site).toString();
+const alternates = alternateUrls(Astro.url.pathname);
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     {/* Marca temprano que hay JS para permitir el anti-parpadeo de la terminal
         sin penalizar a quien navega sin JavaScript. */}
@@ -34,14 +34,17 @@ const ogImageUrl = new URL(image, Astro.site).toString();
     <meta name="description" content={description} />
     <meta name="author" content="Kendall Chacón" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="es" href={alternates.es} />
+    <link rel="alternate" hreflang="en" href={alternates.en} />
+    <link rel="alternate" hreflang="x-default" href={alternates["x-default"]} />
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:site_name" content="Portafolio de Kendall Chacón" />
-    <meta property="og:locale" content="es_CR" />
+    <meta property="og:site_name" content={t("meta.siteName")} />
+    <meta property="og:locale" content={ogLocale[lang]} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -51,23 +54,8 @@ const ogImageUrl = new URL(image, Astro.site).toString();
     <link rel="icon" href="/favicon.svg" />
   </head>
 
-  <body class="overflow-x-hidden bg-slate-950 text-slate-100 antialiased">
-    <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div
-        class="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-(--accent)/10 blur-3xl animate-float"
-      >
-      </div>
-      <div
-        class="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl animate-float-slow"
-      >
-      </div>
-      <div
-        class="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl animate-float-slower"
-      >
-      </div>
-    </div>
-
-    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+  <body class="overflow-x-hidden bg-bg text-ink antialiased">
+    <a href="#main-content" class="skip-link">{t("a11y.skipLink")}</a>
 
     <div class="min-h-screen flex flex-col">
       <Navbar />
