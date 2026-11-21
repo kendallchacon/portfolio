@@ -1,8 +1,8 @@
 ---
 import { Icon } from "astro-icon/components";
 import ButtonLink from "../common/ButtonLink.astro";
-import { navigationItems } from "../../data/navigation";
-import { SITE_CONFIG } from "../../data/config";
+import { navigationItems } from "../../data/legacy/navigation";
+import { SITE_CONFIG } from "../../data/legacy/config";
 
 // Ítem activo detectado con la ruta actual de Astro (normalizada sin barra final).
 const current = Astro.url.pathname.replace(/\/+$/, "") || "/";

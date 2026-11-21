@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 export const technologies = [
   { name: "Laravel", icon: "simple-icons:laravel", color: "text-red-500" },
   { name: "Node.js", icon: "simple-icons:nodedotjs", color: "text-green-500" },

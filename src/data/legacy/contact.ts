@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 import { SITE_CONFIG } from "./config";
 
 export interface ContactCta {

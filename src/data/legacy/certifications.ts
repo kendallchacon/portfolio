@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 export interface Certification {
   nombre: string;
   emisor: string;

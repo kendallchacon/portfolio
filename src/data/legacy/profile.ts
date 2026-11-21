@@ -1,3 +1,4 @@
+// LEGACY: se elimina en la iteración 7
 export const profileTags = [
   "Full Stack Developer",
   "APIs REST",
