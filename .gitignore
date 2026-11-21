@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # local task tracking, not for public repo
 TODO.md
+
+# heavy prototype assets (real CV lives in public/)
+docs/prototype/media/*.mp4
+docs/prototype/*.pdf
