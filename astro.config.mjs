@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://portfolio-kendallchacon.vercel.app',
+  site: 'https://portfolio-kendall-chacon.vercel.app',
 
   integrations: [
     mdx(),
