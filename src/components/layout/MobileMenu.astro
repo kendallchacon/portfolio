@@ -1,0 +1,148 @@
+---
+import { Icon } from "astro-icon/components";
+import { contact } from "../../data/contact";
+import { pick } from "../../data/types";
+import { navSections, sectionHref, useTranslations, type Lang, type NavSectionId } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const cv = contact.channels.find((channel) => channel.id === "cv");
+
+const icons: Record<NavSectionId, string> = {
+  servicios: "heroicons:server-stack",
+  experiencia: "heroicons:briefcase",
+  proyectos: "heroicons:rectangle-stack",
+  criterio: "heroicons:scale",
+  contacto: "heroicons:envelope",
+};
+---
+
+<div data-mobile-menu class="min-[980px]:hidden">
+  <button
+    type="button"
+    data-menu-button
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    aria-label={t("nav.menu.open")}
+    data-label-open={t("nav.menu.open")}
+    data-label-close={t("nav.menu.close")}
+    class="group inline-flex size-11 cursor-pointer items-center justify-center rounded-full bg-ink text-bg"
+  >
+    <Icon name="heroicons:bars-3" class="size-5 group-aria-expanded:hidden" aria-hidden="true" />
+    <Icon name="heroicons:x-mark" class="hidden size-5 group-aria-expanded:block" aria-hidden="true" />
+  </button>
+
+  <div
+    id="mobile-menu"
+    hidden
+    class="pointer-events-auto fixed inset-x-3 top-18.5 z-20 rounded-2 border border-line-strong bg-surface-1 p-2 shadow-2xl"
+  >
+    <nav aria-label={t("nav.menu.label")}>
+      <ul>
+        {
+          navSections.map((id) => (
+            <li>
+              <a
+                href={sectionHref(id, lang)}
+                class="flex min-h-12 items-center gap-3.5 rounded-3 p-3.5 font-medium transition-colors hover:bg-surface-2"
+              >
+                <Icon name={icons[id]} class="size-5 shrink-0 text-ink-2" aria-hidden="true" />
+                <span class="flex-1">{t(`nav.${id}`)}</span>
+                <Icon name="heroicons:arrow-right" class="size-4 shrink-0 text-ink-2" aria-hidden="true" />
+              </a>
+            </li>
+          ))
+        }
+        {
+          cv && (
+            <li class="mt-2 border-t border-line pt-2">
+              <a
+                href={cv.href}
+                download
+                aria-label={`${pick(cv.label, lang)}: ${pick(cv.value, lang)}`}
+                class="flex min-h-12 items-center gap-3.5 rounded-3 p-3.5 font-medium transition-colors hover:bg-surface-2"
+              >
+                <Icon name={cv.icon} class="size-5 shrink-0 text-ink-2" aria-hidden="true" />
+                <span class="flex-1">{pick(cv.label, lang)}</span>
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div data-menu-backdrop hidden class="pointer-events-auto fixed inset-0 -z-10 bg-bg/60"></div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-mobile-menu]");
+  const button = root?.querySelector<HTMLButtonElement>("[data-menu-button]");
+  const sheet = root?.querySelector<HTMLElement>("#mobile-menu");
+  const backdrop = root?.querySelector<HTMLElement>("[data-menu-backdrop]");
+
+  if (root && button && sheet && backdrop) {
+    const html = document.documentElement;
+    const desktop = window.matchMedia("(min-width: 980px)");
+    const isOpen = () => button.getAttribute("aria-expanded") === "true";
+    // El botón entra en el ciclo de Tab para poder cerrar sin salir de la hoja.
+    const focusables = () => [button, ...sheet.querySelectorAll<HTMLElement>("a[href]")];
+
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = focusables();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    const open = () => {
+      button.setAttribute("aria-expanded", "true");
+      button.setAttribute("aria-label", button.dataset.labelClose ?? "");
+      sheet.hidden = false;
+      backdrop.hidden = false;
+      html.style.overflow = "hidden";
+      document.addEventListener("keydown", onKeydown);
+      sheet.querySelector<HTMLElement>("a[href]")?.focus();
+    };
+
+    const close = ({ returnFocus = true } = {}) => {
+      if (!isOpen()) return;
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-label", button.dataset.labelOpen ?? "");
+      sheet.hidden = true;
+      backdrop.hidden = true;
+      html.style.overflow = "";
+      document.removeEventListener("keydown", onKeydown);
+      if (returnFocus) button.focus();
+    };
+
+    button.addEventListener("click", () => (isOpen() ? close() : open()));
+    backdrop.addEventListener("click", () => close());
+    // Al elegir un enlace el foco lo lleva el ancla de destino.
+    sheet.addEventListener("click", (event) => {
+      const link = (event.target as Element).closest("a[href]");
+      // Una descarga no mueve el foco: vuelve al botón en vez de perderse.
+      if (link) close({ returnFocus: link.hasAttribute("download") });
+    });
+    // Si la ventana pasa a escritorio con la hoja abierta, se libera el scroll.
+    desktop.addEventListener("change", (event) => {
+      if (event.matches) close({ returnFocus: false });
+    });
+  }
+</script>
