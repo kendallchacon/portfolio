@@ -2,7 +2,7 @@
 
 Prototipo aprobado: **v10** (21 nov 2026) — https://claude.ai/artifact/7JiMQ8FFLv7ZuTzeAigXfA
 Copia local: carpeta `prototipo-v10/` (abrir `index.html` con un servidor local, p. ej. `npx serve prototipo-v10`).
-Repositorio: https://github.com/kendallchacon/portfolio (Astro 6 + Tailwind 4, deploy en Vercel, rama por defecto `master`).
+Repositorio: https://github.com/kendallchacon/portfolio (Astro 7 + Tailwind 4, deploy en Vercel, rama por defecto `master`).
 
 El prototipo es **referencia visual y de comportamiento**, no código para copiar tal cual: es un HTML único generado por scripts. En Astro se reconstruye por componentes y datos tipados.
 
@@ -26,7 +26,7 @@ El prototipo es **referencia visual y de comportamiento**, no código para copia
   - Acento `#5B8CFF`, éxito/commits `#3DDC97`, aviso `#F5B451`.
   - Ramas: profesional `#5B8CFF`, proyectos `#3DDC97`, logros `#F5B451`, docencia `#FF6B9A`, formación `#B58CFF`.
   - Radios 28 / 18 / 12 px. Easing `cubic-bezier(.2,.7,.2,1)`.
-- Logos de tecnologías: oficiales (simple-icons) en su color de marca, dentro de un cuadro redondeado.
+- Logos de tecnologías: oficiales, en su color de marca, dentro de un cuadro redondeado (ver §10 para fuentes y casos especiales).
 - Movimiento con propósito; todo respeta `prefers-reduced-motion`.
 
 ## 3. Estructura de la página (una sola página + casos)
@@ -52,17 +52,16 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 ## 4. Contenido y datos verificados
 
 - **Flameware** (del informe): 16 historias/tareas, 34 subtareas, 53 pruebas en validación de DTOs; historias CRH-117 (catálogo con filtros y moneda), CRH-135 (panel del propietario), CRH-150 (corte quincenal con vista previa), PR #17 (panel administrativo). Stack: PHP, MySQL, JavaScript, Docker, Jira, Symfony Validator.
-- **MatchGo**: matchgo-mobile 170 commits de Kendall (65 %), 19 PRs integrados. Backend .NET 10, YARP, 4 servicios con PostgreSQL propio (PostGIS en Booking), RabbitMQ + MassTransit outbox/inbox, Flutter + Riverpod, Next.js admin. Solo demo local con Docker Compose. La restricción GiST la escribió Cristofer: **no atribuírsela a Kendall**.
-- **CIMA**: cima-mobile 52 commits, cima-backend 40 (DevTeam-DAKFC, repos públicos). **Faltan capturas de la app.**
+- **MatchGo**: matchgo-mobile 170 commits de Kendall (65 %), 19 PRs integrados. Backend .NET 10, YARP, 4 servicios con PostgreSQL propio (PostGIS en Booking), RabbitMQ + MassTransit outbox/inbox, Flutter + Riverpod, Next.js admin. Solo demo local con Docker Compose. La restricción GiST la escribió Cristofer: **no atribuírsela a Kendall**. La contribución de Kendall a `matchgo-backend` **no está confirmada**: el respaldo es solo `matchgo-mobile`.
+- **CIMA**: cima-mobile 52 commits, cima-backend 40 (DevTeam-DAKFC, repos públicos). Jira `CIMA` con 30 historias en 6 épicas. **Faltan capturas de la app.**
 - **Beto y Más**: Laravel, Vue 3, TS, Inertia, MySQL, Phaser, PHPUnit; equipo de 5, 3 semestres, en producción (betoymas.com), código privado del cliente.
 - **Lab**: github.com/kendallchacon/docker-kubernetes-lab (+ presentation).
-- Hashes de Beto, logros, docencia y formación en el prototipo son **decorativos**.
+- Todos los hashes del git log (Flameware, MatchGo, CIMA, Beto, logros, docencia y formación) son **decorativos**.
 - Repos privados (matchgo-*): en el sitio mostrar fragmentos cortos con aviso "repositorio privado", sin enlaces.
 
 ## 5. Problemas del sitio actual a corregir
 
-- `site` en `astro.config.mjs` dice `portfolio-kendallchacon.vercel.app` (falta el guion): debe ser `https://portfolio-kendall-chacon.vercel.app`.
-- `package.json` se llama `density-disk` (plantilla) → `portfolio`.
+- ~~`site` en `astro.config.mjs`~~ y ~~nombre del paquete~~: corregidos en la iteración 0.
 - Proyectos de relleno, JSON-LD, imágenes sin optimizar, typos, ruta del CV en README, enlace de Beto `share.google/...`.
 - Páginas separadas (`perfil`, `experiencia`, `certificaciones`…) → pasan a una sola página + rutas de casos (dejar redirecciones).
 
@@ -73,7 +72,7 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 - Por cada iteración: rama desde `dev` con prefijo convencional → PR hacia `dev` → revisar el preview de Vercel → merge (squash).
   - `feat/…` funcionalidad, `fix/…` corrección, `chore/…` configuración, `content/…` textos/datos, `perf/…`, `docs/…`.
 - Cuando `dev` está estable: PR `dev → master` (release), etiqueta `v2.0.0`, etc.
-- Commits convencionales en inglés o español, pequeños: `feat(hero): add contribution grid background`.
+- Commits convencionales en inglés, pequeños: `feat(hero): add contribution grid background`, con cuerpo `Work done: …`.
 - Protección de ramas en GitHub para `master` (y luego `dev`): requerir PR y que pase el build.
 - CI mínimo (GitHub Actions): `npm ci`, `astro check`, `astro build` en cada PR.
 
@@ -81,14 +80,15 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 
 | # | Rama | Alcance |
 |---|------|---------|
-| 0 | `chore/setup-dev-workflow` | Crear `dev`, CI de build, `CLAUDE.md`, plantilla de PR, corregir `site` y nombre del paquete, `docs/prototype/` (sin videos pesados ni PDF). |
-| 1 | `feat/foundation` | Fuentes Geist, tokens en `global.css` (`@theme` de Tailwind 4), BaseLayout oscuro, utilidades (`.wrap`, botones, logos). i18n de Astro (`es` por defecto, `/en/`) y diccionario de UI. |
-| 2 | `feat/data-model` | `src/data/*.ts` nuevo y bilingüe: perfil, servicios, experiencia (tipo commit), proyectos, criterio, contacto, tecnologías→logo. Borrar datos de relleno. |
+| 0 | `chore/setup-dev-workflow` | Hecha (PR #2): `dev`, CI, `CLAUDE.md`, plantilla de PR, `site`, nombre del paquete, `docs/prototype/`. |
+| 1 | `feat/foundation` | Hecha (PR #4): fuentes Geist, tokens, BaseLayout oscuro, utilidades, i18n de Astro y diccionario de UI. |
+| 2A | `feat/data-model` | Hecha (PR #5): datos viejos a `src/data/legacy/`; `types`, `tech` (con iconos), `profile`, `services`, `contact`. |
+| 2B | `feat/data-model-content` | `projects`, `experience`, `criterio` (y el tipo `Branch`). Solo lo confirmado; lo demás con `// VERIFICAR`. |
 | 3 | `feat/shell` | Navbar en cápsula, indicador, menú móvil, paleta `Ctrl K`, selector de idioma, barra de progreso, footer. |
 | 4 | `feat/hero-services` | Portada + canvas de contribuciones (island ligera en TS) + franja de evidencias; bento de servicios con log de API animado y referencias. |
 | 5 | `feat/about-experience` | Foto + terminal interactiva; git log con filtros, KPIs, desplegables y visor de adjuntos. |
 | 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
-| 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas (`perfil`, `experiencia`, `certificaciones`…) y dejar redirecciones. |
+| 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
 | 8 | `feat/motion-polish` | Revelados, títulos que se escriben, spotlight global, bordes con cursor, riel de progreso, reduced-motion. |
 | 9 | `perf/seo-a11y` | Imágenes con `astro:assets` (AVIF/WebP), videos livianos con poster, metadatos, JSON-LD Person, sitemap, Lighthouse ≥ 95, foco visible, contraste. |
 | Release | `release` | PR `dev → master`, revisión final en Vercel, etiqueta. |
@@ -108,32 +108,36 @@ Referencia visual: docs/prototype/index.html, sección <sección> (selector/clas
 Alcance: <lista concreta>. Fuera de alcance: <lista>.
 Usa los datos de src/data, no texto quemado en componentes. Componentes pequeños en src/components/<área>/.
 JS solo donde haya interacción (script de Astro o island mínima), respeta prefers-reduced-motion.
-Al terminar: npm run build, resume los cambios y propón los mensajes de commit (con los archivos de cada uno) y la descripción del PR. No hagas commits, push ni merge: los hago yo.
+Muéstrame el plan antes de tocar archivos.
+Al terminar: npm run build y npx astro check, resume los cambios y propón los mensajes de commit (en inglés, con cuerpo "Work done: …" y los archivos de cada uno) y la descripción del PR (en español, sin mencionar a Claude ni el plan de iteraciones). No hagas commits, push, merge ni PR: los hago yo.
 ```
 
-Prompt de arranque (iteración 0):
-
-```
-Lee docs/HANDOFF_DESARROLLO.md. Vamos con la iteración 0.
-
-Antes de proponer el plan, revisa solo en lectura: git status (debe estar limpio salvo docs/ y prototipo-v10/, que copié sin versionar), package.json, package-lock.json, .gitignore, cuánto pesa prototipo-v10/ y si hay .mp4 ya versionados, y la versión de Node en engines/.nvmrc. Confirma que existen docs/HANDOFF_DESARROLLO.md, docs/CLAUDE.template.md y prototipo-v10/; si falta alguno, detente y avísame.
-
-Tareas:
-1) Crea la rama dev desde master y luego chore/setup-dev-workflow desde dev.
-2) Agrega CLAUDE.md en la raíz con el contenido de docs/CLAUDE.template.md.
-3) Agrega .github/workflows/ci.yml (checkout, setup-node con caché npm, npm ci, npx astro check, npm run build) en pull_request hacia dev y master, y .github/pull_request_template.md en español con el checklist de "terminado" del handoff (build, 1440 px y 390 px, ES/EN, consola limpia, reduced-motion).
-4) Corrige site en astro.config.mjs a https://portfolio-kendall-chacon.vercel.app y el name de package.json a "portfolio". Actualiza también el name en package-lock.json para que npm ci no quede inconsistente. Haz grep de "portfolio-kendallchacon" y solo repórtame otras apariciones, no las corrijas.
-5) Mueve prototipo-v10/ a docs/prototype/ (git mv si está versionado, mv si no). Agrega docs/prototype/media/*.mp4 y docs/prototype/*.pdf a .gitignore (el CV real irá en public/ más adelante). Si algún .mp4 ya está versionado, avísame en vez de resolverlo.
-
-Reglas: cambios mínimos, nada fuera de este alcance. Si npx astro check necesita @astrojs/check y typescript y no están instalados, no los agregues: dímelo y propón la opción. Si astro check falla por código existente, no lo arregles: reporta los errores.
-Commits pequeños y convencionales, en este orden: docs (incluye docs/HANDOFF_DESARROLLO.md y docs/CLAUDE.template.md, y CLAUDE.md), ci, fix(config), docs(prototype). No hagas push, merge ni PR.
-
-Muéstrame el plan antes de tocar archivos. Al terminar: corre npm ci, npx astro check y npm run build, y dame resumen, git log --oneline de la rama y la descripción propuesta para el PR.
-```
+(El prompt de arranque de la iteración 0 ya se usó y se retiró de este documento.)
 
 ## 9. Pendientes de Kendall
 
 - Capturas de CIMA (historial, comparativo, reportes).
 - Capturas de Flameware (diapositivas 5–7 del informe final), si se pueden mostrar.
 - Confirmar si se puede nombrar públicamente a Flameware / Costa Rica Homes Realty (el informe dice que sí, con referencias públicas).
-- Consentimiento para avatares de terceros en capturas de MatchGo 09/10.
+- Consentimiento para avatares de terceros en capturas de MatchGo 01, 06, 09 y 10.
+- Contribución real a `matchgo-backend` (define cómo se redacta el servicio "Backend y APIs").
+- Confirmar: Flameware (tres practicantes, remoto, seguridad de cuentas, CRM de agentes), fechas del tutor, "lideré la app móvil", UnaRoom (Room + FCM) en el Lab, autoría de ADR 0003, ADR 0010 y `dio_failure_mapper`, y si los fragmentos de repos privados son literales o adaptados.
+
+## 10. Notas técnicas acumuladas
+
+**Datos y contenido**
+- Todo dato dudoso lleva `// VERIFICAR` en `src/data/`. Un dato con `VERIFICAR` no se renderiza hasta resolverlo. Antes de cada iteración que renderice datos, `grep -rn VERIFICAR src/data` sobre los archivos que usa debe quedar vacío o con lo pendiente retirado de la vista.
+- `src/data/legacy/` contiene los datos del sitio anterior y se elimina en la iteración 7 junto con las páginas viejas. No copiar nada de ahí (por ejemplo, el copy "busco práctica").
+- Los repos privados no pueden tener `url` (lo impone el tipo `RepoRef`), y los fragmentos de código tienen un máximo de líneas por tipo (`SNIPPET_MAX_LINES`).
+
+**Iconos de tecnologías** (`src/data/tech.ts`)
+- Solo los `simple-icons:*` (monocromo) usan `brandColor`. Los de `devicon:*` y los SVG locales de `src/icons/` son multicolor y conservan sus colores.
+- Sin logo vectorial oficial: MassTransit y Retrofit usan un icono genérico de heroicons. YARP, GHCR y Room usan el logo de su familia (.NET, GitHub, Android).
+- **Phaser**: su política de marca (phaser.io/download/trademark) prohíbe modificar el logo, salvo escalarlo. No recolorear ni editar el SVG; si se pierde sobre fondo oscuro, mostrarlo sobre un chip claro.
+- Los SVG de Phaser y PHPUnit traen `<style>` con clases genéricas (`.cls-N`, `.st0`–`.st3`) e ids repetidos (`clippath`, `radial-gradient`, `Layer_1`). Al renderizarlos hay que aislarlos (por ejemplo como imagen con `astro:assets`) sin editar el archivo.
+- Baldosas casi negras contra el fondo (Next.js, Symfony Validator, GHCR) necesitan borde visible. Glifos blancos sobre baldosa clara (JavaScript, Android, Room, Vue) se resuelven en el componente, como en el prototipo (glifo `#0B0D12` en JavaScript y Android).
+- PHPUnit es una insignia apaisada (2,5:1), no cuadrada.
+
+**Entorno**
+- Astro 7: `compressHTML: 'jsx'` no renderiza espacios entre elementos en línea; separarlos con `gap`/flex o `{' '}`.
+- Node ≥ 22.23.4. El CI usa `node-version: 22`.
