@@ -39,7 +39,6 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
       es: "Práctica profesional · desarrollador full stack",
       en: "Professional internship · full stack developer",
     },
-    // VERIFICAR: nombre público de Flameware Technologies y Costa Rica Homes Realty (handoff §9).
     subtitle: both("Flameware Technologies · Costa Rica Homes Realty"),
     // Solo lo respaldado por el handoff §4 (el prototipo agrega detalles que se omiten).
     // VERIFICAR: «de comisiones» viene solo del prototipo; el handoff §4 dice «corte quincenal con
@@ -85,26 +84,44 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
     date: { es: "Ago – nov 2026", en: "Aug – Nov 2026" },
     branch: "proyectos",
     // VERIFICAR: si se confirma la revisión del modelo de datos, agregar «y modelo de datos» /
-    // «and data model» al título (matchgo-backend sin confirmar, ver projects.ts y handoff §9).
+    // «and data model» al título (revisión del modelo de datos sin confirmar; ver projects.ts).
     title: {
-      es: "MatchGo · app móvil",
-      en: "MatchGo · mobile app",
+      es: "MatchGo · app móvil y backend",
+      en: "MatchGo · mobile app and backend",
     },
     subtitle: { es: "Proyecto final en equipo · UNA", en: "Team capstone · UNA" },
     // VERIFICAR: si se confirma, agregar «Antes de implementar, revisé el modelo de datos de los
     // cuatro servicios .NET.» / «Before implementation, I reviewed the data model of the four
-    // .NET services.» (matchgo-backend sin confirmar).
+    // .NET services.» (revisión del modelo de datos sin confirmar).
     body: {
-      es: "Desarrollé la app móvil en Flutter: autenticación, reservas, retos, equipos, comunidad y notificaciones.",
-      en: "I developed the Flutter mobile app: authentication, bookings, challenges, teams, community and notifications.",
+      es: "Desarrollé la app móvil en Flutter, con mayor peso en autenticación, reservas, comunidad y notificaciones, y colaboré en equipos y retos. En el backend .NET inicié la arquitectura de microservicios (monorepo, Gateway YARP, Docker Compose y CI inicial) y documenté las decisiones iniciales de arquitectura en ADR.",
+      en: "I developed the Flutter mobile app, mainly authentication, bookings, community and notifications, and contributed to teams and challenges. On the .NET backend I started the microservices architecture (monorepo, YARP Gateway, Docker Compose and initial CI) and documented the initial architecture decisions in ADRs.",
     },
+    stories: [
+      {
+        es: "Identity · login, refresh y logout con tokens RS256, refresh con rotación y sesiones revocables",
+        en: "Identity · login, refresh and logout with RS256 tokens, rotating refresh and revocable sessions",
+      },
+      {
+        es: "Competition · invitaciones, roles captain y member, y autorización contextual",
+        en: "Competition · invitations, captain and member roles, and contextual authorization",
+      },
+      {
+        es: "Community · moderación y directorio de miembros",
+        en: "Community · moderation and member directory",
+      },
+      {
+        es: "Autenticación servicio a servicio entre Booking e Identity y contratos OpenAPI de estos endpoints",
+        en: "Service-to-service authentication between Booking and Identity, and OpenAPI contracts for these endpoints",
+      },
+    ],
     kpis: [
       { value: 170, label: { es: "commits en matchgo-mobile", en: "commits in matchgo-mobile" } },
       { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
       { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
     ],
-    // Sin .NET ni PostgreSQL: son del backend, cuya contribución no está confirmada.
-    tech: ["flutter", "riverpod"],
+    // Backend: solo lo que Kendall implementó o inició; sin RabbitMQ ni MassTransit.
+    tech: ["flutter", "riverpod", "dotnet", "yarp", "jwt", "docker", "postgresql"],
     project: "matchgo",
   },
 

@@ -74,6 +74,7 @@ export type Project = {
   scene: Scene;
 };
 
+const matchgoBackend: RepoRef = { name: "matchgo-backend", visibility: "private" };
 const matchgoMobile: RepoRef = { name: "matchgo-mobile", visibility: "private" };
 
 export const projects = [
@@ -85,11 +86,11 @@ export const projects = [
       en: "Multi-sport platform to book courts, challenge teams and organize matches.",
     },
     // VERIFICAR: si se confirma, agregar «y revisé el modelo de datos de los 4 servicios» /
-    // «and reviewed the data model of the 4 services». Toca matchgo-backend, cuya contribución
-    // de Kendall no está confirmada (handoff §4 y §9); lo respaldado es matchgo-mobile.
+    // «and reviewed the data model of the 4 services» (revisión sin confirmar; la contribución
+    // al backend sí está confirmada, handoff §4).
     myPart: {
-      es: "Desarrollé la app móvil en Flutter",
-      en: "Developed the Flutter mobile app",
+      es: "Desarrollé la app móvil en Flutter e inicié el backend .NET: arquitectura de microservicios y funcionalidades de Identity, Competition y Community",
+      en: "Developed the Flutter mobile app and started the .NET backend: microservices architecture and features in Identity, Competition and Community",
     },
     team: {
       label: {
@@ -119,8 +120,12 @@ export const projects = [
       { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
       { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
     ],
-    // Repositorio privado: sin url. Solo matchgo-mobile tiene respaldo de la contribución de Kendall.
-    repos: [{ repo: matchgoMobile, detail: both("19 PRs") }],
+    // Repos privados: sin url. matchgo-backend y matchgo-mobile tienen respaldo de la contribución
+    // de Kendall (handoff §4).
+    repos: [
+      { repo: matchgoBackend, detail: both("Identity · Competition · Community") },
+      { repo: matchgoMobile, detail: both("19 PRs") },
+    ],
     links: [],
     scene: {
       type: "phones",
