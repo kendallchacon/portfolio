@@ -114,7 +114,6 @@ export const evidence: readonly Evidence[] = [
       es: "Práctica profesional concluida",
       en: "Professional internship completed",
     },
-    // VERIFICAR: nombrar públicamente a Flameware está pendiente de confirmar (handoff §9).
     detail: both("Flameware Technologies · 2026"),
   },
   {
