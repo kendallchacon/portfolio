@@ -41,6 +41,9 @@ export type ExperienceId =
   | "diplomado"
   | "proyectos-java";
 
+/** Ramas del git log de experiencia; coinciden con los tokens `--color-branch-*` de global.css. */
+export type Branch = "profesional" | "proyectos" | "logros" | "docencia" | "formacion";
+
 /**
  * Imagen o captura referida por nombre de archivo, relativo a `docs/prototype/media/`
  * por ahora. No se importa nada aquí: la resolución con `astro:assets` llega con los
