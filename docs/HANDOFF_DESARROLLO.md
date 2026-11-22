@@ -31,7 +31,7 @@ El prototipo es **referencia visual y de comportamiento**, no código para copia
 
 ## 3. Estructura de la página (una sola página + casos)
 
-1. **Navbar** flotante en cápsula: logo `kendall.dev`, secciones, buscador `Ctrl K` (paleta de comandos), selector ES/EN, botón CV. Indicador deslizante bajo la sección activa. Menú hoja en móvil.
+1. **Navbar** flotante en cápsula: logo `~/kendall`, secciones, buscador `Ctrl K` (paleta de comandos), selector ES/EN, botón CV. Indicador deslizante bajo la sección activa. Menú hoja en móvil.
 2. **Portada** (100svh): estado "Disponible…", titular "Desarrollo backend y full stack que llega a producción.", texto, 2 botones, 8 logos.
    Fondo: **mapa de contribuciones decorativo** (canvas) que cubre toda la portada; aparece en onda desde el centro, se atenúa detrás del texto, celdas cambian lento, **brillo bajo el cursor**. No usa el historial real.
 3. **Franja de evidencias** (debajo del pliegue): Bachillerato 9,0 · Práctica concluida · Plataforma en producción · 1.er lugar Infocontexto 2026.
@@ -116,6 +116,7 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 
 ## 9. Pendientes de Kendall
 
+- CV: el botón del navbar descarga un solo PDF por ahora; habrá versiones es/en cuando Kendall las entregue.
 - Capturas de CIMA (historial, comparativo, reportes).
 - Capturas de Flameware (diapositivas 5–7 del informe final), si se pueden mostrar.
 - Confirmar si se puede nombrar públicamente a Flameware / Costa Rica Homes Realty (el informe dice que sí, con referencias públicas).
