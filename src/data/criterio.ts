@@ -40,11 +40,11 @@ export const criterio = [
       en: "The rule lives where it can't be skipped",
     },
     body: {
-      es: "Dos personas pueden reservar la misma cancha a la vez. En MatchGo no lo evita un if: lo evita PostgreSQL con una restricción de exclusión sobre el rango de la reserva.",
-      en: "Two people can book the same court at once. In MatchGo an if doesn't prevent it: PostgreSQL does, with an exclusion constraint over the booking range.",
+      es: "Dos personas pueden reservar la misma cancha a la vez. En MatchGo, el equipo no lo dejó a un if: lo evita PostgreSQL con una restricción de exclusión sobre el rango de la reserva.",
+      en: "Two people can book the same court at once. In MatchGo, the team didn't leave it to an if: PostgreSQL prevents it, with an exclusion constraint over the booking range.",
     },
     file: {
-      // La restricción GiST la escribió Cristofer: NO atribuírsela a Kendall.
+      // La restricción GiST la escribió un compañero: NO atribuírsela a Kendall.
       authorship: "team",
       snippet: {
         kind: "sql",
@@ -66,12 +66,11 @@ export const criterio = [
     id: "base-por-servicio",
     title: { es: "Cada servicio es dueño de sus datos", en: "Each service owns its data" },
     body: {
-      es: "Una base de datos por servicio, sin llaves foráneas ni joins entre servicios. Lo que cruza fronteras viaja por APIs o eventos con IDs estables. La decisión quedó escrita en un ADR, con sus costos.",
-      en: "One database per service, with no cross-service foreign keys or joins. Anything crossing boundaries travels through APIs or events with stable IDs. The decision is written in an ADR, with its costs.",
+      es: "Una base de datos por servicio, sin llaves foráneas ni joins entre servicios. Lo que cruza fronteras viaja por APIs o eventos con IDs estables. La decisión la dejé escrita en un ADR, con sus costos.",
+      en: "One database per service, with no cross-service foreign keys or joins. Anything crossing boundaries travels through APIs or events with stable IDs. I wrote the decision down in an ADR, with its costs.",
     },
     file: {
-      // VERIFICAR: autoría de ADR 0003 (handoff §9).
-      authorship: "unconfirmed",
+      authorship: "own",
       snippet: {
         kind: "md",
         repo: matchgoBackend,
@@ -100,8 +99,8 @@ export const criterio = [
       en: "Accepting a challenge touches two databases. Instead of a distributed transaction, the challenge ID is the reservation's idempotency key: if the network fails and the request is retried, no second booking appears.",
     },
     file: {
-      // VERIFICAR: autoría de ADR 0010 (handoff §9).
-      authorship: "unconfirmed",
+      // ADR 0010 es del equipo: sin primera persona en el texto.
+      authorship: "team",
       snippet: {
         kind: "md",
         repo: matchgoBackend,
@@ -123,15 +122,12 @@ export const criterio = [
   {
     id: "errores-tipados",
     title: { es: "Los errores también son contrato", en: "Errors are part of the contract" },
-    // VERIFICAR (principio 3): «En las apps que construí» depende de que Kendall sea autor de
-    // dio_failure_mapper, cuya autoría está sin confirmar (handoff §9).
     body: {
       es: "En las apps que construí, cada respuesta del servidor se convierte en un error tipado. La pantalla sabe si fue validación, conflicto o límite de solicitudes, y un 504 se marca como resultado incierto para no repetir un cobro o una reserva.",
       en: "In the apps I built, every server response becomes a typed error. The screen knows whether it was validation, a conflict or rate limiting, and a 504 is flagged as an uncertain outcome so a payment or booking isn't repeated.",
     },
     file: {
-      // VERIFICAR: autoría de dio_failure_mapper (handoff §9).
-      authorship: "unconfirmed",
+      authorship: "own",
       snippet: {
         kind: "dart",
         repo: matchgoMobile,
