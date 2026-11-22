@@ -1,134 +1,140 @@
 ---
 import { Icon } from "astro-icon/components";
-import ButtonLink from "../common/ButtonLink.astro";
-import { navigationItems } from "../../data/legacy/navigation";
-import { SITE_CONFIG } from "../../data/legacy/config";
+import { contact } from "../../data/contact";
+import { pick } from "../../data/types";
+import { navSections, sectionHref, useTranslations, type Lang } from "../../i18n/ui";
+import LangSwitch from "./LangSwitch.astro";
+import MobileMenu from "./MobileMenu.astro";
 
-// Ítem activo detectado con la ruta actual de Astro (normalizada sin barra final).
-const current = Astro.url.pathname.replace(/\/+$/, "") || "/";
-const isActive = (href: string): boolean => {
-  const target = href.replace(/\/+$/, "") || "/";
-  if (target === "/") return current === "/";
-  return current === target || current.startsWith(`${target}/`);
-};
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = "es" } = Astro.props;
+const t = useTranslations(lang);
+const cv = contact.channels.find((channel) => channel.id === "cv");
 ---
 
-<header
-  id="site-header"
-  class="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950 transition-transform duration-300 ease-out md:bg-slate-950/80 md:backdrop-blur"
->
-  <nav
-    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6"
-    role="navigation"
-    aria-label="Navegación principal"
+<header class="pointer-events-none fixed inset-x-0 top-0 z-70 px-3 pt-2.5">
+  {/* El fondo con blur va en ::before: un backdrop-filter en el contenedor haría de bloque
+      contenedor de la hoja móvil (position: fixed) y la descolocaría. */}
+  <div
+    class="pointer-events-auto relative isolate mx-auto flex h-13.5 w-full max-w-310 items-center gap-3.5 pr-2 pl-2.5 before:absolute before:inset-0 before:-z-10 before:rounded-full before:border before:border-line before:bg-surface-1/70 before:backdrop-blur-xl before:backdrop-saturate-150"
   >
     <a
-      href="/"
-      class="nav-focus rounded-md text-lg font-bold tracking-tight text-white"
+      href={sectionHref("inicio", lang)}
+      aria-label={t("nav.home")}
+      class="flex min-h-11 items-center gap-2.5 rounded-full font-mono text-[15px] font-semibold tracking-tight whitespace-nowrap"
     >
-      Kendall Chacón
+      <span class="grid size-8.5 place-items-center rounded-full bg-ink text-bg" aria-hidden="true">
+        <Icon name="heroicons:command-line" class="size-4.5" />
+      </span>
+      <span>{t("nav.brand")}</span>
     </a>
 
-    <!-- Navegación desktop: tubelight pill -->
-    <ul
-      class="tubelight hidden items-center gap-1 rounded-full p-1 md:flex"
-    >
-      {
-        navigationItems.map((item) => {
-          const active = isActive(item.href);
-          return (
+    <nav data-nav aria-label={t("nav.label")} class="relative mx-auto hidden min-[980px]:block">
+      <ul class="flex gap-0.5">
+        {
+          navSections.map((id) => (
             <li>
               <a
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                class:list={[
-                  "nav-pill nav-focus relative block rounded-full px-5 py-2 text-sm font-semibold transition-colors",
-                  active
-                    ? "is-active text-white font-medium"
-                    : "text-slate-400 hover:text-white",
-                ]}
+                href={sectionHref(id, lang)}
+                data-section={id}
+                class="relative z-10 block rounded-full px-2.75 py-2 text-[14.5px] font-medium text-ink-2 transition-colors hover:text-ink aria-[current=location]:text-ink min-[1100px]:px-3.75"
               >
-                <span class="relative z-10">{item.label}</span>
-                <span class="nav-lamp" aria-hidden="true">
-                  <span class="nav-lamp__bar" />
-                </span>
+                {t(`nav.${id}`)}
               </a>
             </li>
-          );
-        })
-      }
-    </ul>
-
-    <div class="flex items-center gap-3">
-      <ButtonLink
-        href={SITE_CONFIG.cv}
-        download
-        class="hidden md:inline-flex"
-      >
-        Descargar CV
-      </ButtonLink>
-
-      <button
-        type="button"
-        id="mobile-menu-button"
-        class="nav-focus inline-flex size-11 items-center justify-center rounded-full border border-slate-800 bg-slate-900/60 text-slate-200 transition hover:border-(--accent) hover:text-(--accent) md:hidden"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        aria-label="Abrir navegación"
-      >
-        <Icon name="heroicons:bars-3" class="menu-open-icon size-5" />
-        <Icon name="heroicons:x-mark" class="menu-close-icon hidden size-5" />
-      </button>
-    </div>
-  </nav>
-
-  <!-- Navegación móvil: drawer con backdrop -->
-  <div id="mobile-menu" class="hidden md:hidden">
-    <button
-      id="mobile-menu-backdrop"
-      type="button"
-      tabindex="-1"
-      aria-hidden="true"
-      class="fixed inset-0 z-40 cursor-default bg-slate-950/70 backdrop-blur-sm"
-    >
-    </button>
-
-    <div
-      class="relative z-50 border-t border-slate-800 bg-slate-950/95 px-4 py-4 shadow-2xl shadow-slate-950/40"
-    >
-      <ul class="mx-auto grid max-w-6xl gap-1.5">
-        {
-          navigationItems.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <li>
-                <a
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  class:list={[
-                    "nav-focus flex items-center gap-3 border-l-2 py-3 text-sm transition-colors duration-200",
-                    active
-                      ? "border-(--accent) pl-3.5 font-medium text-(--accent)"
-                      : "border-transparent pl-4 text-slate-400 hover:text-slate-200",
-                  ]}
-                >
-                  {item.icon && (
-                    <Icon
-                      name={item.icon}
-                      class:list={[
-                        "size-5 shrink-0 transition-colors duration-200",
-                        active ? "text-(--accent)" : "text-slate-400 group-hover:text-slate-200",
-                      ]}
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span>{item.label}</span>
-                </a>
-              </li>
-            );
-          })
+          ))
         }
       </ul>
+      <i
+        data-nav-indicator
+        aria-hidden="true"
+        class="pointer-events-none absolute top-1/2 left-0 z-0 h-8.5 w-0 -translate-y-1/2 rounded-full bg-surface-3 opacity-0 transition-[transform,width,opacity] duration-450 ease-brand motion-reduce:transition-none"
+      >
+      </i>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-2 min-[980px]:ml-0">
+      <LangSwitch lang={lang} />
+      {
+        cv && (
+          <a
+            href={cv.href}
+            download
+            aria-label={`${pick(cv.label, lang)}: ${pick(cv.value, lang)}`}
+            class="btn pri sm hidden min-[980px]:inline-flex"
+          >
+            <Icon name={cv.icon} class="size-4 shrink-0" aria-hidden="true" />
+            <span>{pick(cv.label, lang)}</span>
+          </a>
+        )
+      }
+      <MobileMenu lang={lang} />
     </div>
   </div>
 </header>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+  const indicator = nav?.querySelector<HTMLElement>("[data-nav-indicator]");
+
+  if (nav && indicator) {
+    const links = new Map(
+      Array.from(nav.querySelectorAll<HTMLAnchorElement>("a[data-section]")).map((a) => [a.dataset.section!, a]),
+    );
+    // Todas las secciones de la página, en orden del documento. Las que no tienen enlace
+    // (inicio, sobre-mi) ceden el indicador a la sección con enlace anterior, si la hay.
+    const sections = Array.from(document.querySelectorAll<HTMLElement>("main section[id]"));
+    let current: HTMLAnchorElement | undefined;
+    let placed = false;
+
+    const place = () => {
+      if (!current) {
+        indicator.style.opacity = "0";
+        return;
+      }
+      // Primera colocación: sin deslizar desde el origen.
+      if (!placed) indicator.style.transition = "none";
+      indicator.style.opacity = "1";
+      indicator.style.width = `${current.offsetWidth}px`;
+      indicator.style.transform = `translate(${current.offsetLeft}px, -50%)`;
+      if (!placed) {
+        void indicator.offsetWidth;
+        indicator.style.transition = "";
+        placed = true;
+      }
+    };
+
+    const setCurrent = (link: HTMLAnchorElement | undefined) => {
+      current = link;
+      links.forEach((a) => {
+        if (a === link) a.setAttribute("aria-current", "location");
+        else a.removeAttribute("aria-current");
+      });
+      place();
+    };
+
+    if (sections.length) {
+      const reached = new Set<Element>();
+      // Franja del 40 % superior del viewport: la sección vigente es la última que la toca.
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => (e.isIntersecting ? reached.add(e.target) : reached.delete(e.target)));
+          let link: HTMLAnchorElement | undefined;
+          for (let i = sections.findLastIndex((s) => reached.has(s)); i >= 0 && !link; i--) {
+            link = links.get(sections[i].id);
+          }
+          setCurrent(link);
+        },
+        { rootMargin: "0px 0px -60% 0px" },
+      );
+      sections.forEach((s) => observer.observe(s));
+    }
+
+    // El ancho de los enlaces cambia al cargar la fuente y al redimensionar.
+    new ResizeObserver(place).observe(nav);
+    document.fonts?.ready.then(place);
+  }
+</script>
