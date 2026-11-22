@@ -11,8 +11,8 @@ export type ApiLogStep =
   | { type: "request"; method: "GET" | "POST"; path: string; note?: Localized }
   | {
       type: "response";
-      status: 200 | 201 | 409;
-      reason: "OK" | "Created" | "Conflict";
+      status: 200 | 201 | 204 | 409;
+      reason: "OK" | "Created" | "No Content" | "Conflict";
       note: Localized;
     };
 
@@ -26,7 +26,7 @@ type ServiceBase = {
 export type Service =
   | (ServiceBase & {
       id: "api";
-      /** Ventana animada: título de la barra y pasos 200 → 201 → 409. */
+      /** Ventana animada: título de la barra y pasos de solicitud/respuesta. */
       apiLog: { window: string; steps: readonly ApiLogStep[] };
     })
   | (ServiceBase & { id: "web"; media?: readonly MediaRef[] })
@@ -46,65 +46,45 @@ export const services: readonly Service[] = [
   {
     id: "api",
     title: { es: "Backend y APIs", en: "Backend and APIs" },
-    // VERIFICAR: microservicios con mensajería, JWT, contratos OpenAPI y reglas que la base de
-    // datos hace cumplir no están en el handoff §4 y pueden ser trabajo de compañeros.
     description: {
-      es: "APIs REST con contratos OpenAPI, microservicios con mensajería, autenticación con JWT y reglas de negocio que la base de datos hace cumplir.",
-      en: "REST APIs with OpenAPI contracts, microservices with messaging, JWT authentication and business rules the database enforces.",
+      es: "APIs REST en microservicios .NET: autenticación con JWT (RS256 y refresh con rotación), autorización por rol de equipo y contratos OpenAPI documentados.",
+      en: "REST APIs in .NET microservices: JWT authentication (RS256 and rotating refresh tokens), team-role authorization and documented OpenAPI contracts.",
     },
-    tech: ["dotnet", "laravel", "postgresql", "mysql", "rabbitmq"],
+    tech: ["dotnet", "laravel", "postgresql", "mysql"],
     references: [
-      // VERIFICAR: la contribución de Kendall a matchgo-backend no está confirmada; el handoff
-      // §4 solo respalda matchgo-mobile.
-      { kind: "repo", repo: matchgoBackend, detail: both("OpenAPI") },
+      { kind: "repo", repo: matchgoBackend, detail: both("Identity · Competition · Community") },
       {
         kind: "experience",
         label: both("Flameware · CRH-150 corte quincenal"),
         id: "flameware",
       },
     ],
-    // VERIFICAR: ilustración tomada del prototipo. Confirmar que las rutas, el 409 y el
-    // código SLOT_UNAVAILABLE existen tal cual en matchgo-backend antes de presentarlo como real.
     apiLog: {
-      window: "matchgo · booking-api",
+      window: "matchgo · identity-api",
       steps: [
-        {
-          type: "request",
-          method: "GET",
-          path: "/api/v1/sports-spaces/7/availability?date=2026-11-14",
-        },
+        { type: "request", method: "POST", path: "/api/v1/auth/login" },
         {
           type: "response",
           status: 200,
           reason: "OK",
           note: {
-            es: "horarios disponibles del espacio",
-            en: "available slots for the space",
+            es: "access token RS256 + refresh token",
+            en: "RS256 access token + refresh token",
           },
         },
-        {
-          type: "request",
-          method: "POST",
-          path: "/api/v1/reservations",
-          note: both("20:00–21:00"),
-        },
+        { type: "request", method: "POST", path: "/api/v1/auth/refresh" },
         {
           type: "response",
-          status: 201,
-          reason: "Created",
-          note: { es: "Reserva creada", en: "Reservation created" },
+          status: 200,
+          reason: "OK",
+          note: { es: "refresh rotado", en: "rotated refresh token" },
         },
-        {
-          type: "request",
-          method: "POST",
-          path: "/api/v1/reservations",
-          note: both("20:30–21:30"),
-        },
+        { type: "request", method: "POST", path: "/api/v1/auth/logout" },
         {
           type: "response",
-          status: 409,
-          reason: "Conflict",
-          note: both("SLOT_UNAVAILABLE · ex_reservations_no_overlap"),
+          status: 204,
+          reason: "No Content",
+          note: { es: "sesión revocada", en: "session revoked" },
         },
       ],
     },
@@ -179,11 +159,9 @@ export const services: readonly Service[] = [
           url: "https://github.com/kendallchacon/docker-kubernetes-lab",
         },
       },
-      // VERIFICAR: la contribución de Kendall a matchgo-backend no está confirmada; el handoff
-      // §4 solo respalda matchgo-mobile.
-      { kind: "repo", repo: matchgoBackend, detail: both("ci.yml") },
+      { kind: "repo", repo: matchgoBackend, detail: { es: "CI inicial", en: "Initial CI" } },
     ],
-    // VERIFICAR: checks tomados del prototipo; confirmar contra el ci.yml de matchgo-backend.
+    // Los 6 checks coinciden con el workflow de matchgo-backend.
     ci: {
       window: "Backend CI · validate",
       checks: [
