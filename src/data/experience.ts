@@ -1,0 +1,345 @@
+import type { ProjectSlug, Metric } from "./projects";
+import type { TechId } from "./tech";
+import { both, type Branch, type ExperienceId, type Localized, type MediaRef } from "./types";
+
+/** Cifra con contador animado: `{ value, decimals?, suffix?, label }`. */
+export type Kpi = Metric;
+
+export type ExperienceEntry = {
+  /** Hash del commit. DECORATIVO: no corresponde a ningún commit real. */
+  hash: string;
+  date: Localized;
+  branch: Branch;
+  title: Localized;
+  /** Organización o contexto bajo el título. */
+  subtitle: Localized;
+  body: Localized;
+  /** Historias destacadas (desplegable). */
+  stories?: readonly Localized[];
+  kpis?: readonly Kpi[];
+  /** Fotos y certificados con visor ampliado. Rutas relativas a `docs/prototype/media/`. */
+  attachments?: readonly MediaRef[];
+  tech?: readonly TechId[];
+  /** Etiquetas que no son tecnologías del registro (metodología, conceptos). */
+  tags?: readonly Localized[];
+  /** Si existe, la entrada enlaza al caso `/proyectos/<slug>`. */
+  project?: ProjectSlug;
+};
+
+/**
+ * Una entrada por cada `ExperienceId`, exactamente una vez: `Record` rechaza claves
+ * repetidas y faltantes.
+ */
+export const experience: Record<ExperienceId, ExperienceEntry> = {
+  flameware: {
+    hash: "f1a7c3e",
+    date: { es: "Ago – nov 2026 · concluida", en: "Aug – Nov 2026 · completed" },
+    branch: "profesional",
+    title: {
+      es: "Práctica profesional · desarrollador full stack",
+      en: "Professional internship · full stack developer",
+    },
+    // VERIFICAR: nombre público de Flameware Technologies y Costa Rica Homes Realty (handoff §9).
+    subtitle: both("Flameware Technologies · Costa Rica Homes Realty"),
+    // Solo lo respaldado por el handoff §4 (el prototipo agrega detalles que se omiten).
+    // VERIFICAR: «de comisiones» viene solo del prototipo; el handoff §4 dice «corte quincenal con
+    // vista previa», sin mencionar comisiones.
+    body: {
+      es: "Me integré a una plataforma inmobiliaria en PHP. Trabajé desde la validación de DTOs hasta el catálogo público y los cortes quincenales de comisiones.",
+      en: "I joined a real-estate platform built in PHP. I worked from DTO validation to the public catalog and biweekly commission settlements.",
+    },
+    stories: [
+      {
+        es: "CRH-117 · catálogo público con filtros y conversión de moneda",
+        en: "CRH-117 · public catalog with filters and currency conversion",
+      },
+      // VERIFICAR: «sin exponer contactos» viene solo del prototipo (handoff §4: «panel del propietario»).
+      {
+        es: "CRH-135 · panel del propietario sin exponer contactos",
+        en: "CRH-135 · owner dashboard without exposing contacts",
+      },
+      {
+        es: "CRH-150 · corte quincenal con vista previa",
+        en: "CRH-150 · biweekly settlement with preview",
+      },
+      // VERIFICAR: «fuera del sprint» viene solo del prototipo (handoff §4: «PR #17 panel administrativo»).
+      {
+        es: "PR #17 · panel administrativo, fuera del sprint",
+        en: "PR #17 · admin dashboard, outside the sprint",
+      },
+    ],
+    kpis: [
+      { value: 16, label: { es: "historias y tareas", en: "stories and tasks" } },
+      { value: 34, label: { es: "subtareas", en: "subtasks" } },
+      {
+        value: 53,
+        label: { es: "pruebas en validación de DTOs", en: "tests in DTO validation" },
+      },
+    ],
+    tech: ["php", "mysql", "javascript", "docker", "jira", "symfonyValidator"],
+  },
+
+  matchgo: {
+    hash: "19af078",
+    // VERIFICAR: la fecha «Ago – nov 2026» viene solo del prototipo (el handoff no la respalda).
+    date: { es: "Ago – nov 2026", en: "Aug – Nov 2026" },
+    branch: "proyectos",
+    // VERIFICAR: si se confirma la revisión del modelo de datos, agregar «y modelo de datos» /
+    // «and data model» al título (matchgo-backend sin confirmar, ver projects.ts y handoff §9).
+    title: {
+      es: "MatchGo · app móvil",
+      en: "MatchGo · mobile app",
+    },
+    subtitle: { es: "Proyecto final en equipo · UNA", en: "Team capstone · UNA" },
+    // VERIFICAR: si se confirma, agregar «Antes de implementar, revisé el modelo de datos de los
+    // cuatro servicios .NET.» / «Before implementation, I reviewed the data model of the four
+    // .NET services.» (matchgo-backend sin confirmar).
+    body: {
+      es: "Desarrollé la app móvil en Flutter: autenticación, reservas, retos, equipos, comunidad y notificaciones.",
+      en: "I developed the Flutter mobile app: authentication, bookings, challenges, teams, community and notifications.",
+    },
+    kpis: [
+      { value: 170, label: { es: "commits en matchgo-mobile", en: "commits in matchgo-mobile" } },
+      { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
+      { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
+    ],
+    // Sin .NET ni PostgreSQL: son del backend, cuya contribución no está confirmada.
+    tech: ["flutter", "riverpod"],
+    project: "matchgo",
+  },
+
+  "beto-y-mas": {
+    hash: "3e9a51f",
+    date: { es: "3 semestres", en: "3 semesters" },
+    branch: "proyectos",
+    title: both("Beto y Más · full stack"),
+    subtitle: {
+      es: "Proyecto de graduación para un cliente real · equipo de 5",
+      en: "Capstone for a real client · team of 5",
+    },
+    body: {
+      es: "Bubble Shooter de punta a punta, recompensas con exportación a CSV, ubicaciones, perfiles y el rediseño del home. La plataforma está en producción.",
+      en: "Bubble Shooter end to end, rewards with CSV export, locations, profiles and the home redesign. The platform is in production.",
+    },
+    tech: ["laravel", "vue", "typescript", "mysql"],
+    project: "beto-y-mas",
+  },
+
+  cima: {
+    hash: "b8c276d",
+    date: both("2026"),
+    branch: "proyectos",
+    title: { es: "CIMA · cliente Android", en: "CIMA · Android client" },
+    subtitle: {
+      es: "Proyecto académico en equipo · DevTeam-DAKFC",
+      en: "Team academic project · DevTeam-DAKFC",
+    },
+    body: {
+      es: "Historial de movimientos, comparativo mensual, reportes y notificaciones sobre un backend .NET, con errores de red tipados en el cliente.",
+      en: "Movements history, monthly comparison, reports and notifications over a .NET backend, with typed network errors on the client.",
+    },
+    kpis: [
+      { value: 52, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
+      { value: 40, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
+    ],
+    tech: ["kotlin", "jetpackCompose", "dotnet"],
+    project: "cima",
+  },
+
+  infocontexto: {
+    hash: "a2e91d0",
+    date: both("2026"),
+    branch: "logros",
+    title: { es: "1.er lugar · Infocontexto 2026", en: "1st place · Infocontexto 2026" },
+    subtitle: both("Universidad Nacional"),
+    body: {
+      es: "Presentación técnica de Beto y Más, elegida entre todos los proyectos del evento académico.",
+      en: "Technical presentation of Beto y Más, chosen among all the projects at the academic event.",
+    },
+    attachments: [
+      {
+        file: "infocontexto.jpg",
+        alt: {
+          es: "Equipo de Beto y Más en Infocontexto 2026",
+          en: "Beto y Más team at Infocontexto 2026",
+        },
+        width: 1100,
+        height: 950,
+      },
+    ],
+  },
+
+  "scrum-sfc": {
+    hash: "5c0b3aa",
+    date: { es: "18 de mayo de 2026", en: "May 18, 2026" },
+    branch: "logros",
+    title: both("Scrum Fundamentals Certified (SFC)"),
+    subtitle: both("SCRUMstudy · ID 1165444"),
+    body: {
+      es: "Roles, eventos y artefactos de Scrum.",
+      en: "Scrum roles, events and artifacts.",
+    },
+    tags: [both("Scrum")],
+    attachments: [
+      {
+        file: "cert-scrum.jpg",
+        alt: { es: "Certificado Scrum Fundamentals", en: "Scrum Fundamentals certificate" },
+        width: 986,
+        height: 761,
+      },
+    ],
+  },
+
+  tutor: {
+    hash: "7d4f2b1",
+    // VERIFICAR: fechas de la entrada del tutor (handoff §9).
+    date: both("2024 – 2026"),
+    branch: "docencia",
+    title: { es: "Tutor de programación", en: "Programming tutor" },
+    subtitle: both("Universidad Nacional"),
+    body: {
+      es: "Acompaño a estudiantes de Programación I y II, principalmente en Java: programación orientada a objetos, MVC, manejo de archivos, herencia y polimorfismo, y preparación de exámenes.",
+      en: "I support Programming I and II students, mostly in Java: object-oriented programming, MVC, file handling, inheritance and polymorphism, and exam preparation.",
+    },
+    tech: ["java"],
+    tags: [{ es: "POO", en: "OOP" }, both("MVC")],
+  },
+
+  "puertas-abiertas": {
+    hash: "e3a81c4",
+    date: both("2025"),
+    branch: "docencia",
+    title: { es: "Evento de puertas abiertas", en: "Open house event" },
+    subtitle: both("Universidad Nacional"),
+    body: {
+      es: "Presenté la carrera y conceptos básicos de informática a estudiantes de colegio.",
+      en: "I presented the degree and basic computing concepts to high-school students.",
+    },
+    attachments: [
+      {
+        file: "puertas-abiertas.jpg",
+        alt: { es: "Puertas abiertas en la UNA", en: "Open house at UNA" },
+        width: 933,
+        height: 1400,
+      },
+    ],
+  },
+
+  "campamento-tutores": {
+    hash: "0b9d6e2",
+    date: both("2024"),
+    branch: "docencia",
+    title: { es: "Campamento de tutores", en: "Tutors camp" },
+    subtitle: both("Universidad Nacional"),
+    body: {
+      es: "Formación y trabajo colaborativo para enseñar y liderar mejor.",
+      en: "Training and collaborative work to teach and lead better.",
+    },
+    attachments: [
+      {
+        file: "evento-tutores.jpg",
+        alt: { es: "Campamento de tutores 2024", en: "Tutors camp 2024" },
+        width: 1000,
+        height: 750,
+      },
+    ],
+  },
+
+  bachillerato: {
+    hash: "9f00c2d",
+    date: { es: "Concluido · 2026", en: "Completed · 2026" },
+    branch: "formacion",
+    title: {
+      es: "Bachillerato en Ingeniería en Sistemas",
+      en: "Bachelor's degree in Systems Engineering",
+    },
+    subtitle: {
+      es: "Universidad Nacional, sede Sarapiquí",
+      en: "Universidad Nacional, Sarapiquí campus",
+    },
+    body: {
+      es: "Todos los cursos aprobados, con promedio ponderado de 9,0. El título se entrega en la ceremonia de graduación de 2027.",
+      en: "All courses passed, with a 9.0/10 weighted GPA. The diploma is awarded at the 2027 graduation ceremony.",
+    },
+    // 9,0 en ES / 9.0 en EN: el formato lo resuelve el componente con `decimals`.
+    kpis: [{ value: 9, decimals: 1, label: { es: "promedio ponderado", en: "weighted GPA" } }],
+  },
+
+  diplomado: {
+    hash: "4be7a95",
+    date: { es: "4 de noviembre de 2025", en: "November 4, 2025" },
+    branch: "formacion",
+    title: {
+      es: "Diplomado en Programación de Aplicaciones Informáticas",
+      en: "Diploma in Computer Applications Programming",
+    },
+    subtitle: both("Universidad Nacional, Sarapiquí"),
+    body: {
+      es: "Fundamentos de programación, estructuras de datos y desarrollo de aplicaciones.",
+      en: "Programming fundamentals, data structures and application development.",
+    },
+    attachments: [
+      {
+        file: "cert-diplomado.jpg",
+        alt: { es: "Título del diplomado", en: "Diploma certificate" },
+        width: 1400,
+        height: 1090,
+      },
+    ],
+  },
+
+  "proyectos-java": {
+    hash: "c71e0f8",
+    date: { es: "Durante la carrera", en: "Throughout the degree" },
+    branch: "formacion",
+    title: { es: "Proyectos académicos en Java", en: "Academic Java projects" },
+    subtitle: { es: "Código no publicado", en: "Code not published" },
+    // VERIFICAR: JavaFX (en el cuerpo y en `tags`) no está en el handoff ni en el sitio viejo.
+    body: {
+      es: "Aplicaciones de escritorio con estructuras de datos propias: REDUNA (red social con Dijkstra), gestor de contenedores portuarios, TranspoRoute, AutoTech y gestión hospitalaria con JavaFX.",
+      en: "Desktop applications with custom data structures: REDUNA (a social network with Dijkstra), a port container manager, TranspoRoute, AutoTech and hospital management with JavaFX.",
+    },
+    tech: ["java"],
+    tags: [both("JavaFX")], // VERIFICAR
+  },
+};
+
+/**
+ * Orden del git log, tal como aparece en el prototipo. Debe contener cada `ExperienceId` exactamente una vez: los tipos
+ * `OrderIsComplete` y `OrderHasNoDuplicates` fallan en `astro check` si falta o sobra alguno.
+ */
+export const experienceOrder = [
+  "flameware",
+  "matchgo",
+  "beto-y-mas",
+  "cima",
+  "infocontexto",
+  "scrum-sfc",
+  "tutor",
+  "puertas-abiertas",
+  "campamento-tutores",
+  "bachillerato",
+  "diplomado",
+  "proyectos-java",
+] as const satisfies readonly ExperienceId[];
+
+type Order = typeof experienceOrder;
+
+type HasDuplicates<T extends readonly unknown[]> = T extends readonly [infer Head, ...infer Rest]
+  ? Head extends Rest[number]
+    ? true
+    : HasDuplicates<Rest>
+  : false;
+
+type Assert<T extends true> = T;
+
+/** Falla si algún `ExperienceId` no aparece en `experienceOrder`. */
+export type OrderIsComplete = Assert<
+  [Exclude<ExperienceId, Order[number]>] extends [never] ? true : false
+>;
+
+/** Falla si algún `ExperienceId` aparece más de una vez en `experienceOrder`. */
+export type OrderHasNoDuplicates = Assert<HasDuplicates<Order> extends false ? true : false>;
+
+/** Entradas en orden de aparición, con su id. */
+export const experienceLog = experienceOrder.map((id) => ({ id, ...experience[id] }));
