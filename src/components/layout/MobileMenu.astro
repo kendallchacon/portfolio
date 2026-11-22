@@ -57,6 +57,17 @@ const icons: Record<NavSectionId, string> = {
             </li>
           ))
         }
+        <li>
+          <button
+            type="button"
+            data-open-palette
+            aria-haspopup="dialog"
+            class="flex min-h-12 w-full cursor-pointer items-center gap-3.5 rounded-3 p-3.5 text-left font-medium transition-colors hover:bg-surface-2"
+          >
+            <Icon name="heroicons:magnifying-glass" class="size-5 shrink-0 text-ink-2" aria-hidden="true" />
+            <span class="flex-1">{t("palette.openMenu")}</span>
+          </button>
+        </li>
         {
           cv && (
             <li class="mt-2 border-t border-line pt-2">
@@ -136,9 +147,10 @@ const icons: Record<NavSectionId, string> = {
     backdrop.addEventListener("click", () => close());
     // Al elegir un enlace el foco lo lleva el ancla de destino.
     sheet.addEventListener("click", (event) => {
-      const link = (event.target as Element).closest("a[href]");
-      // Una descarga no mueve el foco: vuelve al botón en vez de perderse.
-      if (link) close({ returnFocus: link.hasAttribute("download") });
+      const link = (event.target as Element).closest("a[href], [data-open-palette]");
+      // Una descarga o la paleta no mueven el foco: vuelve al botón del menú, y es el que
+      // la paleta recuerda como origen.
+      if (link) close({ returnFocus: link.hasAttribute("download") || link.hasAttribute("data-open-palette") });
     });
     // Si la ventana pasa a escritorio con la hoja abierta, se libera el scroll.
     desktop.addEventListener("change", (event) => {
