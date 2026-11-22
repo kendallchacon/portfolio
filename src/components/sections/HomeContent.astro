@@ -1,0 +1,11 @@
+---
+import { langFrom } from "../../i18n/ui";
+import EvidenceStrip from "./EvidenceStrip.astro";
+import HomeHero from "./HomeHero.astro";
+
+// Contenido de la portada, compartido por `/` y `/en/`. Las secciones siguientes se suman aquí.
+const lang = langFrom(Astro.currentLocale);
+---
+
+<HomeHero lang={lang} />
+<EvidenceStrip lang={lang} />

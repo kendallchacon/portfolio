@@ -1,0 +1,76 @@
+---
+import { Icon } from "astro-icon/components";
+import { tech, iconName, type TechIcon, type TechId } from "../../data/tech";
+
+/**
+ * Baldosa de logo de tecnología (`.lg` de global.css) con los tres tipos de `tech.ts`:
+ * - monocromo (`simple-icons:*`): glifo sobre el color de marca. Claro, o `bg-2` si la baldosa
+ *   es clara (JavaScript, Android, Room). Las baldosas casi negras llevan un borde visible.
+ * - multicolor (`devicon:*`, `local:*`): sobre un chip claro para que no se pierda en el fondo
+ *   oscuro. Los SVG locales se cargan como imagen para aislar sus `<style>` e ids (§10).
+ * - genérico (`heroicons:*`): glifo sobre una baldosa neutra.
+ * El nombre accesible es el texto oculto; el logo en sí es decorativo.
+ */
+interface Props {
+  id: TechId;
+  class?: string;
+}
+
+const { id, class: className } = Astro.props;
+const entry: { label: string; icon: string; brandColor?: string } = tech[id];
+const { label, icon, brandColor } = entry;
+
+const localIcons = import.meta.glob<{ default: ImageMetadata }>("../../icons/*.svg", {
+  eager: true,
+});
+const local = icon.startsWith("local:")
+  ? localIcons[`../../icons/${iconName(icon as TechIcon)}.svg`]?.default
+  : undefined;
+
+/** Luminancia relativa (0 = negro, 1 = blanco) de un color `#rrggbb`. */
+function luminance(hex: string): number {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+    const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+// PHPUnit es una insignia apaisada (2,5:1): la baldosa se ensancha.
+const wide = local ? local.width / local.height > 1.5 : false;
+
+let tileClass: string;
+if (brandColor) {
+  const lum = luminance(brandColor);
+  tileClass = lum > 0.5 ? "text-bg-2" : "text-white";
+  if (lum < 0.05) tileClass += " ring-1 ring-inset ring-ink-3";
+} else if (icon.startsWith("heroicons:")) {
+  tileClass = "bg-surface-3 text-ink ring-1 ring-inset ring-line-strong";
+} else {
+  tileClass = "bg-ink";
+}
+---
+
+<span
+  class:list={["lg", tileClass, wide && "w-auto px-1.5", className]}
+  style={brandColor ? `--c:${brandColor}` : undefined}
+  title={label}
+>
+  {
+    local ? (
+      <img
+        src={local.src}
+        width={local.width}
+        height={local.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        class:list={["max-w-none", wide ? "h-[58%] w-auto" : "size-[58%]"]}
+      />
+    ) : (
+      <Icon name={icon} aria-hidden="true" />
+    )
+  }
+  <span class="sr-only">{label}</span>
+</span>

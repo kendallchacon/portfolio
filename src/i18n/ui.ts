@@ -44,6 +44,11 @@ const es = {
   "footer.tagline": 'git commit -m "gracias por leer"',
   "footer.top": "Volver arriba",
   "footer.contactLabel": "Enlaces de contacto",
+  "home.title": "Kendall Chacón | Desarrollador backend y full stack",
+  "home.description":
+    "Desarrollador backend y full stack disponible para proyectos y empleo en Costa Rica o remoto. APIs, bases de datos y apps web y móviles con .NET y Laravel.",
+  "home.logos.label": "Tecnologías con las que trabajo",
+  "home.evidence.label": "Logros y evidencias",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -85,11 +90,21 @@ const en: Record<keyof typeof es, string> = {
   "footer.tagline": 'git commit -m "thanks for reading"',
   "footer.top": "Back to top",
   "footer.contactLabel": "Contact links",
+  "home.title": "Kendall Chacón | Backend and full stack developer",
+  "home.description":
+    "Backend and full stack developer available for projects and roles in Costa Rica or remote. APIs, databases and web and mobile apps with .NET and Laravel.",
+  "home.logos.label": "Technologies I work with",
+  "home.evidence.label": "Achievements and evidence",
 };
 
 export const ui = { es, en } as const;
 
 export type UiKey = keyof typeof es;
+
+/** Idioma de `Astro.currentLocale`; el predeterminado si no coincide con ninguno. */
+export function langFrom(locale: string | undefined): Lang {
+  return locales.find((l) => l === locale) ?? defaultLang;
+}
 
 /** Devuelve la función de traducción para un idioma. */
 export function useTranslations(lang: Lang) {

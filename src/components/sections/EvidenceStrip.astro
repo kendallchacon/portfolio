@@ -1,0 +1,39 @@
+---
+import { Icon } from "astro-icon/components";
+import { evidence, type EvidenceId } from "../../data/profile";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const icons: Record<EvidenceId, string> = {
+  degree: "heroicons:academic-cap",
+  internship: "heroicons:check-circle",
+  production: "heroicons:globe-alt",
+  award: "heroicons:trophy",
+};
+---
+
+<section class="border-y border-line bg-bg-2" aria-label={t("home.evidence.label")}>
+  <ul
+    class="wrap grid grid-cols-1 min-[561px]:grid-cols-2 min-[980px]:grid-cols-4"
+  >
+    {
+      evidence.map((item) => (
+        <li class="flex items-start gap-3.5 border-t border-line py-4 transition-colors first:border-t-0 hover:bg-white/2 min-[561px]:nth-[-n+2]:border-t-0 min-[561px]:py-5 min-[561px]:pr-4 min-[980px]:border-t-0 min-[980px]:border-l min-[980px]:px-5 min-[980px]:py-6 min-[980px]:first:border-l-0 min-[980px]:first:pl-0">
+          <Icon name={icons[item.id]} class="mt-0.5 size-[22px] shrink-0 text-accent" aria-hidden="true" />
+          <div>
+            <p class="text-[15.5px] leading-[1.6] font-semibold tracking-[-0.01em]">{pick(item.title, lang)}</p>
+            {/* 27,2 px = interlínea del cuerpo (17 px × 1,6), como en el prototipo. */}
+            <p class="text-[13.5px] leading-[27.2px] text-ink-2">{pick(item.detail, lang)}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</section>

@@ -1,18 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/sections/Hero.astro";
-import Skills from "../components/sections/Skills.astro";
-import Projects from "../components/sections/Projects.astro";
-import ContactCompact from "../components/sections/ContactCompact.astro";
+import HomeContent from "../components/sections/HomeContent.astro";
+import { langFrom, useTranslations } from "../i18n/ui";
+
+const lang = langFrom(Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
-<BaseLayout
-  layout="legacy"
-  title="Kendall Chacón | Desarrollador Backend / Full Stack"
-  description="Desarrollador backend / full stack enfocado en APIs REST, Laravel, bases de datos relacionales, autenticación y control de roles."
->
-  <Hero />
-  <Skills />
-  <Projects />
-  <ContactCompact />
+<BaseLayout lang={lang} title={t("home.title")} description={t("home.description")}>
+  <HomeContent />
 </BaseLayout>

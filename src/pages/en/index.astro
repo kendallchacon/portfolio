@@ -1,7 +1,12 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import HomeContent from "../../components/sections/HomeContent.astro";
+import { langFrom, useTranslations } from "../../i18n/ui";
+
+const lang = langFrom(Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
-<BaseLayout lang="en">
-  <h1>Kendall Chacón</h1>
+<BaseLayout lang={lang} title={t("home.title")} description={t("home.description")}>
+  <HomeContent />
 </BaseLayout>
