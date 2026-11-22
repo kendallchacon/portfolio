@@ -1,7 +1,8 @@
 ---
 import "../styles/global.css";
 import Navbar from "../components/layout/Navbar.astro";
-import Footer from "../components/sections/Footer.astro";
+import Footer from "../components/layout/Footer.astro";
+import ScrollProgress from "../components/layout/ScrollProgress.astro";
 import { alternateUrls, ogLocale, useTranslations, type Lang } from "../i18n/ui";
 
 interface Props {
@@ -10,9 +11,19 @@ interface Props {
   description?: string;
   image?: string;
   type?: "website" | "profile" | "article";
+  /**
+   * "full": el <main> no limita el ancho (cada sección decide el suyo).
+   * "legacy": páginas del sitio anterior, con <main> acotado y page-enter. Se borra con ellas.
+   */
+  layout?: "legacy" | "full";
 }
 
-const { lang = "es", image = "/images/project-preview.jpg", type = "website" } = Astro.props;
+const {
+  lang = "es",
+  image = "/images/project-preview.jpg",
+  type = "website",
+  layout = "full",
+} = Astro.props;
 const t = useTranslations(lang);
 const { title = t("meta.title"), description = t("meta.description") } = Astro.props;
 
@@ -57,16 +68,24 @@ const alternates = alternateUrls(Astro.url.pathname);
   <body class="overflow-x-hidden bg-bg text-ink antialiased">
     <a href="#main-content" class="skip-link">{t("a11y.skipLink")}</a>
 
-    <div class="min-h-screen flex flex-col">
-      <Navbar />
+    <ScrollProgress />
 
+    <div class="min-h-screen flex flex-col">
+      <Navbar lang={lang} />
+
+      {/* El navbar es fijo y flotante: el <main> legacy deja su altura libre arriba. */}
       <main
         id="main-content"
-        class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 page-enter"
+        tabindex="-1"
+        class:list={[
+          "flex-1 outline-none",
+          layout === "legacy" &&
+            "w-full max-w-6xl mx-auto px-4 sm:px-6 pt-[calc(var(--header-h)+1rem)] page-enter",
+        ]}
       >
         <slot />
       </main>
-      <Footer />
+      <Footer lang={lang} />
     </div>
     <script src="../scripts/site-interactions.js"></script>
   </body>
