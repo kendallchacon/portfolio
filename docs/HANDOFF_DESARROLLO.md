@@ -52,7 +52,7 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 ## 4. Contenido y datos verificados
 
 - **Flameware** (del informe): 16 historias/tareas, 34 subtareas, 53 pruebas en validación de DTOs; historias CRH-117 (catálogo con filtros y moneda), CRH-135 (panel del propietario), CRH-150 (corte quincenal con vista previa), PR #17 (panel administrativo). Stack: PHP, MySQL, JavaScript, Docker, Jira, Symfony Validator.
-- **MatchGo**: matchgo-mobile 170 commits de Kendall (65 %), 19 PRs integrados. Backend .NET 10, YARP, 4 servicios con PostgreSQL propio (PostGIS en Booking), RabbitMQ + MassTransit outbox/inbox, Flutter + Riverpod, Next.js admin. Solo demo local con Docker Compose. La restricción GiST la escribió Cristofer: **no atribuírsela a Kendall**. La contribución de Kendall a `matchgo-backend` **no está confirmada**: el respaldo es solo `matchgo-mobile`.
+- **MatchGo**: matchgo-mobile 170 commits de Kendall (65 %), 19 PRs integrados. Backend .NET 10, YARP, 4 servicios con PostgreSQL propio (PostGIS en Booking), RabbitMQ + MassTransit outbox/inbox, Flutter + Riverpod, Next.js admin. Solo demo local con Docker Compose. La restricción GiST la escribió un compañero: **no atribuírsela a Kendall**. Contribución a `matchgo-backend` confirmada: arranque de la arquitectura y funcionalidades de Identity, Competition y Community; no son de Kendall el esquema de Booking, la mensajería ni S3.
 - **CIMA**: cima-mobile 52 commits, cima-backend 40 (DevTeam-DAKFC, repos públicos). Jira `CIMA` con 30 historias en 6 épicas. **Faltan capturas de la app.**
 - **Beto y Más**: Laravel, Vue 3, TS, Inertia, MySQL, Phaser, PHPUnit; equipo de 5, 3 semestres, en producción (betoymas.com), código privado del cliente.
 - **Lab**: github.com/kendallchacon/docker-kubernetes-lab (+ presentation).
@@ -83,9 +83,11 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 0 | `chore/setup-dev-workflow` | Hecha (PR #2): `dev`, CI, `CLAUDE.md`, plantilla de PR, `site`, nombre del paquete, `docs/prototype/`. |
 | 1 | `feat/foundation` | Hecha (PR #4): fuentes Geist, tokens, BaseLayout oscuro, utilidades, i18n de Astro y diccionario de UI. |
 | 2A | `feat/data-model` | Hecha (PR #5): datos viejos a `src/data/legacy/`; `types`, `tech` (con iconos), `profile`, `services`, `contact`. |
-| 2B | `feat/data-model-content` | `projects`, `experience`, `criterio` (y el tipo `Branch`). Solo lo confirmado; lo demás con `// VERIFICAR`. |
-| 3 | `feat/shell` | Navbar en cápsula, indicador, menú móvil, paleta `Ctrl K`, selector de idioma, barra de progreso, footer. |
-| 4 | `feat/hero-services` | Portada + canvas de contribuciones (island ligera en TS) + franja de evidencias; bento de servicios con log de API animado y referencias. |
+| 2B | `feat/data-model-content` | Hecha (PR #6 y #7): `projects`, `experience`, `criterio` (y el tipo `Branch`). Solo lo confirmado; lo demás con `// VERIFICAR`. |
+| 3A | `feat/shell` | Hecha (PR #8): navbar en cápsula con indicador, menú móvil (incluye CV), selector de idioma, barra de progreso, footer; páginas viejas con `layout="legacy"`. |
+| 3B | `feat/shell-palette` | Hecha (PR #9): paleta `Ctrl K` / `Cmd K`. |
+| 4A | `feat/hero` | Hecha: portada, canvas de contribuciones y franja de evidencias. |
+| 4B | `feat/services` | Bento de servicios con log de API animado y referencias. |
 | 5 | `feat/about-experience` | Foto + terminal interactiva; git log con filtros, KPIs, desplegables y visor de adjuntos. |
 | 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
@@ -119,10 +121,8 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - CV: el botón del navbar descarga un solo PDF por ahora; habrá versiones es/en cuando Kendall las entregue.
 - Capturas de CIMA (historial, comparativo, reportes).
 - Capturas de Flameware (diapositivas 5–7 del informe final), si se pueden mostrar.
-- Confirmar si se puede nombrar públicamente a Flameware / Costa Rica Homes Realty (el informe dice que sí, con referencias públicas).
 - Consentimiento para avatares de terceros en capturas de MatchGo 01, 06, 09 y 10.
-- Contribución real a `matchgo-backend` (define cómo se redacta el servicio "Backend y APIs").
-- Confirmar: Flameware (tres practicantes, remoto, seguridad de cuentas, CRM de agentes), fechas del tutor, "lideré la app móvil", UnaRoom (Room + FCM) en el Lab, autoría de ADR 0003, ADR 0010 y `dio_failure_mapper`, y si los fragmentos de repos privados son literales o adaptados.
+- Confirmar: Flameware (tres practicantes, remoto, seguridad de cuentas, CRM de agentes), fechas del tutor, "lideré la app móvil", UnaRoom (Room + FCM) en el Lab, y si los fragmentos de repos privados son literales o adaptados.
 
 ## 10. Notas técnicas acumuladas
 
@@ -142,3 +142,15 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 **Entorno**
 - Astro 7: `compressHTML: 'jsx'` no renderiza espacios entre elementos en línea; separarlos con `gap`/flex o `{' '}`.
 - Node ≥ 22.23.4. El CI usa `node-version: 22`.
+
+**Shell (iteración 3)**
+- `BaseLayout` tiene la prop `layout` (`"legacy"` | `"full"`); se elimina en la iteración 7.
+- La navbar usa el breakpoint `min-[980px]`. Por debajo, menú hoja con foco atrapado y el CV como último ítem.
+- La paleta de comandos se monta una sola vez en `BaseLayout`.
+- Pendientes: el selector de idioma pierde el `#hash`, y `hreflang` asume que toda página tiene su par `/en/`.
+
+**Pulido pendiente (iteración 9)**
+- Espacio de no separación en "full stack" de los titulares y `text-wrap: balance` en el `h1` (en inglés queda "production." sola a 1440 px).
+- La píldora de disponibilidad hace wrap a 390 px.
+- Forced reflow de ~34 ms (probablemente `offsetWidth` en la navbar).
+- CLS de 0,022 en `/en/` por el cambio de fuente.
