@@ -23,7 +23,7 @@ const pathname = Astro.url.pathname;
         href={languageSwitchUrl(pathname, l.code)}
         lang={l.code}
         hreflang={l.code}
-        aria-label={l.name}
+        aria-label={`${l.code.toUpperCase()}, ${l.name}`}
         aria-current={l.code === lang ? "true" : undefined}
         class="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-2.5 text-xs font-semibold text-ink-2 transition-colors hover:text-ink aria-[current=true]:bg-ink aria-[current=true]:text-bg min-[980px]:min-h-0 min-[980px]:min-w-0 min-[980px]:py-1.5"
       >
