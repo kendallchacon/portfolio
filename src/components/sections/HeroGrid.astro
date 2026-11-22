@@ -1,0 +1,42 @@
+---
+/**
+ * Fondo decorativo de la portada: cuadrícula tipo mapa de contribuciones dibujada en un
+ * canvas (src/scripts/hero-grid.ts). No usa datos reales; los colores salen de los tokens
+ * `--color-ok` y `--color-ink`.
+ * Va dentro de una sección `relative isolate`.
+ */
+---
+
+<div
+  data-hero-grid
+  aria-hidden="true"
+  class="hero-grid pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+>
+  <canvas class="block size-full"></canvas>
+</div>
+
+<style>
+  /* Se atenúa detrás del texto (centro) y en los bordes superior e inferior. */
+  .hero-grid {
+    mask-image:
+      radial-gradient(ellipse 34% 36% at 50% 46%, rgb(0 0 0 / 0.18) 0, rgb(0 0 0 / 0.45) 55%, #000 100%),
+      linear-gradient(transparent 0, #000 16%, #000 78%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  @media (max-width: 760px) {
+    .hero-grid {
+      mask-image: linear-gradient(
+        transparent 0,
+        rgb(0 0 0 / 0.35) 20%,
+        rgb(0 0 0 / 0.35) 70%,
+        #000 85%,
+        transparent
+      );
+    }
+  }
+</style>
+
+<script>
+  import "../../scripts/hero-grid";
+</script>
