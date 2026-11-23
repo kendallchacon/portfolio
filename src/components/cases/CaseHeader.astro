@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+import SceneBrowsers from "../projects/SceneBrowsers.astro";
+import SceneCode from "../projects/SceneCode.astro";
+import ScenePhones from "../projects/ScenePhones.astro";
+import ScenePipeline from "../projects/ScenePipeline.astro";
+import type { CaseStudy } from "../../data/cases";
+import type { Project } from "../../data/projects";
+import { pick } from "../../data/types";
+import { sectionHref, useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * Cabecera del caso. Una sola estructura para todos los proyectos; solo cambian los datos.
+ * - ≥1024 px: dos columnas (`1fr .9fr`, gap 56). Izquierda: volver, meta, h1, lead y "Mi parte"
+ *   (el bloque absorbe la altura que sobre hasta el pie de la figura, así que no queda hueco
+ *   aunque el texto sea corto). Derecha: la figura, `sticky` bajo la navbar: acompaña si la
+ *   columna izquierda crece.
+ * - <1024 px: una columna en el orden del DOM: cabecera, figura, "Mi parte".
+ * La figura es la misma escena de la tarjeta (`view-transition-name` compartido con ella),
+ * decorativa salvo las capturas con alt. Su video usa el `data-src` de la tarjeta y se activa en
+ * scripts/projects.ts (`preload="none"` y poster).
+ */
+interface Props {
+  project: Project;
+  study: CaseStudy;
+  lang: Lang;
+}
+
+const { project: p, study, lang } = Astro.props;
+const t = useTranslations(lang);
+const scene = p.scene;
+// "Mi parte" es la evidencia principal; sin ella (Lab) se muestra "Qué hay".
+const main = p.myPart
+  ? { label: t("home.projects.myPart"), text: pick(p.myPart, lang) }
+  : p.contents
+    ? { label: t("home.projects.contents"), text: pick(p.contents, lang) }
+    : undefined;
+---
+
+<div class="wrap pt-[calc(var(--header-h)+30px)]">
+  <div class="grid gap-y-7 min-[1024px]:grid-cols-[1fr_0.9fr] min-[1024px]:grid-rows-[auto_1fr] min-[1024px]:gap-x-14 min-[1024px]:gap-y-0">
+    <div class="min-w-0 min-[1024px]:col-start-1 min-[1024px]:row-start-1">
+      <a
+        href={sectionHref("proyectos", lang)}
+        aria-label={t("case.backLabel")}
+        class="inline-flex items-center gap-2 rounded-full bg-ink py-[9px] pr-4 pl-3 text-[14.5px] leading-none font-medium text-bg no-underline"
+      >
+        <Icon name="lucide:arrow-left" class="size-4 *:stroke-[1.75]" aria-hidden="true" />
+        {t("case.back")}
+      </a>
+
+      <header class="pt-[30px]">
+        <p class="mb-4 font-mono text-sm leading-[normal] font-medium text-accent">{pick(study.meta, lang)}</p>
+        <h1 id="case-title" class="text-[clamp(46px,6.2vw,88px)] leading-[0.98] tracking-[-0.05em]">{p.name}</h1>
+        <p class="mt-[22px] max-w-[52ch] text-[19px]/[1.55] text-ink-2">{pick(study.lead, lang)}</p>
+      </header>
+    </div>
+
+    <div
+      aria-hidden={scene.type === "browsers" || scene.type === "pipeline" ? undefined : "true"}
+      style={`view-transition-name:project-${p.slug}`}
+      class="scene relative h-[540px] min-w-0 overflow-hidden rounded-1 border border-line max-[1023px]:h-[440px] max-[560px]:h-[360px] min-[1024px]:sticky min-[1024px]:top-[calc(var(--header-h)+24px)] min-[1024px]:col-start-2 min-[1024px]:row-span-2 min-[1024px]:row-start-1 min-[1024px]:self-start"
+    >
+      {scene.type === "phones" && <ScenePhones scene={scene} lang={lang} />}
+      {scene.type === "browsers" && <SceneBrowsers scene={scene} lang={lang} />}
+      {scene.type === "code" && <SceneCode scene={scene} lang={lang} />}
+      {scene.type === "pipeline" && <ScenePipeline scene={scene} lang={lang} />}
+    </div>
+
+    {
+      main && (
+        <section
+          aria-labelledby="case-main-label"
+          class="min-w-0 rounded-2 border border-[color-mix(in_srgb,var(--color-accent)_35%,transparent)] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),var(--color-surface-1)_60%)] p-7 max-[560px]:p-5 min-[1024px]:col-start-1 min-[1024px]:row-start-2 min-[1024px]:mt-9"
+        >
+          <h2 id="case-main-label" class="mb-3 font-mono text-sm leading-[normal] font-medium text-accent">{main.label}</h2>
+          <p class="text-[clamp(18px,1.6vw,21px)]/[1.5] text-ink">{main.text}</p>
+        </section>
+      )
+    }
+  </div>
+</div>

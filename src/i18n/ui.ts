@@ -1,4 +1,5 @@
 import { getAbsoluteLocaleUrl } from "astro:i18n";
+import type { ProjectSlug } from "../data/projects";
 import type { ExperienceId, SectionId } from "../data/types";
 
 export const defaultLang = "es";
@@ -97,6 +98,14 @@ const es = {
   "home.projects.manual": "paso manual",
   "home.projects.illustrative": "# sufijos de pod ilustrativos",
   "home.projects.rerun": "Volver a ejecutar",
+  "case.back": "Proyectos",
+  "case.backLabel": "Volver a Proyectos",
+  "case.open": "Abrir el caso",
+  "case.openNamed": "Abrir el caso de {name}",
+  "case.evidence": "Evidencia",
+  "case.data": "Datos del proyecto",
+  "case.hood": "Debajo del capó",
+  "case.problem": "El problema",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -191,6 +200,14 @@ const en: Record<keyof typeof es, string> = {
   "home.projects.manual": "manual step",
   "home.projects.illustrative": "# illustrative pod suffixes",
   "home.projects.rerun": "Re-run",
+  "case.back": "Projects",
+  "case.backLabel": "Back to Projects",
+  "case.open": "Open the case",
+  "case.openNamed": "Open the {name} case",
+  "case.evidence": "Evidence",
+  "case.data": "Project data",
+  "case.hood": "Under the hood",
+  "case.problem": "The problem",
 };
 
 export const ui = { es, en } as const;
@@ -282,10 +299,23 @@ export function experienceHref(id: ExperienceId, lang: Lang): string | undefined
 }
 
 /**
- * Rutas (sin prefijo de idioma) que existen en español y en inglés. Súmale cada ruta
- * nueva que se publique en ambos idiomas; las demás enlazan a la portada del otro idioma.
+ * Casos de proyecto con ruta `/proyectos/<slug>` publicada. Un proyecto fuera de esta lista no
+ * recibe enlace desde ninguna tarjeta ni referencia. Beto y Más y CIMA entran en 6B.2.
  */
-export const translatedRoutes: readonly string[] = ["/"];
+export const publishedProjects = ["matchgo"] as const satisfies readonly ProjectSlug[];
+export type PublishedSlug = (typeof publishedProjects)[number];
+
+/** Enlace al caso de un proyecto, o `undefined` si todavía no está publicado. */
+export function projectHref(slug: string, lang: Lang): string | undefined {
+  if (!(publishedProjects as readonly string[]).includes(slug)) return undefined;
+  return lang === "en" ? `/en/proyectos/${slug}` : `/proyectos/${slug}`;
+}
+
+/**
+ * Rutas (sin prefijo de idioma) que existen en español y en inglés. Los casos publicados se
+ * derivan de `publishedProjects`; las demás rutas enlazan a la portada del otro idioma.
+ */
+export const translatedRoutes: readonly string[] = ["/", ...publishedProjects.map((s) => `/proyectos/${s}`)];
 
 /** Ruta a la que lleva el selector de idioma desde la página actual. */
 export function languageSwitchUrl(pathname: string, target: Lang): string {

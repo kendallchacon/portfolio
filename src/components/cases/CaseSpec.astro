@@ -1,0 +1,62 @@
+---
+import TechLogo from "../common/TechLogo.astro";
+import type { CaseStudy } from "../../data/cases";
+import type { Project } from "../../data/projects";
+import { pick } from "../../data/types";
+import { tech as techData } from "../../data/tech";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * Franja de datos del caso, a ancho completo bajo la cabecera: equipo, commits y estado
+ * (etiqueta arriba, valor abajo; tantas columnas como datos haya, hasta 3), stack del proyecto
+ * en una fila que envuelve y evidencia como párrafo. La prosa larga ("Mi parte") vive en la
+ * cabecera, nunca en una tabla angosta. Todo se deriva de `projects.ts`, salvo la evidencia.
+ */
+interface Props {
+  project: Project;
+  study: CaseStudy;
+  lang: Lang;
+}
+
+const { project: p, study, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const facts: { label: string; value: string }[] = [];
+if (p.team) facts.push({ label: t("home.projects.team"), value: pick(p.team.label, lang) });
+if (p.commits) facts.push({ label: t("home.projects.commits"), value: pick(p.commits, lang) });
+if (p.status) facts.push({ label: t("home.projects.status"), value: pick(p.status, lang) });
+---
+
+<section aria-label={t("case.data")} class="wrap mt-10">
+  {
+    facts.length > 0 && (
+      <dl class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-8 gap-y-6 border-t border-line pt-8">
+        {facts.map((f) => (
+          <div class="min-w-0">
+            <dt class="mb-1.5 font-mono text-[13px] text-ink-2">{f.label}</dt>
+            <dd class="text-base">{f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )
+  }
+
+  <div class:list={["border-line", facts.length > 0 ? "mt-8" : "border-t pt-8"]}>
+    <p id="case-stack" class="mb-2.5 font-mono text-[13px] text-ink-2">{t("home.projects.stack")}</p>
+    <ul class="flex flex-wrap gap-2" aria-labelledby="case-stack">
+      {
+        p.tech.map((id) => (
+          <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 py-[5px] pr-3 pl-[5px] text-[13.5px] font-medium">
+            <TechLogo id={id} class="size-6 rounded-full" decorative />
+            <span>{techData[id].label}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="mt-8">
+    <h2 class="mb-1.5 font-mono text-[13px] font-normal text-ink-2">{t("case.evidence")}</h2>
+    <p class="max-w-[70ch] text-base">{pick(study.evidence, lang)}</p>
+  </div>
+</section>
