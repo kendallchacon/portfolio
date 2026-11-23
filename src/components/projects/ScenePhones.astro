@@ -1,0 +1,64 @@
+---
+import { Image, getImage } from "astro:assets";
+import type { Scene } from "../../data/projects";
+import type { Lang } from "../../i18n/ui";
+import { projectImage, projectVideo } from "./media";
+
+/**
+ * Tres celulares en abanico; el del centro lleva el video de demo. El video no tiene `src`:
+ * solo `data-src` y el poster, así que nada se descarga hasta que el script lo active al entrar
+ * en vista (y nunca con reduced-motion). Sin JS se ve el poster.
+ */
+interface Props {
+  scene: Extract<Scene, { type: "phones" }>;
+  lang: Lang;
+}
+
+const { scene } = Astro.props;
+const side = [
+  { cls: "left-[7%] -rotate-6", ref: scene.left },
+  { cls: "right-[7%] rotate-6", ref: scene.right },
+];
+const poster = await getImage({ src: projectImage(scene.center.poster.file), width: 420, format: "webp" });
+const video = projectVideo(scene.center.file);
+---
+
+{
+  side.map(({ cls, ref }) => (
+    <div
+      class:list={[
+        "top-[15%] aspect-[9/19.5] w-[31%] rounded-[30px] bg-bg p-1.5 opacity-90 shadow-[inset_0_0_0_1px_var(--color-surface-3),0_30px_50px_-24px_var(--color-shadow)] max-[561px]:w-[30%]",
+        cls,
+      ]}
+    >
+      <div class="size-full overflow-hidden rounded-[25px] bg-paper">
+        <Image
+          src={projectImage(ref.file)}
+          alt=""
+          widths={[180, 360]}
+          sizes="(max-width: 560px) 30vw, 180px"
+          loading="lazy"
+          decoding="async"
+          class="block size-full object-cover"
+        />
+      </div>
+    </div>
+  ))
+}
+<div class="top-[6%] left-1/2 z-2 aspect-[9/19.5] w-[35%] -translate-x-1/2 drop-shadow-[0_30px_40px_color-mix(in_srgb,var(--color-shadow)_60%,transparent)] max-[561px]:w-[38%]">
+  <div class="aspect-[9/19.3] w-full rounded-[34px] bg-bg-2 p-1.5 shadow-[inset_0_0_0_1px_var(--color-surface-3),0_30px_60px_-30px_var(--color-shadow)]">
+    <div class="size-full overflow-hidden rounded-[28px] bg-paper">
+      <video
+        muted
+        playsinline
+        loop
+        preload="none"
+        poster={poster.src}
+        width={scene.center.poster.width}
+        height={scene.center.poster.height}
+        data-src={video}
+        class="block size-full object-cover"
+      ></video>
+    </div>
+  </div>
+</div>
