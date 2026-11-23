@@ -320,6 +320,50 @@
   }
 }
 
+/* ─── Escenas de proyectos (prototipo #proyectos) ──────────────────────────────────────────
+   El resto de estilos van como utilidades en src/components/projects/. Aquí solo el fondo con
+   trama de puntos, el posicionamiento de los hijos (en % como el prototipo) y el check del CI. */
+@theme static {
+  --color-scene-top: #121722;
+  --color-scene-bottom: #0a0c11;
+  --color-brand-kotlin: #7f52ff;
+  --color-brand-dotnet: #512bd4;
+  /* Sombras y fondo bajo las capturas. */
+  --color-shadow: #000;
+}
+
+@layer components {
+  .scene {
+    background:
+      radial-gradient(90% 80% at 50% 110%, var(--color-accent-soft), transparent 60%),
+      radial-gradient(120% 90% at 50% 0%, var(--color-scene-top), var(--color-scene-bottom) 70%);
+  }
+
+  .scene::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.6;
+    background-image: radial-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+    mask-image: radial-gradient(closest-side, #000, transparent);
+  }
+
+  .scene > * {
+    position: absolute;
+  }
+
+  /* Paso de CI terminado: círculo verde con check. */
+  .job-done {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-ok)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2307080B' stroke-width='4'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")
+      center / 80% no-repeat;
+  }
+}
+
 /* LEGACY: se elimina con las páginas viejas */
 :root {
   --accent-bright: #22d3ee;

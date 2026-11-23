@@ -45,6 +45,11 @@ switch (ref.kind) {
     [name, detail] = splitLabel(pick(ref.label, lang));
     href = ref.href;
     break;
+  case "doc":
+    icon = "lucide:file-text";
+    [name, detail] = splitLabel(pick(ref.label, lang));
+    href = ref.href;
+    break;
   case "experience":
     icon = ref.icon === "pr" ? "lucide:git-pull-request" : ref.icon === "issue" ? "lucide:circle-dot" : "lucide:briefcase";
     [name, detail] = splitLabel(pick(ref.label, lang));

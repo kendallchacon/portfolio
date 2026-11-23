@@ -14,9 +14,11 @@ import { tech, iconName, type TechIcon, type TechId } from "../../data/tech";
 interface Props {
   id: TechId;
   class?: string;
+  /** El nombre ya está visible al lado (píldoras de proyectos): sin texto oculto ni title. */
+  decorative?: boolean;
 }
 
-const { id, class: className } = Astro.props;
+const { id, class: className, decorative = false } = Astro.props;
 const entry: { label: string; icon: string; brandColor?: string } = tech[id];
 const { label, icon, brandColor } = entry;
 
@@ -55,7 +57,8 @@ if (brandColor) {
 <span
   class:list={["lg", tileClass, wide && "w-auto px-1.5", className]}
   style={brandColor ? `--c:${brandColor}` : undefined}
-  title={label}
+  title={decorative ? undefined : label}
+  aria-hidden={decorative ? "true" : undefined}
 >
   {
     local ? (
@@ -72,5 +75,5 @@ if (brandColor) {
       <Icon name={icon} aria-hidden="true" />
     )
   }
-  <span class="sr-only">{label}</span>
+  {!decorative && <span class="sr-only">{label}</span>}
 </span>

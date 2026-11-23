@@ -1,0 +1,45 @@
+---
+import { Image } from "astro:assets";
+import SceneBar from "./SceneBar.astro";
+import type { Scene } from "../../data/projects";
+import { pick } from "../../data/types";
+import type { Lang } from "../../i18n/ui";
+import { projectImage } from "./media";
+
+/** Dos ventanas de navegador superpuestas. Las capturas llevan alt: son contenido. */
+interface Props {
+  scene: Extract<Scene, { type: "browsers" }>;
+  lang: Lang;
+}
+
+const { scene, lang } = Astro.props;
+const [back, front] = scene.windows;
+const windows = [
+  { cls: "top-[8%] right-[5%] w-[72%] opacity-75", w: back },
+  { cls: "top-[30%] left-[5%] z-2 w-[76%]", w: front },
+];
+---
+
+{
+  windows.map(({ cls, w }) => (
+    <div
+      class:list={[
+        "overflow-hidden rounded-xl border border-line-strong bg-shadow shadow-[0_30px_60px_-24px_var(--color-shadow)]",
+        cls,
+      ]}
+    >
+      <SceneBar size="sm">
+        <span aria-hidden="true">{w.url}</span>
+      </SceneBar>
+      <Image
+        src={projectImage(w.shot.file)}
+        alt={pick(w.shot.alt, lang)}
+        widths={[420, 840]}
+        sizes="(max-width: 980px) 80vw, 420px"
+        loading="lazy"
+        decoding="async"
+        class="block h-auto w-full"
+      />
+    </div>
+  ))
+}

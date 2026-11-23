@@ -1,0 +1,31 @@
+---
+import SectionHead from "../common/SectionHead.astro";
+import ProjectCard from "../projects/ProjectCard.astro";
+import { projects } from "../../data/projects";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="proyectos" aria-labelledby="proyectos-title" class="pt-[88px] pb-6 min-[980px]:pt-[120px] min-[980px]:pb-10">
+  <div class="wrap">
+    <SectionHead
+      path={t("home.projects.path")}
+      title={t("home.projects.title")}
+      lead={t("home.projects.lead")}
+      headingId="proyectos-title"
+    />
+    <div class="grid gap-7">
+      {projects.map((project, i) => <ProjectCard project={project} flip={i % 2 === 1} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/reveal";
+</script>

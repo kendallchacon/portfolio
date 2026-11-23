@@ -83,6 +83,19 @@ const es = {
   "home.xp.close": "Cerrar",
   "home.xp.prev": "Anterior",
   "home.xp.next": "Siguiente",
+  "home.projects.path": "cd ~/proyectos",
+  "home.projects.title": "Proyectos",
+  "home.projects.lead": "Producto real, con su stack, mi parte, su estado y los repositorios donde vive.",
+  "home.projects.myPart": "Mi parte",
+  "home.projects.contents": "Qué hay",
+  "home.projects.team": "Equipo",
+  "home.projects.commits": "Commits",
+  "home.projects.status": "Estado",
+  "home.projects.stack": "Stack del proyecto",
+  "home.projects.refs": "Repositorios y referencias",
+  "home.projects.excerpt": "extracto",
+  "home.projects.manual": "paso manual",
+  "home.projects.illustrative": "# sufijos de pod ilustrativos",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -163,6 +176,19 @@ const en: Record<keyof typeof es, string> = {
   "home.xp.close": "Close",
   "home.xp.prev": "Previous",
   "home.xp.next": "Next",
+  "home.projects.path": "cd ~/proyectos",
+  "home.projects.title": "Projects",
+  "home.projects.lead": "Real product, with its stack, my part, its status and the repositories where it lives.",
+  "home.projects.myPart": "My part",
+  "home.projects.contents": "What's inside",
+  "home.projects.team": "Team",
+  "home.projects.commits": "Commits",
+  "home.projects.status": "Status",
+  "home.projects.stack": "Project stack",
+  "home.projects.refs": "Repositories and references",
+  "home.projects.excerpt": "excerpt",
+  "home.projects.manual": "manual step",
+  "home.projects.illustrative": "# illustrative pod suffixes",
 };
 
 export const ui = { es, en } as const;

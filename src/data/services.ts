@@ -5,6 +5,8 @@ import { both, type ExperienceId, type HttpsUrl, type Localized, type MediaRef, 
 export type Reference =
   | { kind: "repo"; repo: RepoRef; detail?: Localized }
   | { kind: "link"; label: Localized; href: HttpsUrl }
+  /** Documento o extracto de código: etiqueta sin enlace, o enlace a un repo público. */
+  | { kind: "doc"; label: Localized; href?: HttpsUrl }
   | {
       kind: "experience";
       label: Localized;

@@ -1,0 +1,124 @@
+---
+import { Icon } from "astro-icon/components";
+import TechLogo from "../common/TechLogo.astro";
+import ReferenceChip from "../sections/services/ReferenceChip.astro";
+import SceneBrowsers from "./SceneBrowsers.astro";
+import SceneCode from "./SceneCode.astro";
+import ScenePhones from "./ScenePhones.astro";
+import ScenePipeline from "./ScenePipeline.astro";
+import type { Project } from "../../data/projects";
+import type { Reference } from "../../data/services";
+import { both, pick } from "../../data/types";
+import { tech as techData } from "../../data/tech";
+import { useTranslations, type Lang, type UiKey } from "../../i18n/ui";
+
+/**
+ * Tarjeta de proyecto: información (qué hizo Kendall, con su contexto) y escena decorativa.
+ * Las filas alternan el lado de la escena (`flip`); por debajo de 980 px la escena va arriba.
+ * La tarjeta no es un enlace: el enlace "Abrir el caso" llega con las rutas de los casos.
+ */
+interface Props {
+  project: Project;
+  flip: boolean;
+  lang: Lang;
+}
+
+const { project: p, flip, lang } = Astro.props;
+const t = useTranslations(lang);
+const headingId = `proyecto-${p.slug}`;
+
+const facts: [UiKey, string][] = [];
+if (p.myPart) facts.push(["home.projects.myPart", pick(p.myPart, lang)]);
+if (p.contents) facts.push(["home.projects.contents", pick(p.contents, lang)]);
+if (p.team) facts.push(["home.projects.team", pick(p.team.label, lang)]);
+if (p.commits) facts.push(["home.projects.commits", pick(p.commits, lang)]);
+if (p.status) facts.push(["home.projects.status", pick(p.status, lang)]);
+
+// Referencias en el mismo formato que las de Servicios: sitios, repos, documentos y extracto.
+const refs: Reference[] = [
+  ...p.links.map((l): Reference => ({ kind: "link", label: both(l.label), href: l.href })),
+  ...p.repos.map((r): Reference => ({ kind: "repo", repo: r.repo, detail: r.detail })),
+  ...(p.docs ?? []).map((d): Reference => ({ kind: "doc", label: d.label })),
+];
+if (p.scene.type === "code") {
+  const file = p.scene.snippet.path.split("/").pop()!;
+  refs.push({
+    kind: "doc",
+    label: both(`${t("home.projects.excerpt")} · ${file} ${p.scene.range}`),
+    href: p.scene.permalink,
+  });
+}
+---
+
+<article
+  aria-labelledby={headingId}
+  class="grid grid-cols-1 items-center gap-[22px] rounded-1 border border-line bg-bg-2 p-5 min-[981px]:grid-cols-[0.95fr_1.05fr] min-[981px]:gap-12 min-[981px]:p-10"
+>
+  <div class:list={["flex min-w-0 flex-col gap-4", flip && "min-[981px]:order-2"]}>
+    <p class="font-mono text-sm font-medium leading-[1.6] text-accent">~/proyectos/{p.slug}</p>
+    <h3 id={headingId} class="text-[clamp(32px,3.4vw,46px)] tracking-[-0.04em]">{p.name}</h3>
+    <p class="text-lg/normal text-ink-2">{pick(p.summary, lang)}</p>
+
+    <dl class="grid gap-2.5">
+      {
+        facts.map(([label, value]) => (
+          <div class="grid grid-cols-[84px_1fr] gap-3.5 text-[15px]">
+            <dt class="text-ink-2">{t(label)}</dt>
+            <dd class="text-ink">{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <div>
+      <p id={`${headingId}-stack`} class="mb-2 font-mono text-xs text-ink-2">{t("home.projects.stack")}</p>
+      <ul class="flex flex-wrap gap-2" aria-labelledby={`${headingId}-stack`}>
+        {
+          p.tech.map((id) => (
+            <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 py-[5px] pr-3 pl-[5px] text-[13.5px] font-medium">
+              <TechLogo id={id} class="size-6 rounded-full" decorative />
+              <span>{techData[id].label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <ul class="mt-0.5 flex flex-wrap gap-1.5" aria-label={t("home.projects.refs")}>
+      {
+        refs.map((reference) => (
+          <li class="max-w-full">
+            <ReferenceChip reference={reference} lang={lang} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div
+    class="scene relative h-[520px] min-w-0 overflow-hidden rounded-[22px] border border-line max-[981px]:order-first max-[981px]:h-[420px] max-[561px]:h-[360px]"
+    aria-hidden={p.scene.type === "browsers" ? undefined : "true"}>
+    {p.scene.type === "phones" && <ScenePhones scene={p.scene} lang={lang} />}
+    {p.scene.type === "browsers" && <SceneBrowsers scene={p.scene} lang={lang} />}
+    {p.scene.type === "code" && <SceneCode scene={p.scene} lang={lang} />}
+    {p.scene.type === "pipeline" && <ScenePipeline scene={p.scene} lang={lang} />}
+    {
+      p.highlights?.map((h, i) => (
+        <span
+          class:list={[
+            "bottom-[6%] z-3 inline-flex items-center gap-2 rounded-full border border-line-strong bg-term/88 px-3 py-2 font-mono text-[12.5px]/[1.1] font-medium whitespace-nowrap shadow-[0_16px_30px_-18px_var(--color-shadow)] backdrop-blur-sm max-[561px]:px-2.5 max-[561px]:py-1.5 max-[561px]:text-[11px]",
+            i === 0 ? "left-[5%]" : "right-[5%] max-[561px]:hidden",
+          ]}
+          aria-hidden="true"
+        >
+          {h.icon === "live" ? (
+            <i class="size-2 shrink-0 rounded-full bg-ok" />
+          ) : (
+            <Icon name={h.icon === "commits" ? "lucide:git-branch" : "lucide:trophy"} class="size-[15px] text-accent *:stroke-[1.75]" />
+          )}
+          <span>{pick(h.label, lang)}</span>
+        </span>
+      ))
+    }
+  </div>
+</article>
