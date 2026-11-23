@@ -63,7 +63,8 @@ export type BrowserWindow = { url: string; shot: MediaRef };
 /** Repositorio con su detalle. Los privados no llevan `url` (lo impone `RepoRef`). */
 export type ProjectRepo = { repo: RepoRef; detail?: Localized };
 
-export type ProjectLink = { label: string; href: HttpsUrl };
+/** Sitio público. La etiqueta es neutral: nombra el sitio, no afirma autoría. */
+export type ProjectLink = { label: Localized; href: HttpsUrl };
 
 /** Documento del repo (ADR) mostrado como etiqueta; sin enlace mientras no haya destino público. */
 export type ProjectDoc = { label: Localized };
@@ -214,7 +215,7 @@ export const projects = [
         detail: { es: "código privado del cliente", en: "client's private code" },
       },
     ],
-    links: [{ label: "betoymas.com", href: "https://betoymas.com/" }],
+    links: [{ label: both("betoymas.com"), href: "https://betoymas.com/" }],
     highlights: [
       { icon: "live", label: { es: "En producción", en: "In production" } },
       { icon: "trophy", label: { es: "1.er lugar Infocontexto", en: "1st place Infocontexto" } },
@@ -356,7 +357,12 @@ export const projects = [
         },
       },
     ],
-    links: [],
+    links: [
+      {
+        label: { es: "Presentación del lab", en: "Lab presentation" },
+        href: "https://docker-kubernetes-presentation.vercel.app/",
+      },
+    ],
     // Verificado contra .github/workflows/publish-images.yml y kubernetes/*-deployment.yaml
     // (rama main, 23 nov 2026).
     scene: {
