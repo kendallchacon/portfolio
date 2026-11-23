@@ -362,6 +362,43 @@
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2307080B' stroke-width='4'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")
       center / 80% no-repeat;
   }
+
+  /* Pipeline animado (projects.ts): con .ci-run, los pasos sin .done quedan pendientes, el que
+     tiene .run gira y el cierre se oculta hasta terminar. Sin JS o con reduced-motion nunca se
+     aplica y se ve el estado final. Solo color, fondo, sombra y opacidad: sin CLS. */
+  [data-job] {
+    transition: color 0.3s;
+  }
+
+  [data-ci-end] {
+    transition: opacity 0.4s;
+  }
+
+  .ci-run [data-job]:not(.done) {
+    color: var(--color-ink-3);
+  }
+
+  .ci-run [data-job]:not(.done) .job-done {
+    background: none;
+    box-shadow: inset 0 0 0 2px var(--color-surface-3);
+  }
+
+  .ci-run [data-job].run .job-done {
+    box-shadow: none;
+    border: 2px solid var(--color-warn);
+    border-right-color: transparent;
+    animation: job-spin 0.7s linear infinite;
+  }
+
+  .ci-run [data-ci-end] {
+    opacity: 0;
+  }
+}
+
+@keyframes job-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* LEGACY: se elimina con las páginas viejas */

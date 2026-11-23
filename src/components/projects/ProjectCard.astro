@@ -16,6 +16,8 @@ import { useTranslations, type Lang, type UiKey } from "../../i18n/ui";
  * Tarjeta de proyecto: información (qué hizo Kendall, con su contexto) y escena decorativa.
  * Las filas alternan el lado de la escena (`flip`); por debajo de 980 px la escena va arriba.
  * La tarjeta no es un enlace: el enlace "Abrir el caso" llega con las rutas de los casos.
+ * Escenas `aria-hidden`, salvo las capturas (alt) y el pipeline, que oculta sus ventanas pero
+ * deja expuesto el botón de volver a ejecutar. Video y pipeline se animan en scripts/projects.ts.
  */
 interface Props {
   project: Project;
@@ -36,7 +38,7 @@ if (p.status) facts.push(["home.projects.status", pick(p.status, lang)]);
 
 // Referencias en el mismo formato que las de Servicios: sitios, repos, documentos y extracto.
 const refs: Reference[] = [
-  ...p.links.map((l): Reference => ({ kind: "link", label: both(l.label), href: l.href })),
+  ...p.links.map((l): Reference => ({ kind: "link", label: l.label, href: l.href })),
   ...p.repos.map((r): Reference => ({ kind: "repo", repo: r.repo, detail: r.detail })),
   ...(p.docs ?? []).map((d): Reference => ({ kind: "doc", label: d.label })),
 ];
@@ -52,6 +54,7 @@ if (p.scene.type === "code") {
 
 <article
   aria-labelledby={headingId}
+  data-rv
   class="grid grid-cols-1 items-center gap-[22px] rounded-1 border border-line bg-bg-2 p-5 min-[981px]:grid-cols-[0.95fr_1.05fr] min-[981px]:gap-12 min-[981px]:p-10"
 >
   <div class:list={["flex min-w-0 flex-col gap-4", flip && "min-[981px]:order-2"]}>
@@ -97,7 +100,7 @@ if (p.scene.type === "code") {
 
   <div
     class="scene relative h-[520px] min-w-0 overflow-hidden rounded-[22px] border border-line max-[981px]:order-first max-[981px]:h-[420px] max-[561px]:h-[360px]"
-    aria-hidden={p.scene.type === "browsers" ? undefined : "true"}>
+    aria-hidden={p.scene.type === "browsers" || p.scene.type === "pipeline" ? undefined : "true"}>
     {p.scene.type === "phones" && <ScenePhones scene={p.scene} lang={lang} />}
     {p.scene.type === "browsers" && <SceneBrowsers scene={p.scene} lang={lang} />}
     {p.scene.type === "code" && <SceneCode scene={p.scene} lang={lang} />}
