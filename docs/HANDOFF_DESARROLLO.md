@@ -89,7 +89,7 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 4A | `feat/hero` | Hecha: portada, canvas de contribuciones y franja de evidencias. |
 | 4B | `feat/services` | Hecha: bento de servicios con log de API (cascada única), panel de CI y chips de referencia; capturas activadas por decisión del autor; reveal, tecleo y brillo como el prototipo. |
 | 5A | `feat/experience` | Hecha: git log de experiencia con filtro por rama, KPIs con contador, historias desplegables y visor de adjuntos. |
-| 5B | `feat/about` | Foto + terminal interactiva (Sobre mí). |
+| 5B | `feat/about` | Hecha: foto + terminal interactiva (Sobre mí) con salidas derivadas de los datos y lectura sin JS. |
 | 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
 | 8 | `feat/motion-polish` | Revelados, títulos que se escriben, spotlight global, bordes con cursor, riel de progreso, reduced-motion. |
@@ -119,6 +119,7 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 
 ## 9. Pendientes de Kendall
 
+- **Bloqueante del release (PR `dev → master`):** los KPIs de CIMA en `experience.ts` y `projects.ts` (52 commits en cima-mobile, 40 en cima-backend) no son de Kendall: en GitHub coinciden con otros autores y a Kendall le aparecen 60 y 49 (sin confirmar por identidades de correo). Corregirlos con `git shortlog -sne` o dejarlos como `// VERIFICAR` (sin renderizar). Se rehace al reestructurar el proyecto CIMA.
 - CV: el botón del navbar descarga un solo PDF por ahora; habrá versiones es/en cuando Kendall las entregue.
 - Capturas de CIMA (historial, comparativo, reportes).
 - Capturas de Flameware (diapositivas 5–7 del informe final), si se pueden mostrar.
@@ -176,8 +177,17 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - Notas, fechas y contadores en `ink-2` (AA); el prototipo usaba `ink-3` (≈4:1).
 - Filtro: la región `aria-live` arranca vacía y solo anuncia tras usar el filtro. Un enlace a una entrada oculta devuelve el filtro a `--all` antes del scroll. En móvil las entradas llevan `scroll-margin-top` extra por la barra de filtro sticky.
 
+**Sobre mí (iteración 5B)**
+- `About` (`sections/`) con `about/TermLine`; datos en `src/data/about.ts` (whoami, stack, `ls` y contacto se derivan de profile, experience, projects y contact). Script `src/scripts/about.ts` (≈2,2 KB minificado).
+- Sin JS: el log trae whoami y `cat sobre-mi.txt`; el resto de comandos va en `<details>`. Con JS, el script clona esas salidas (nada de copy en el script).
+- El log arranca con `aria-live="off"` y pasa a `polite` en la primera acción del usuario (la salida se agrega un frame después). El retecleo del intro corre una vez y se cancela al actuar o enfocar el input.
+- `cat stack.json`: cada tecnología lista como evidencia los ids de experiencia que la usan; si no hay evidencia, el build falla.
+- Shortlog: matchgo-mobile 170, Beto y Más 150 (auditoría forense), matchgo-backend 13 (rama dev, 1 de 4 contribuyentes). VERIFICAR: cima-mobile 52 / cima-backend 40 (en GitHub coinciden con otros autores; los commits de Kendall serían 60 y 49) y docker-kubernetes-lab 4.
+- Foto en `src/assets/about/` (WebP 360/480/720, sin EXIF). `WindowBar` acepta `size="md"`; `SectionHead` acepta `tight`. Token `term-text`.
+
 **Pulido pendiente (iteración 9)**
 - Espacio de no separación en "full stack" de los titulares y `text-wrap: balance` en el `h1` (en inglés queda "production." sola a 1440 px).
 - La píldora de disponibilidad hace wrap a 390 px.
 - Forced reflow de ~34 ms (probablemente `offsetWidth` en la navbar).
 - CLS de 0,022 en `/en/` por el cambio de fuente.
+- Terminal de Sobre mí: aceptar `ls proyectos` además de `ls proyectos/` (normalizar la barra final al buscar el comando).

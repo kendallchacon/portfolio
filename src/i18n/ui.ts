@@ -58,6 +58,11 @@ const es = {
   "home.services.privateRepo": "(repositorio privado)",
   "home.services.apiLogCaption": "Registro de solicitudes y respuestas de autenticación e invitaciones de equipo; rutas bajo /api/v1",
   "home.services.ciPass": "pasa",
+  "home.about.path": "cd ~/sobre-mi",
+  "home.about.title": "Un poco de mí, en mi idioma",
+  "home.about.log": "Salida de la terminal",
+  "home.about.input": "Escribe un comando",
+  "home.about.try": "Prueba:",
   "home.xp.path": "cd ~/experiencia",
   "home.xp.title": "Experiencia",
   "home.xp.lead":
@@ -133,6 +138,11 @@ const en: Record<keyof typeof es, string> = {
   "home.services.privateRepo": "(private repository)",
   "home.services.apiLogCaption": "Request and response log of authentication and team invitations; routes under /api/v1",
   "home.services.ciPass": "passes",
+  "home.about.path": "cd ~/sobre-mi",
+  "home.about.title": "A bit about me, in my own language",
+  "home.about.log": "Terminal output",
+  "home.about.input": "Type a command",
+  "home.about.try": "Try:",
   "home.xp.path": "cd ~/experiencia",
   "home.xp.title": "Experience",
   "home.xp.lead":

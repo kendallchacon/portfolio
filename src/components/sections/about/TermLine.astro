@@ -1,0 +1,32 @@
+---
+/** Línea de salida de la terminal de Sobre mí: texto y enlaces (los externos abren otra pestaña). */
+import type { Line } from "../../../data/about";
+import { useTranslations, type Lang } from "../../../i18n/ui";
+
+interface Props {
+  line: Line;
+  lang: Lang;
+}
+
+const { line, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="whitespace-pre-wrap break-words text-ink-2 motion-safe:animate-[fin_.25s_ease_both]">
+  {line.length ? null : " "}{
+    line.map((s) =>
+      typeof s === "string" ? (
+        s
+      ) : s.external ? (
+        <a href={s.href} target="_blank" rel="noopener noreferrer" class="text-str hover:underline">
+          {s.text}
+          <span class="sr-only"> {t("a11y.newTab")}</span>
+        </a>
+      ) : (
+        <a href={s.href} class="text-str hover:underline">
+          {s.text}
+        </a>
+      ),
+    )
+  }
+</div>

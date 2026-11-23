@@ -45,6 +45,8 @@
   --color-term-bar: #010409;
   --color-term-line: #21262d;
   --color-term-ink: #7d8590;
+  /* Texto de comando en la terminal de Sobre mí. */
+  --color-term-text: #e6edf3;
 
   --radius-1: 28px;
   --radius-2: 18px;
@@ -287,6 +289,14 @@
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* Entrada de cada línea de la terminal (Sobre mí). */
+@keyframes fin {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
   }
 }
 
