@@ -1,0 +1,51 @@
+---
+import { Icon } from "astro-icon/components";
+import type { DeliveryStep } from "../../../data/services";
+import { pick, type Localized } from "../../../data/types";
+import type { Lang } from "../../../i18n/ui";
+
+/**
+ * Franja estática bajo el panel de CI: qué publica el repo de práctica (imágenes en GHCR que
+ * los manifiestos referencian). Sin animación propia; las flechas son decorativas.
+ */
+interface Props {
+  source: string;
+  label: Localized;
+  steps: readonly DeliveryStep[];
+  lang: Lang;
+}
+
+const { source, label, steps, lang } = Astro.props;
+
+const icons: Record<DeliveryStep["icon"], string> = {
+  push: "lucide:git-commit-horizontal",
+  image: "lucide:container",
+  registry: "lucide:package",
+  manifest: "lucide:ship-wheel",
+};
+---
+
+<div class="rounded-[14px] border border-line bg-term p-3 font-mono text-[12.5px] leading-[normal]">
+  <p class="mb-2.5 text-com">{source}</p>
+  <ol class="m-0 flex list-none flex-wrap items-center gap-x-1.5 gap-y-2 p-0" aria-label={pick(label, lang)}>
+    {
+      steps.map((step, i) => (
+        <li class="flex items-center gap-1.5">
+          <span class="inline-flex items-center gap-1.5 rounded-[10px] border border-line bg-surface-1 px-2.5 py-1.5 text-ink-2">
+            <Icon name={icons[step.icon]} class="size-3.5 shrink-0 text-accent *:stroke-[1.75]" aria-hidden="true" />
+            <span>{pick(step.label, lang)}</span>
+            {step.note && (
+              <>
+                {" "}
+                <span class="sr-only">{pick(step.note, lang)}</span>
+              </>
+            )}
+          </span>
+          {i < steps.length - 1 && (
+            <Icon name="lucide:arrow-right" class="size-3.5 shrink-0 text-ink-2 *:stroke-[1.75]" aria-hidden="true" />
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</div>

@@ -4,6 +4,7 @@ import { Icon } from "astro-icon/components";
 import TechLogo from "../../common/TechLogo.astro";
 import ApiLog from "./ApiLog.astro";
 import CiPanel from "./CiPanel.astro";
+import DeliveryStrip from "./DeliveryStrip.astro";
 import ReferenceChip from "./ReferenceChip.astro";
 import type { Service, ServiceId } from "../../../data/services";
 import { pick, type MediaRef } from "../../../data/types";
@@ -125,5 +126,17 @@ const headingId = `servicio-${service.id}`;
   </div>
 
   {service.id === "api" && <ApiLog window={service.apiLog.window} steps={service.apiLog.steps} lang={lang} />}
-  {service.id === "ops" && <CiPanel window={service.ci.window} checks={service.ci.checks} lang={lang} />}
+  {
+    service.id === "ops" && (
+      <div class="flex flex-col gap-3.5">
+        <CiPanel window={service.ci.window} checks={service.ci.checks} lang={lang} />
+        <DeliveryStrip
+          source={service.delivery.source}
+          label={service.delivery.label}
+          steps={service.delivery.steps}
+          lang={lang}
+        />
+      </div>
+    )
+  }
 </article>
