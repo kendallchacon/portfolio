@@ -153,7 +153,8 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - `SectionHead` (`common/`) es el encabezado de sección nuevo; `SectionHeader` es legacy y se borra en la iteración 7.
 - Las capturas de servicios se leen de `src/assets/services/` (no de `docs/`): captura de web y dos teléfonos de mobile, activadas por decisión del autor.
 - `experienceHref()` (`i18n/ui.ts`) devuelve `undefined` mientras no haya anclas `#xp-<id>`; al publicar la experiencia (iteración 5), agregar los ids a `publishedExperience` y los chips pasan a ser enlaces.
-- El log de Identity coincide con `matchgo-backend` (`/api/v1/auth/login`, `/refresh`, `/logout`: 200, 200, 204). La cascada usa `html.js` y `api-log.ts`.
+- El log (`matchgo · api`) muestra dos flujos verificados en `matchgo-backend`, separados por comentarios visibles: Identity (`/api/v1/auth/login`, `/refresh`, `/logout`: 200, 200, 204) y Competition (`POST /api/v1/teams/{teamId}/invitations`: 201 Created y 403 Forbidden cuando quien invita no es capitán, `TeamInvitationsController`). La cascada usa `html.js` y `api-log.ts`.
+- Desviación pedida por el autor: bajo el panel de CI de ops hay una franja estática con lo que publica `docker-kubernetes-lab` (`publish-images.yml`): push a main → imágenes Docker → GHCR → manifiestos K8s, que solo referencian esas imágenes (no hay despliegue automático). Entre 980 y 1227 px el log y la franja ocupan más líneas y estiran su fila.
 - Fidelidad al prototipo: columnas texto | panel `1fr 1.05fr`, h3 de Infraestructura en dos líneas, refs a 6 px de los logos en las tarjetas anchas y al fondo en web/mobile, CI en dos columnas.
 - Etiquetas del CI acortadas para no hacer wrap a 1180 px ("build", "tests + PG", "compose cfg"); las notas del log van en `ink-2` (AA), no en `ink-3`.
 - Íconos de tarjetas y referencias: set `lucide` (`@iconify-json/lucide`); solo se incluyen los usados. Las referencias de experiencia aceptan `icon: "pr" | "issue"`.
