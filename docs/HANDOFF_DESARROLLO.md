@@ -90,7 +90,10 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 4B | `feat/services` | Hecha: bento de servicios con log de API (cascada única), panel de CI y chips de referencia; capturas activadas por decisión del autor; reveal, tecleo y brillo como el prototipo. |
 | 5A | `feat/experience` | Hecha: git log de experiencia con filtro por rama, KPIs con contador, historias desplegables y visor de adjuntos. |
 | 5B | `feat/about` | Hecha: foto + terminal interactiva (Sobre mí) con salidas derivadas de los datos y lectura sin JS. |
-| 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
+| 6A.1 | `feat/projects` | Hecha: sección #proyectos con 4 tarjetas y escenas estáticas completas (celulares, navegadores, código, CI). Sin enlace "Abrir el caso". |
+| 6A.2 | `feat/projects-motion` | Video con IntersectionObserver, animación del pipeline, botón de volver a ejecutar, reveal. |
+| 6B.1 | `feat/project-cases` | Rutas `/proyectos/[slug]` y `/en/proyectos/[slug]`, transiciones CSS cross-document, hrefs de proyectos y caso MatchGo. |
+| 6B.2 | `content/project-cases` | Casos Beto y Más y CIMA. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
 | 8 | `feat/motion-polish` | Revelados, títulos que se escriben, spotlight global, bordes con cursor, riel de progreso, reduced-motion. |
 | 9 | `perf/seo-a11y` | Imágenes con `astro:assets` (AVIF/WebP), videos livianos con poster, metadatos, JSON-LD Person, sitemap, Lighthouse ≥ 95, foco visible, contraste. |
@@ -123,7 +126,7 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - CV: el botón del navbar descarga un solo PDF por ahora; habrá versiones es/en cuando Kendall las entregue.
 - Capturas de CIMA (historial, comparativo, reportes).
 - Capturas de Flameware (diapositivas 5–7 del informe final), si se pueden mostrar.
-- Consentimiento para avatares de terceros en capturas de MatchGo 01, 06, 09 y 10.
+- Consentimiento para avatares de terceros en capturas de MatchGo 08, 09 y 10 y en los videos M4 y M5 (01 y 06 aprobadas en la iteración 6).
 - Confirmar: Flameware (tres practicantes, remoto, seguridad de cuentas, CRM de agentes), fechas del tutor, "lideré la app móvil", UnaRoom (Room + FCM) en el Lab, y si los fragmentos de repos privados son literales o adaptados.
 
 ## 10. Notas técnicas acumuladas
@@ -182,10 +185,25 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - Sin JS: el log trae whoami y `cat sobre-mi.txt`; el resto de comandos va en `<details>`. Con JS, el script clona esas salidas (nada de copy en el script).
 - El log arranca con `aria-live="off"` y pasa a `polite` en la primera acción del usuario (la salida se agrega un frame después). El retecleo del intro corre una vez y se cancela al actuar o enfocar el input.
 - `cat stack.json`: cada tecnología lista como evidencia los ids de experiencia que la usan; si no hay evidencia, el build falla.
-- Shortlog: matchgo-mobile 170, Beto y Más 150 (auditoría forense), matchgo-backend 13 (rama dev, 1 de 4 contribuyentes). VERIFICAR: cima-mobile 52 / cima-backend 40 (en GitHub coinciden con otros autores; los commits de Kendall serían 60 y 49) y docker-kubernetes-lab 4.
+- Shortlog: matchgo-mobile 170, Beto y Más 150 (auditoría forense), matchgo-backend 13 (rama dev, 1 de 4 contribuyentes), docker-kubernetes-lab 4 (único contribuyente, activado en 6A.1). Cada conteo lleva en `about.ts` su fuente (repo, rama, comando, fecha); el de Beto y Más no registra rama ni comando. VERIFICAR: cima-mobile 52 / cima-backend 40 (en GitHub coinciden con otros autores; los commits de Kendall serían 60 y 49).
 - Foto en `src/assets/about/` (WebP 360/480/720, sin EXIF). `WindowBar` acepta `size="md"`; `SectionHead` acepta `tight`. Token `term-text`.
 
+**Proyectos (iteración 6A.1)**
+- `Projects` (`sections/`) con `projects/ProjectCard`, `SceneBar` y una escena por tipo (`ScenePhones`, `SceneBrowsers`, `SceneCode`, `ScenePipeline`). Estilos como utilidades; en `global.css` solo el fondo `.scene` con trama, `.scene > *` absoluto, el check `.job-done` y los tokens `scene-*`, `brand-kotlin`, `brand-dotnet`, `shadow`.
+- Escena con altura fija (520 / 420 ≤980 / 360 ≤560): CLS ≈ 0. Escenas `aria-hidden`, salvo las capturas de Beto y Más (alt de los datos). Sin JS se lee todo: el pipeline va en su estado final y el video muestra el poster.
+- Media en `src/assets/projects/` (M3.mp4 re-codificado a 468 KB, 540×1170, 24 fps, sin audio; M3p y beto-inicio). 01, 06 y beto-juegos se reutilizan de `src/assets/services/` (`projects/media.ts`). El `<video>` solo lleva `data-src` y `preload="none"`: no descarga nada hasta 6A.2.
+- Tarjeta: Mi parte / Qué hay, Equipo, Commits (con el contexto real: uno de N contribuyentes), Estado; "Stack del proyecto" visible; referencias con `ReferenceChip` (nuevo `kind: "doc"`: ADR 0003 sin enlace hasta #criterio, y el extracto de CIMA con enlace fijado al commit). `TechLogo` acepta `decorative` (el nombre ya está al lado).
+- CIMA: extracto literal de `NetworkCallAdapter.kt` L74–93 en `c3a41de` (rama dev). `git blame -w`: 19 de 20 líneas son de Kendall (95 %); el archivo completo tiene 6 autores. Los KPIs 52/40 están comentados como VERIFICAR.
+- Lab: pipeline verificado contra `publish-images.yml`; 2 pods (`replicas: 1` en cada deployment) con sufijos ilustrativos (visible en la ventana); `kubectl apply` marcado como paso manual.
+- Parallax de escenas (`data-depth`): iteración 8.
+
+**Reglas para 6B (casos)**
+- MatchGo: los textos al pie de M2/M3 describen solo la interfaz de la app (la parte de Kendall). No se atribuyen el emparejamiento con ML ni la lógica de reservas del backend. M2 lleva "© OpenStreetMap" visible. Fuera por terceros: 08, 09, 10, M4, M5; W1/W2 son del panel web del equipo (y W1 muestra un correo de demo).
+- CIMA entra en `publishedProjects` solo si hay contenido verificado suficiente; si no, la tarjeta queda sin enlace.
+
 **Pulido pendiente (iteración 9)**
+- Experiencia (5A): a 390 px en emulación móvil, la barra de filtros por rama ensancha el viewport de layout (`innerWidth` 605–618); al ocultar #experiencia vuelve a 390. Revisar antes del release.
+- Terminal de Sobre mí: con `docker-kubernetes-lab` la columna del shortlog es más ancha y las notas hacen wrap a 390 px (ya lo hacía la de matchgo-mobile).
 - Espacio de no separación en "full stack" de los titulares y `text-wrap: balance` en el `h1` (en inglés queda "production." sola a 1440 px).
 - La píldora de disponibilidad hace wrap a 390 px.
 - Forced reflow de ~34 ms (probablemente `offsetWidth` en la navbar).
