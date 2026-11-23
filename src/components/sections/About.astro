@@ -1,0 +1,167 @@
+---
+import { Image } from "astro:assets";
+import SectionHead from "../common/SectionHead.astro";
+import WindowBar from "../common/WindowBar.astro";
+import photo from "../../assets/about/kendall-profile.jpg";
+import TermLine from "./about/TermLine.astro";
+import { about, aboutOutputs, photoCaption, type AboutCommand } from "../../data/about";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const out = aboutOutputs(lang);
+const caption = photoCaption(lang);
+const inputId = "about-input";
+
+// Comandos que sin JS se leen en <details> bajo la terminal (los del intro ya están en el log).
+const rest = about.chips.filter((c) => !(about.intro as readonly AboutCommand[]).includes(c));
+// Solo con JS: el intro y `help` se guardan en un <template> para reimprimirlos.
+const jsOnly: AboutCommand[] = [...about.intro, "help"];
+
+// Misma base que TermLine; la línea de comando se separa del bloque anterior.
+const cmdClass = "mt-2.5 whitespace-pre-wrap break-words text-term-text first:mt-0 motion-safe:animate-[fin_.25s_ease_both]";
+---
+
+<section id="sobre-mi" aria-labelledby="sobre-mi-title" class="pt-[88px] pb-6 min-[980px]:pt-[120px] min-[980px]:pb-10">
+  <div
+    class="wrap grid grid-cols-1 gap-8 *:min-w-0 min-[980px]:grid-cols-[.75fr_1.25fr] min-[980px]:items-center min-[980px]:gap-14"
+  >
+    <figure
+      data-rv
+      class="relative m-0 aspect-square max-w-[360px] overflow-hidden rounded-1 border border-line-strong min-[980px]:aspect-[4/5] min-[980px]:max-w-none"
+    >
+      <Image
+        src={photo}
+        alt={pick(about.photo.alt, lang)}
+        widths={[360, 480, 720]}
+        sizes="(min-width: 980px) 422px, 360px"
+        format="webp"
+        quality={78}
+        loading="lazy"
+        decoding="async"
+        class="block size-full object-cover object-[50%_20%]"
+      />
+      <figcaption
+        class="absolute inset-x-3 bottom-3 grid rounded-2xl text-sm leading-[1.6] border border-line-strong bg-bg/72 px-4 py-3.5 backdrop-blur-md"
+      >
+        <b>{caption.name}</b>
+        <span class="text-ink-2">{caption.detail}</span>
+      </figcaption>
+    </figure>
+
+    <div>
+      <SectionHead path={t("home.about.path")} title={t("home.about.title")} headingId="sobre-mi-title" tight />
+
+      <div data-glow>
+        <div
+          data-rv
+          class="glow relative overflow-hidden rounded-2 border border-line-strong bg-term shadow-[0_40px_80px_-40px_var(--color-bg)]"
+        >
+          <WindowBar title="kendall@portfolio: ~" size="md" />
+          {/* role="log": el script pone aria-live="off" al iniciar y "polite" tras la primera acción. */}
+          <div
+            data-about-log
+            data-nf={pick(about.notFound, lang)}
+            role="log"
+            aria-live="polite"
+            aria-label={t("home.about.log")}
+            tabindex="0"
+            class="h-[330px] overflow-y-auto scroll-smooth px-5 pt-[18px] pb-1.5 font-mono text-[14.5px] leading-[1.7] focus-visible:-outline-offset-2 max-[560px]:h-[300px] max-[560px]:text-[13px]"
+          >
+            {
+              about.intro.map((cmd) => (
+                <>
+                  <div data-c={cmd} class={cmdClass}>
+                    <span class="text-ok">$</span> {cmd}
+                  </div>
+                  {out[cmd].map((line) => (
+                    <TermLine line={line} lang={lang} />
+                  ))}
+                </>
+              ))
+            }
+          </div>
+          <form
+            data-about-form
+            autocomplete="off"
+            class="flex gap-2.5 px-5 pt-2 pb-4 font-mono text-[14.5px] leading-[1.27] max-[560px]:text-[13px] [html:not(.js)_&]:hidden"
+          >
+            <label for={inputId} class="sr-only">{t("home.about.input")}</label>
+            <span aria-hidden="true" class="text-ok max-[560px]:hidden">kendall@portfolio:~$</span>
+            <input
+              id={inputId}
+              type="text"
+              spellcheck="false"
+              autocapitalize="off"
+              enterkeyhint="send"
+              class="min-w-0 flex-1 bg-transparent text-term-text caret-accent"
+            />
+          </form>
+        </div>
+      </div>
+
+      <div
+        data-rv
+        class="mt-4 flex flex-wrap items-center gap-2 text-sm text-ink-2 [html:not(.js)_&]:hidden"
+      >
+        <span>{t("home.about.try")}</span>
+        {
+          about.chips.map((cmd) => (
+            <button
+              type="button"
+              data-run={cmd}
+              class="cursor-pointer rounded-full border border-line bg-surface-2 px-3 py-1.5 font-mono text-[13px] leading-[1.26] text-ink transition-colors duration-200 hover:border-accent"
+            >
+              {cmd}
+            </button>
+          ))
+        }
+      </div>
+
+      {/* Sin JS: el resto de comandos, legibles como bloques desplegables. Con JS, fuente del script. */}
+      <div class="mt-4 grid gap-2 [html.js_&]:hidden">
+        {
+          rest.map((cmd) => (
+            <details class="rounded-3 border border-line bg-term font-mono text-[13.5px] leading-[1.7]">
+              <summary class="cursor-pointer px-4 py-2.5 text-term-text">
+                <span class="text-ok">$</span> {cmd}
+              </summary>
+              <div data-out={cmd} class="px-4 pb-3">
+                {out[cmd].map((line) => (
+                  <TermLine line={line} lang={lang} />
+                ))}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+      <template data-about-tpl>
+        {
+          jsOnly.map((cmd) => (
+            <div data-out={cmd}>
+              {out[cmd].map((line) => (
+                <TermLine line={line} lang={lang} />
+              ))}
+            </div>
+          ))
+        }
+        <div data-cmd class={cmdClass}>
+          <span class="text-ok">$</span> <span data-ty></span><i
+            class="ml-0.5 inline-block h-[1.1em] w-[0.55em] bg-accent align-[-0.15em]"></i>
+        </div>
+        <TermLine line={[]} lang={lang} />
+      </template>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/reveal";
+  import "../../scripts/glow";
+  import "../../scripts/about";
+</script>

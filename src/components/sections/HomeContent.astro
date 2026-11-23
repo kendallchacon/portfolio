@@ -1,5 +1,6 @@
 ---
 import { langFrom } from "../../i18n/ui";
+import About from "./About.astro";
 import EvidenceStrip from "./EvidenceStrip.astro";
 import ExperienceLog from "./ExperienceLog.astro";
 import HomeHero from "./HomeHero.astro";
@@ -12,4 +13,5 @@ const lang = langFrom(Astro.currentLocale);
 <HomeHero lang={lang} />
 <EvidenceStrip lang={lang} />
 <ServicesBento lang={lang} />
+<About lang={lang} />
 <ExperienceLog lang={lang} />

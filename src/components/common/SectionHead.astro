@@ -10,12 +10,14 @@ interface Props {
   lead?: string;
   /** Id del h2, para `aria-labelledby` de la sección. */
   headingId: string;
+  /** Variante compacta (columna de Sobre mí): margen inferior de 24 px. */
+  tight?: boolean;
 }
 
-const { path, title, lead, headingId } = Astro.props;
+const { path, title, lead, headingId, tight } = Astro.props;
 ---
 
-<header data-rv class="mb-[34px] min-[980px]:mb-11">
+<header data-rv class={tight ? "mb-6" : "mb-[34px] min-[980px]:mb-11"}>
   <p data-type class="inline-flex min-h-[1.6em] items-center gap-[0.5em] font-mono text-sm font-medium text-accent">
     <span aria-hidden="true" class="text-ok">$</span>
     <span class="pt">{path}</span><i
