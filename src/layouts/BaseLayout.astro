@@ -37,8 +37,9 @@ const alternates = alternateUrls(Astro.url.pathname);
 <html lang={lang}>
   <head>
     {/* Marca temprano que hay JS para permitir el anti-parpadeo de la terminal
-        sin penalizar a quien navega sin JavaScript. */}
-    <script is:inline>document.documentElement.classList.add("js");</script>
+        sin penalizar a quien navega sin JavaScript. `rv` habilita el reveal por scroll
+        solo si existe IntersectionObserver (sin él, nada se oculta). */}
+    <script is:inline>document.documentElement.classList.add("js");if("IntersectionObserver"in window)document.documentElement.classList.add("rv");</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
