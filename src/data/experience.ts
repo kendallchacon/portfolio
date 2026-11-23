@@ -8,6 +8,7 @@ export type Kpi = Metric;
 export type ExperienceEntry = {
   /** Hash del commit. DECORATIVO: no corresponde a ningún commit real. */
   hash: string;
+  /** Vacía (`both("")`) = sin fecha visible. */
   date: Localized;
   branch: Branch;
   title: Localized;
@@ -17,11 +18,16 @@ export type ExperienceEntry = {
   /** Historias destacadas (desplegable). */
   stories?: readonly Localized[];
   kpis?: readonly Kpi[];
-  /** Fotos y certificados con visor ampliado. Rutas relativas a `docs/prototype/media/`. */
+  /** Fotos y certificados con visor ampliado. Rutas relativas a `src/assets/experience/`. */
   attachments?: readonly MediaRef[];
   tech?: readonly TechId[];
   /** Etiquetas que no son tecnologías del registro (metodología, conceptos). */
   tags?: readonly Localized[];
+  /**
+   * Logo de la organización, en un tile claro junto al título (decorativo: el nombre ya va en
+   * `subtitle`). Archivo en `src/assets/experience/logos/`. Sin logo no se renderiza el tile.
+   */
+  logo?: `${string}.${"png" | "jpg" | "webp" | "svg"}`;
   /** Si existe, la entrada enlaza al caso `/proyectos/<slug>`. */
   project?: ProjectSlug;
 };
@@ -40,32 +46,23 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
       en: "Professional internship · full stack developer",
     },
     subtitle: both("Flameware Technologies · Costa Rica Homes Realty"),
+    logo: "flameware.png",
     // Solo lo respaldado por el handoff §4 (el prototipo agrega detalles que se omiten).
-    // VERIFICAR: «de comisiones» viene solo del prototipo; el handoff §4 dice «corte quincenal con
-    // vista previa», sin mencionar comisiones.
     body: {
-      es: "Me integré a una plataforma inmobiliaria en PHP. Trabajé desde la validación de DTOs hasta el catálogo público y los cortes quincenales de comisiones.",
-      en: "I joined a real-estate platform built in PHP. I worked from DTO validation to the public catalog and biweekly commission settlements.",
+      es: "Me integré a una plataforma inmobiliaria en PHP. Trabajé desde la validación de DTOs hasta el catálogo público y los cortes quincenales.",
+      en: "I joined a real-estate platform built in PHP. I worked from DTO validation to the public catalog and biweekly settlements.",
     },
     stories: [
       {
         es: "CRH-117 · catálogo público con filtros y conversión de moneda",
         en: "CRH-117 · public catalog with filters and currency conversion",
       },
-      // VERIFICAR: «sin exponer contactos» viene solo del prototipo (handoff §4: «panel del propietario»).
-      {
-        es: "CRH-135 · panel del propietario sin exponer contactos",
-        en: "CRH-135 · owner dashboard without exposing contacts",
-      },
+      { es: "CRH-135 · panel del propietario", en: "CRH-135 · owner dashboard" },
       {
         es: "CRH-150 · corte quincenal con vista previa",
         en: "CRH-150 · biweekly settlement with preview",
       },
-      // VERIFICAR: «fuera del sprint» viene solo del prototipo (handoff §4: «PR #17 panel administrativo»).
-      {
-        es: "PR #17 · panel administrativo, fuera del sprint",
-        en: "PR #17 · admin dashboard, outside the sprint",
-      },
+      { es: "PR #17 · panel administrativo", en: "PR #17 · admin dashboard" },
     ],
     kpis: [
       { value: 16, label: { es: "historias y tareas", en: "stories and tasks" } },
@@ -80,8 +77,7 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
 
   matchgo: {
     hash: "19af078",
-    // VERIFICAR: la fecha «Ago – nov 2026» viene solo del prototipo (el handoff no la respalda).
-    date: { es: "Ago – nov 2026", en: "Aug – Nov 2026" },
+    date: both("2026"),
     branch: "proyectos",
     // VERIFICAR: si se confirma la revisión del modelo de datos, agregar «y modelo de datos» /
     // «and data model» al título (revisión del modelo de datos sin confirmar; ver projects.ts).
@@ -209,8 +205,8 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
 
   tutor: {
     hash: "7d4f2b1",
-    // VERIFICAR: fechas de la entrada del tutor (handoff §9).
-    date: both("2024 – 2026"),
+    // VERIFICAR: fechas de la entrada del tutor (handoff §9). Vacía = no se renderiza.
+    date: both(""),
     branch: "docencia",
     title: { es: "Tutor de programación", en: "Programming tutor" },
     subtitle: both("Universidad Nacional"),
@@ -311,13 +307,11 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
     branch: "formacion",
     title: { es: "Proyectos académicos en Java", en: "Academic Java projects" },
     subtitle: { es: "Código no publicado", en: "Code not published" },
-    // VERIFICAR: JavaFX (en el cuerpo y en `tags`) no está en el handoff ni en el sitio viejo.
     body: {
-      es: "Aplicaciones de escritorio con estructuras de datos propias: REDUNA (red social con Dijkstra), gestor de contenedores portuarios, TranspoRoute, AutoTech y gestión hospitalaria con JavaFX.",
-      en: "Desktop applications with custom data structures: REDUNA (a social network with Dijkstra), a port container manager, TranspoRoute, AutoTech and hospital management with JavaFX.",
+      es: "Aplicaciones de escritorio con estructuras de datos propias: REDUNA (red social con Dijkstra), gestor de contenedores portuarios, TranspoRoute, AutoTech y gestión hospitalaria.",
+      en: "Desktop applications with custom data structures: REDUNA (a social network with Dijkstra), a port container manager, TranspoRoute, AutoTech and hospital management.",
     },
     tech: ["java"],
-    tags: [both("JavaFX")], // VERIFICAR
   },
 };
 

@@ -45,9 +45,9 @@ export type ExperienceId =
 export type Branch = "profesional" | "proyectos" | "logros" | "docencia" | "formacion";
 
 /**
- * Imagen o captura referida por nombre de archivo, relativo a `docs/prototype/media/`
- * por ahora. No se importa nada aquí: la resolución con `astro:assets` llega con los
- * componentes. Alt vacío = imagen decorativa.
+ * Imagen o captura referida por nombre de archivo. La carpeta la fija cada tipo que la usa
+ * (p. ej. `src/assets/experience/`); el componente la resuelve con `astro:assets`.
+ * Alt vacío = imagen decorativa.
  */
 export type MediaRef = {
   file: string;
