@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon/components";
 import SceneBar from "./SceneBar.astro";
 import type { Scene } from "../../data/projects";
 import { pick } from "../../data/types";
@@ -8,6 +9,9 @@ import { useTranslations, type Lang } from "../../i18n/ui";
  * Corrida de GitHub Actions (publish-images.yml) y `kubectl get pods`. Se renderiza en su
  * estado final (todos los pasos hechos): es lo que se lee sin JS y con reduced-motion. El
  * despliegue es manual: el workflow solo publica imágenes en GHCR.
+ * Con JS, scripts/projects.ts anima los pasos (`data-job`) al entrar en vista y muestra el
+ * botón de volver a ejecutar (`hidden` sin JS). Las ventanas son decorativas (`aria-hidden`);
+ * el botón no, porque es un control real.
  */
 interface Props {
   scene: Extract<Scene, { type: "pipeline" }>;
@@ -19,29 +23,39 @@ const t = useTranslations(lang);
 const win = "overflow-hidden rounded-xl border border-line-strong bg-term shadow-[0_30px_60px_-24px_var(--color-shadow)]";
 ---
 
-<div class:list={["top-[5%] right-[16%] left-[5%] flex flex-col", win]}>
+<div class:list={["top-[5%] right-[16%] left-[5%] flex flex-col", win]} data-ci>
   <SceneBar>
-    <span class="min-w-0 flex-1 truncate">{scene.workflow}</span>
+    <span class="min-w-0 flex-1 truncate" aria-hidden="true">{scene.workflow}</span>
+    <button
+      type="button"
+      data-ci-rerun
+      hidden
+      aria-label={t("home.projects.rerun")}
+      title={t("home.projects.rerun")}
+      class="-my-2 -mr-4 -ml-3 grid size-8 flex-none cursor-pointer place-items-center rounded-lg transition-colors hover:bg-surface-2 hover:text-ink focus-visible:outline-offset-[-2px]"
+    >
+      <Icon name="lucide:rotate-ccw" class="size-[15px] *:stroke-[1.75]" aria-hidden="true" />
+    </button>
   </SceneBar>
-  <div class="px-[18px] py-4 font-mono text-xs/[1.75] max-[561px]:p-3 max-[561px]:text-[11px]">
+  <div aria-hidden="true" class="px-[18px] py-4 font-mono text-xs/[1.75] max-[561px]:p-3 max-[561px]:text-[11px]">
     <p class="text-term-text">$ {scene.trigger}</p>
     <p class="mb-1.5 text-ink-3">→ {scene.run}</p>
     {
       scene.steps.map((step) => (
-        <p class="grid grid-cols-[20px_74px_1fr] items-center gap-2.5 text-term-text max-[561px]:grid-cols-[16px_60px_1fr] max-[561px]:gap-1.5">
+        <p data-job class="grid grid-cols-[20px_74px_1fr] items-center gap-2.5 text-term-text max-[561px]:grid-cols-[16px_60px_1fr] max-[561px]:gap-1.5">
           <span class="job-done" />
           <b class="font-medium">{step.id}</b>
           <span class="truncate text-ink-3">{step.detail}</span>
         </p>
       ))
     }
-    <p class="mt-2.5 text-ok">✔ {scene.published}</p>
-    <p class="mt-2.5 text-ok">
+    <p data-ci-end class="mt-2.5 text-ok">✔ {scene.published}</p>
+    <p data-ci-end class="mt-2.5 text-ok">
       $ {scene.deploy.command}{" "}<span class="text-ink-2">({t("home.projects.manual")}) · {pick(scene.deploy.note, lang)}</span>
     </p>
   </div>
 </div>
-<div class:list={["right-[4%] bottom-[5%] left-[22%] z-2 max-[981px]:left-[8%] max-[561px]:hidden", win]}>
+<div class:list={["right-[4%] bottom-[5%] left-[22%] z-2 max-[981px]:left-[8%] max-[561px]:hidden", win]} aria-hidden="true">
   <SceneBar size="xs">
     <span>kubectl get pods</span>
   </SceneBar>

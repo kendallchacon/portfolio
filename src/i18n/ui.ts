@@ -96,6 +96,7 @@ const es = {
   "home.projects.excerpt": "extracto",
   "home.projects.manual": "paso manual",
   "home.projects.illustrative": "# sufijos de pod ilustrativos",
+  "home.projects.rerun": "Volver a ejecutar",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -189,6 +190,7 @@ const en: Record<keyof typeof es, string> = {
   "home.projects.excerpt": "excerpt",
   "home.projects.manual": "manual step",
   "home.projects.illustrative": "# illustrative pod suffixes",
+  "home.projects.rerun": "Re-run",
 };
 
 export const ui = { es, en } as const;
