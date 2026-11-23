@@ -32,6 +32,16 @@
   --color-fn: #d2a8ff;
   --color-num: #79c0ff;
 
+  /* Puntos de la barra de ventana (terminales, log de API, CI) */
+  --color-dot-close: #ff5f57;
+  --color-dot-min: #febc2e;
+  --color-dot-max: #28c840;
+  /* Ventanas de terminal (log de API, panel de CI, chips de referencia). */
+  --color-term: #0d1117;
+  --color-term-bar: #010409;
+  --color-term-line: #21262d;
+  --color-term-ink: #7d8590;
+
   /* Ramas del git log */
   --color-branch-profesional: #5b8cff;
   --color-branch-proyectos: #3ddc97;
@@ -177,7 +187,103 @@
   }
 }
 
+/* Log de API: con JS y sin reduced-motion, las filas esperan a .run (api-log.ts) y entran
+   en cascada una sola vez. Sin JS o con reduced-motion se ven desde el inicio. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-api-log] li {
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.4s var(--ease-brand),
+      transform 0.4s var(--ease-brand);
+    transition-delay: calc(var(--i, 0) * 0.55s);
+  }
+
+  html.js [data-api-log].run li {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reveal por scroll (reveal.ts): solo se oculta con JS e IntersectionObserver (html.rv,
+   inline en <head>) y sin reduced-motion. Solo opacidad, transform y filtro: sin CLS. */
+@media (prefers-reduced-motion: no-preference) {
+  html.rv [data-rv] {
+    transition:
+      opacity 0.9s var(--ease-brand),
+      transform 0.9s var(--ease-brand),
+      filter 0.9s var(--ease-brand);
+  }
+
+  html.rv [data-rv]:not(.vis) {
+    opacity: 0;
+    transform: translateY(48px) scale(0.97);
+    filter: blur(6px);
+  }
+
+  html.rv [data-rv-stagger] > * {
+    transition:
+      opacity 0.8s var(--ease-brand),
+      transform 0.8s var(--ease-brand);
+    transition-delay: calc(var(--k, 0) * 90ms);
+  }
+
+  html.rv [data-rv-stagger]:not(.vis) > * {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+/* Brillo del borde que sigue al cursor (glow.ts fija --mx/--my), solo con puntero que hace hover. */
+@media (hover: hover) {
+  .glow::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      400px circle at var(--mx, 50%) var(--my, 0%),
+      color-mix(in srgb, var(--color-accent) 55%, transparent),
+      transparent 45%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .glow:hover::before {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-ok {
+  70% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-ok) 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-ok) 0%, transparent);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .glow::before {
+    transition: none;
+  }
+
   .lg:hover,
   .btn:active {
     transform: none;
