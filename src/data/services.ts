@@ -14,13 +14,22 @@ export type Reference =
     };
 
 export type ApiLogStep =
+  /** Comentario visible entre flujos (p. ej. `# identity`). */
+  | { type: "comment"; text: string }
   | { type: "request"; method: "GET" | "POST"; path: string; note?: Localized }
   | {
       type: "response";
-      status: 200 | 201 | 204 | 409;
-      reason: "OK" | "Created" | "No Content" | "Conflict";
+      status: 200 | 201 | 204 | 403 | 409;
+      reason: "OK" | "Created" | "No Content" | "Forbidden" | "Conflict";
       note: Localized;
     };
+
+/** Paso de la franja de entrega de imágenes; `note` se lee solo con lector de pantalla. */
+export type DeliveryStep = {
+  icon: "push" | "image" | "registry" | "manifest";
+  label: Localized;
+  note?: Localized;
+};
 
 type ServiceBase = {
   title: Localized;
@@ -41,6 +50,8 @@ export type Service =
       id: "ops";
       /** Mini panel de CI: título de la ventana y checks que pasan. */
       ci: { window: string; checks: readonly Localized[] };
+      /** Franja bajo el CI: qué publica el repo de práctica (no despliega). */
+      delivery: { source: string; label: Localized; steps: readonly DeliveryStep[] };
     });
 
 export type ServiceId = Service["id"];
@@ -67,8 +78,10 @@ export const services: readonly Service[] = [
       },
     ],
     apiLog: {
-      window: "matchgo · identity-api",
+      window: "matchgo · api",
+      // Rutas y códigos verificados en los controladores de Identity y Competition de matchgo-backend.
       steps: [
+        { type: "comment", text: "# identity" },
         { type: "request", method: "POST", path: "/api/v1/auth/login" },
         {
           type: "response",
@@ -89,6 +102,21 @@ export const services: readonly Service[] = [
           status: 204,
           reason: "No Content",
           note: { es: "sesión revocada", en: "session revoked" },
+        },
+        { type: "comment", text: "# competition" },
+        { type: "request", method: "POST", path: "/api/v1/teams/{teamId}/invitations" },
+        {
+          type: "response",
+          status: 201,
+          reason: "Created",
+          note: { es: "invitación pendiente", en: "pending invitation" },
+        },
+        { type: "request", method: "POST", path: "/api/v1/teams/{teamId}/invitations" },
+        {
+          type: "response",
+          status: 403,
+          reason: "Forbidden",
+          note: { es: "solo el capitán invita", en: "only the captain invites" },
         },
       ],
     },
@@ -177,6 +205,25 @@ export const services: readonly Service[] = [
         both("audit NuGet"),
         both("compose cfg"),
         both("docker images"),
+      ],
+    },
+    // Verificado en docker-kubernetes-lab: publish-images.yml construye y publica en GHCR al hacer
+    // push a main; los manifiestos de kubernetes/ referencian esas imágenes, no se aplican solos.
+    delivery: {
+      source: "# docker-kubernetes-lab",
+      label: {
+        es: "Publicación de imágenes en docker-kubernetes-lab",
+        en: "Image publishing in docker-kubernetes-lab",
+      },
+      steps: [
+        { icon: "push", label: { es: "push a main", en: "push to main" } },
+        { icon: "image", label: { es: "imágenes Docker", en: "Docker images" } },
+        { icon: "registry", label: both("GHCR") },
+        {
+          icon: "manifest",
+          label: { es: "manifiestos K8s", en: "K8s manifests" },
+          note: { es: "(usan las imágenes de GHCR)", en: "(use the GHCR images)" },
+        },
       ],
     },
   },

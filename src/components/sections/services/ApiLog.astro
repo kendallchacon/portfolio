@@ -18,7 +18,8 @@ const { window: title, steps, lang } = Astro.props;
 const t = useTranslations(lang);
 
 const methodClass = { GET: "text-ok", POST: "text-warn" } as const;
-const statusClass = { 200: "bg-num", 201: "bg-ok", 204: "bg-ok", 409: "bg-bad" } as const;
+// Texto oscuro sobre el color del badge (AA), también en 403/409.
+const statusClass = { 200: "bg-num", 201: "bg-ok", 204: "bg-ok", 403: "bg-bad", 409: "bg-bad" } as const;
 ---
 
 <figure
@@ -31,7 +32,9 @@ const statusClass = { 200: "bg-num", 201: "bg-ok", 204: "bg-ok", 409: "bg-bad" }
     {
       steps.map((step, i) => (
         <li style={`--i:${i}`} class:list={["break-words [overflow-wrap:anywhere]", step.type === "response" && "mb-2 pl-3.5"]}>
-          {step.type === "request" ? (
+          {step.type === "comment" ? (
+            <span class="text-com">{step.text}</span>
+          ) : step.type === "request" ? (
             <>
               <span class:list={["font-semibold", methodClass[step.method]]}>{step.method}</span>
               {" "}
