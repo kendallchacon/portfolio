@@ -67,7 +67,7 @@ const filters = [
                 data-b={f.key}
                 data-label={f.label}
                 aria-pressed={f.key === "all" ? "true" : "false"}
-                class="flex shrink-0 cursor-pointer items-center gap-3 rounded-3 px-3 py-2 font-mono text-[14.5px] leading-[normal] font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:bg-surface-1 hover:text-ink focus-visible:-outline-offset-2 aria-pressed:bg-surface-2! aria-pressed:text-ink aria-pressed:shadow-[inset_0_0_0_1px_var(--color-line-strong)] max-[979px]:bg-surface-1 min-[980px]:px-3.5 min-[980px]:py-[11px]"
+                class="relative flex shrink-0 cursor-pointer items-center gap-3 rounded-3 px-3 py-2 font-mono text-[14.5px] leading-[normal] font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:bg-surface-1 hover:text-ink focus-visible:-outline-offset-2 aria-pressed:bg-surface-2! aria-pressed:text-ink aria-pressed:shadow-[inset_0_0_0_1px_var(--color-line-strong)] max-[979px]:bg-surface-1 min-[980px]:px-3.5 min-[980px]:py-[11px]"
               >
                 <i aria-hidden="true" class="size-2.5 shrink-0 rounded-full" style={`background:${f.color}`} />
                 <span aria-hidden="true">{f.label}</span>
