@@ -62,16 +62,21 @@ export const about = {
 
   /** Commits de Kendall por repositorio. Se ordenan por cantidad al renderizar. */
   shortlog: [
-    // Handoff §4: 170 commits de Kendall (65 %), 19 PRs integrados.
+    // Fuente: MatchGo-UNA/matchgo-mobile, rama dev (por defecto),
+    // `gh api repos/MatchGo-UNA/matchgo-mobile/contributors` → kendallchacon 170 (23 nov 2026).
+    // 65 % y 19 PRs: handoff §4.
     {
       repo: "matchgo-mobile",
       commits: 170,
       note: { es: "65 % de los commits · 19 PRs", en: "65% of commits · 19 PRs" },
     },
     // Fuente: auditoría forense del repositorio, confirmada por el autor (iteración 5B).
+    // Repo privado del cliente: la rama y el comando de esa auditoría no quedaron registrados.
     // Nombre tal como figura en projects.ts (código privado del cliente, sin nombre de repo).
     { repo: "Beto y Más", commits: 150 },
-    // Verificado por el autor el 22 nov 2026: rama dev, 207 commits en total, 4 contribuyentes.
+    // Fuente: MatchGo-UNA/matchgo-backend, rama dev (por defecto),
+    // `gh api "repos/MatchGo-UNA/matchgo-backend/commits?sha=dev&author=kendallchacon"` → 13
+    // (23 nov 2026). Total de 207 commits y 4 contribuyentes: verificado por el autor (22 nov 2026).
     {
       repo: "matchgo-backend",
       commits: 13,
@@ -79,7 +84,14 @@ export const about = {
     },
     // VERIFICAR: cima-mobile 52 y cima-backend 40 (handoff §4) no constan como commits de
     // Kendall; en GitHub (contributors, rama por defecto) coinciden con otros autores.
-    // VERIFICAR: docker-kubernetes-lab 4 (prototipo), sin respaldo.
+    // Fuente: kendallchacon/docker-kubernetes-lab (público), rama main (por defecto),
+    // `gh api repos/kendallchacon/docker-kubernetes-lab/contributors` → kendallchacon 4,
+    // único contribuyente (23 nov 2026).
+    {
+      repo: "docker-kubernetes-lab",
+      commits: 4,
+      note: { es: "único contribuyente", en: "sole contributor" },
+    },
   ] satisfies readonly ShortlogEntry[],
 
   /** `ls proyectos/`: tecnologías a mostrar (subconjunto de `project.tech`). */

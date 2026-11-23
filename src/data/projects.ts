@@ -9,12 +9,15 @@ export type Metric = {
   label: Localized;
 };
 
-/** Video corto de demo: `preload="none"`, con poster. Rutas relativas a `docs/prototype/media/`. */
+/**
+ * Video corto de demo: `preload="none"`, con poster. Archivos en `src/assets/projects/`
+ * (el build no depende de `docs/`).
+ */
 export type VideoRef = { file: string; poster: MediaRef; alt: Localized };
 
 export type PipelineStep = { id: string; detail: string };
 
-/** Escena de la tarjeta de proyecto (unión discriminada por `type`). */
+/** Escena de la tarjeta de proyecto (unión discriminada por `type`). Es decorativa. */
 export type Scene =
   | {
       type: "phones";
@@ -30,7 +33,12 @@ export type Scene =
     }
   | {
       type: "code";
+      /** Extracto literal y contiguo de un repo público. */
       snippet: CodeSnippet;
+      /** Enlace fijado a un commit, con el rango de líneas del extracto. */
+      permalink: HttpsUrl;
+      /** Rango de líneas tal como se muestra (p. ej. "L74–93"). */
+      range: string;
       /** Fila de capas bajo el código, de arriba hacia abajo. */
       layers: readonly string[];
     }
@@ -44,7 +52,9 @@ export type Scene =
       steps: readonly PipelineStep[];
       /** Imagen publicada al final del job. */
       published: string;
-      deploy: { command: string; note: Localized };
+      /** El workflow no despliega: `kubectl apply` es un paso manual. */
+      deploy: { command: string; note: Localized; manual: true };
+      /** Pods según los manifiestos; los sufijos de hash los genera Kubernetes (ilustrativos). */
       pods: readonly { name: string; ready: string }[];
     };
 
@@ -54,6 +64,12 @@ export type BrowserWindow = { url: string; shot: MediaRef };
 export type ProjectRepo = { repo: RepoRef; detail?: Localized };
 
 export type ProjectLink = { label: string; href: HttpsUrl };
+
+/** Documento del repo (ADR) mostrado como etiqueta; sin enlace mientras no haya destino público. */
+export type ProjectDoc = { label: Localized };
+
+/** Chip flotante de la escena. */
+export type Highlight = { icon: "live" | "commits" | "trophy"; label: Localized };
 
 export type Project = {
   slug: string;
@@ -65,17 +81,28 @@ export type Project = {
   contents?: Localized;
   /** `size` solo cuando es un dato confirmado. */
   team?: { size?: number; label: Localized };
+  /** Commits de Kendall con su contexto real (uno de N contribuyentes). */
+  commits?: Localized;
   status?: Localized;
+  /** Stack del proyecto (no son habilidades propias por sí solas). */
   tech: readonly TechId[];
   metrics: readonly Metric[];
   repos: readonly ProjectRepo[];
   /** Enlaces públicos (sitio en producción). Los repos públicos van en `repos`. */
   links: readonly ProjectLink[];
+  docs?: readonly ProjectDoc[];
+  /** Máximo 2. En móvil (≤560 px) solo se ve el primero. */
+  highlights?: readonly Highlight[];
   scene: Scene;
 };
 
 const matchgoBackend: RepoRef = { name: "matchgo-backend", visibility: "private" };
 const matchgoMobile: RepoRef = { name: "matchgo-mobile", visibility: "private" };
+const cimaMobile: RepoRef = {
+  name: "cima-mobile",
+  visibility: "public",
+  url: "https://github.com/DevTeam-DAKFC/cima-mobile",
+};
 
 export const projects = [
   {
@@ -85,18 +112,27 @@ export const projects = [
       es: "Plataforma multi-deporte para reservar canchas, retar equipos y organizar partidos.",
       en: "Multi-sport platform to book courts, challenge teams and organize matches.",
     },
-    // VERIFICAR: si se confirma, agregar «y revisé el modelo de datos de los 4 servicios» /
-    // «and reviewed the data model of the 4 services» (revisión sin confirmar; la contribución
-    // al backend sí está confirmada, handoff §4).
+    // Contribución verificada (iteración 6): arranque de matchgo-backend (arquitectura base,
+    // Docker Compose, ADR 0001–0003 en el commit de arranque), CI inicial (PR #1), auth (PR #24),
+    // invitaciones y equipos (PR #29), moderación (PR #46), roles y permisos (PR #55, #79),
+    // auth servicio a servicio (PR #80), directorio de miembros (PR #89); en matchgo-mobile,
+    // base Flutter, lib/features/booking/ y dio_failure_mapper. No son de Kendall: restricción
+    // GiST/esquema de Booking, reservas/disponibilidad/409, mensajería, S3, ADR 0010.
+    // VERIFICAR: «revisé el modelo de datos de los 4 servicios» sigue sin confirmar.
     myPart: {
-      es: "Desarrollé la app móvil en Flutter e inicié el backend .NET: arquitectura de microservicios y funcionalidades de Identity, Competition y Community",
-      en: "Developed the Flutter mobile app and started the .NET backend: microservices architecture and features in Identity, Competition and Community",
+      es: "Arranqué el backend .NET (arquitectura base, Docker Compose, ADR y CI inicial) y desarrollé autenticación, equipos, moderación y permisos; en la app Flutter, la base y el módulo de reservas.",
+      en: "Bootstrapped the .NET backend (base architecture, Docker Compose, ADRs and initial CI) and built authentication, teams, moderation and permissions; in the Flutter app, the foundation and the booking module.",
     },
     team: {
       label: {
         es: "Proyecto final · 3 repositorios: backend, móvil y web",
         en: "Capstone · 3 repositories: backend, mobile and web",
       },
+    },
+    // Fuente de las cifras: about.ts (gh api, rama dev, 23 nov 2026).
+    commits: {
+      es: "móvil: 170 (65 %) · backend: 13, uno de 4 contribuyentes",
+      en: "mobile: 170 (65%) · backend: 13, one of 4 contributors",
     },
     status: {
       es: "Demo funcional con Docker Compose",
@@ -120,17 +156,25 @@ export const projects = [
       { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
       { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
     ],
-    // Repos privados: sin url. matchgo-backend y matchgo-mobile tienen respaldo de la contribución
-    // de Kendall (handoff §4).
+    // Repos privados: sin url.
     repos: [
       { repo: matchgoBackend, detail: both("Identity · Competition · Community") },
       { repo: matchgoMobile, detail: both("19 PRs") },
     ],
     links: [],
+    // ADR 0003 está en el commit de arranque de Kendall («chore: bootstrap backend architecture»).
+    // Sin enlace hasta que exista #criterio (iteración 7). ADR 0010 no es de Kendall: no va.
+    docs: [{ label: { es: "ADR 0003 · base por servicio", en: "ADR 0003 · database per service" } }],
+    highlights: [
+      { icon: "live", label: { es: "4 servicios · Docker Compose", en: "4 services · Docker Compose" } },
+      { icon: "commits", label: both("170 commits · 19 PRs") },
+    ],
     scene: {
       type: "phones",
-      // VERIFICAR: las capturas 01 y 06 muestran avatares de terceros; no renderizar sin consentimiento.
+      // Capturas 01 y 06 aprobadas por el autor (iteración 6). Copias en src/assets/services/.
       left: { file: "01.jpg", alt: both(""), width: 720, height: 1560 },
+      // M3 re-codificado a ~470 KB (mismo recorte 540×1170, 40 s, sin audio). Revisado: datos de
+      // demo, el avatar es la foto de Kendall, sin correos ni rostros de terceros.
       center: {
         file: "M3.mp4",
         poster: { file: "M3p.jpg", alt: both(""), width: 540, height: 1170 },
@@ -146,14 +190,17 @@ export const projects = [
       es: "Plataforma de fidelización con juegos, recompensas y panel administrativo para un negocio real.",
       en: "Loyalty platform with games, rewards and an admin panel for a real business.",
     },
+    // Áreas comprobadas en el historial (iteración 6). Sin cifras de PR (no se conocen).
     myPart: {
-      es: "Full stack: Bubble Shooter de punta a punta, recompensas, ubicaciones y perfiles",
-      en: "Full stack: Bubble Shooter end to end, rewards, locations and profiles",
+      es: "Full stack: Bubble Shooter (Phaser y puente Vue–Phaser), recompensas, ubicaciones y usuarios, y vistas de home, perfil y administración.",
+      en: "Full stack: Bubble Shooter (Phaser and a Vue–Phaser bridge), rewards, locations and users, and the home, profile and admin views.",
     },
     team: {
       size: 5,
       label: { es: "5 personas · 3 semestres", en: "5 people · 3 semesters" },
     },
+    // Fuente: about.ts (auditoría forense del repositorio, iteración 5B).
+    commits: { es: "150 en un equipo de 5", en: "150 in a team of 5" },
     status: {
       es: "En producción · 1.er lugar Infocontexto 2026",
       en: "In production · 1st place Infocontexto 2026",
@@ -168,8 +215,13 @@ export const projects = [
       },
     ],
     links: [{ label: "betoymas.com", href: "https://betoymas.com/" }],
+    highlights: [
+      { icon: "live", label: { es: "En producción", en: "In production" } },
+      { icon: "trophy", label: { es: "1.er lugar Infocontexto", en: "1st place Infocontexto" } },
+    ],
     scene: {
       type: "browsers",
+      // Revisadas: la cuenta y el avatar son de Kendall; sin datos de terceros.
       windows: [
         {
           url: "betoymas.com/juegos",
@@ -209,23 +261,20 @@ export const projects = [
         en: "DevTeam-DAKFC · Jira with 30 stories",
       },
     },
+    // VERIFICAR (bloqueante del release, handoff §9): conteo de commits de Kendall en CIMA.
     status: { es: "En mejora continua", en: "Ongoing improvements" },
     tech: ["kotlin", "jetpackCompose", "retrofit", "dotnet", "efcore", "jira"],
     metrics: [
-      { value: 52, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
-      { value: 40, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
+      // VERIFICAR (no se renderiza): 52 commits en cima-mobile y 40 en cima-backend no son de
+      // Kendall (en GitHub coinciden con otros autores). Solo se ocultan, sin corregir.
+      // { value: 52, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
+      // { value: 40, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
       // Jira CIMA: 30 historias en 6 épicas (handoff §4).
       { value: 30, label: { es: "historias en Jira", en: "stories in Jira" } },
       { value: 6, label: { es: "épicas", en: "epics" } },
     ],
     repos: [
-      {
-        repo: {
-          name: "cima-mobile",
-          visibility: "public",
-          url: "https://github.com/DevTeam-DAKFC/cima-mobile",
-        },
-      },
+      { repo: cimaMobile },
       {
         repo: {
           name: "cima-backend",
@@ -237,39 +286,41 @@ export const projects = [
     links: [],
     scene: {
       type: "code",
-      // VERIFICAR: el fragmento usa `parsedMessage`, que no se define en él; confirmar si es
-      // literal de cima-mobile (repo público) o está recortado.
+      // Extracto literal de NetworkCallAdapter.kt, líneas 74–93, en el commit c3a41de (rama dev).
+      // `git blame -w` (23 nov 2026): 19 de 20 líneas son de Kendall (95 %); la línea 91 es de
+      // otro integrante. El archivo completo es compartido (6 autores).
       snippet: {
         kind: "kotlin",
-        repo: {
-          name: "cima-mobile",
-          visibility: "public",
-          url: "https://github.com/DevTeam-DAKFC/cima-mobile",
-        },
+        repo: cimaMobile,
         path: "core/network/NetworkCallAdapter.kt",
         lines: [
-          "suspend fun <T> safeApiCall(",
-          "    apiCall: suspend () -> Response<T>,",
-          "): NetworkResult<T> {",
-          "    return try {",
-          "        val response = apiCall()",
-          "        val body = response.body()",
-          "",
-          "        if (response.isSuccessful && body != null) {",
-          "            NetworkResult.Success(body)",
-          "        } else when (response.code()) {",
-          "            401 -> NetworkResult.Unauthorized()",
-          "            409 -> NetworkResult.Conflict(message = parsedMessage)",
-          "            else -> NetworkResult.UnknownError(code = response.code())",
-          "        }",
           "    } catch (exception: SocketTimeoutException) {",
           "        NetworkResult.NetworkError(",
           '            message = "La solicitud tardó demasiado. Intenta nuevamente.",',
+          "            cause = exception,",
           "        )",
-          "    }",
-          "}",
+          "    } catch (exception: IOException) {",
+          "        NetworkResult.NetworkError(",
+          "            message = exception.message.toFriendlyNetworkMessage(),",
+          "            cause = exception,",
+          "        )",
+          "    } catch (exception: SSLException) {",
+          "        NetworkResult.NetworkError(",
+          '            message = "No se pudo conectar con el servidor.",',
+          "            cause = exception,",
+          "        )",
+          "    } catch (exception: Exception) {",
+          "        NetworkResult.UnknownError(",
+          '            message = exception.message ?: "Ocurrió un error inesperado.",',
+          "            cause = exception,",
+          "        )",
         ],
       },
+      permalink:
+        "https://github.com/DevTeam-DAKFC/cima-mobile/blob/c3a41de87896ad4ee1595406f2895af4a9928c9a/app/src/main/java/com/dakfc/cima/core/network/NetworkCallAdapter.kt#L74-L93",
+      range: "L74–93",
+      // Capas verificadas en el árbol de cima-mobile (rama dev): ui/, domain/usecase,
+      // domain/repository, data/repository, data/remote.
       layers: ["Compose", "ViewModel", "UseCase", "Repository", "Retrofit"],
     },
   },
@@ -285,6 +336,8 @@ export const projects = [
       es: "Compose para desarrollo, GitHub Actions que publica en GHCR y manifiestos con readiness y liveness.",
       en: "Compose for development, GitHub Actions publishing to GHCR and manifests with readiness and liveness.",
     },
+    // Fuente: about.ts (gh api, rama main, 23 nov 2026).
+    commits: { es: "4 · único contribuyente", en: "4 · sole contributor" },
     tech: ["docker", "kubernetes", "githubActions", "ghcr"],
     metrics: [],
     repos: [
@@ -304,6 +357,8 @@ export const projects = [
       },
     ],
     links: [],
+    // Verificado contra .github/workflows/publish-images.yml y kubernetes/*-deployment.yaml
+    // (rama main, 23 nov 2026).
     scene: {
       type: "pipeline",
       workflow: ".github/workflows/publish-images.yml",
@@ -323,11 +378,12 @@ export const projects = [
           es: "readiness y liveness en /health",
           en: "readiness and liveness on /health",
         },
+        manual: true,
       },
+      // Deployments `frontend` y `orders-service`, `replicas: 1` cada uno.
       pods: [
         { name: "frontend-7c9d8b-x2kq", ready: "1/1" },
         { name: "orders-service-5f6b9-m4tz", ready: "1/1" },
-        { name: "orders-service-5f6b9-p8wn", ready: "1/1" },
       ],
     },
   },
