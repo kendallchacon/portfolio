@@ -91,7 +91,7 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 5A | `feat/experience` | Hecha: git log de experiencia con filtro por rama, KPIs con contador, historias desplegables y visor de adjuntos. |
 | 5B | `feat/about` | Hecha: foto + terminal interactiva (Sobre mí) con salidas derivadas de los datos y lectura sin JS. |
 | 6A.1 | `feat/projects` | Hecha: sección #proyectos con 4 tarjetas y escenas estáticas completas (celulares, navegadores, código, CI). Sin enlace "Abrir el caso". |
-| 6A.2 | `feat/projects-motion` | Video con IntersectionObserver, animación del pipeline, botón de volver a ejecutar, reveal. |
+| 6A.2 | `feat/projects-motion` | Hecha: video con IntersectionObserver, animación del pipeline, botón de volver a ejecutar, reveal de tarjetas y enlace a la presentación del Lab. |
 | 6B.1 | `feat/project-cases` | Rutas `/proyectos/[slug]` y `/en/proyectos/[slug]`, transiciones CSS cross-document, hrefs de proyectos y caso MatchGo. |
 | 6B.2 | `content/project-cases` | Casos Beto y Más y CIMA. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
@@ -196,6 +196,14 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - CIMA: extracto literal de `NetworkCallAdapter.kt` L74–93 en `c3a41de` (rama dev). `git blame -w`: 19 de 20 líneas son de Kendall (95 %); el archivo completo tiene 6 autores. Los KPIs 52/40 están comentados como VERIFICAR.
 - Lab: pipeline verificado contra `publish-images.yml`; 2 pods (`replicas: 1` en cada deployment) con sufijos ilustrativos (visible en la ventana); `kubectl apply` marcado como paso manual.
 - Parallax de escenas (`data-depth`): iteración 8.
+
+**Proyectos (iteración 6A.2)**
+- `scripts/projects.ts` (importado en `Projects.astro` junto a `reveal`): un solo IntersectionObserver (umbral 0,25) para el video de MatchGo y el pipeline del Lab.
+- Video: el `<video>` sigue sin `src`; al entrar en vista se asigna `data-src` y se llama a `play()` (muted, loop, playsinline); al salir, `pause()`. Si `play()` se rechaza queda el poster, sin errores. Con reduced-motion no se observa: 0 peticiones `.mp4`.
+- Pipeline: el HTML sigue en su estado final. Con JS y sin reduced-motion, `.ci-run` deja los pasos pendientes hasta verse y luego avanzan uno a uno (`.run` gira en `warn`, `.done` vuelve al check; 0,6–1 s por paso); el cierre (`data-ci-end`) aparece al final. Estados en `global.css`, solo color, fondo, sombra y opacidad.
+- Botón "Volver a ejecutar" / "Re-run" en la barra del workflow: solo icono en todos los anchos, con `aria-label` y `title` (tooltip); área de clic de 32×32 px con márgenes negativos (`-my-2 -ml-3 -mr-4`) para no cambiar el alto de la barra y que a 1440 px la ruta `.github/workflows/publish-images.yml` se lea completa (281 de 302 px útiles; ≤1000 px se trunca como en 6A.1). `hidden` sin JS, foco visible hacia dentro (la ventana recorta el outline). Con reduced-motion no anima: el estado final se mantiene. Las ventanas del pipeline son `aria-hidden`; el botón queda expuesto.
+- Reveal: cada tarjeta lleva `data-rv` (opacidad, transform y filtro; sin CLS). Las alturas de escena de 6A.1 no cambian.
+- Lab: referencia "Presentación del lab" / "Lab presentation" → docker-kubernetes-presentation.vercel.app, con el mismo `ReferenceChip` (`kind: "link"`) que betoymas.com. `ProjectLink.label` pasa a `Localized`.
 
 **Reglas para 6B (casos)**
 - MatchGo: los textos al pie de M2/M3 describen solo la interfaz de la app (la parte de Kendall). No se atribuyen el emparejamiento con ML ni la lógica de reservas del backend. M2 lleva "© OpenStreetMap" visible. Fuera por terceros: 08, 09, 10, M4, M5; W1/W2 son del panel web del equipo (y W1 muestra un correo de demo).
