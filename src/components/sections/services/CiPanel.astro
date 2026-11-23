@@ -1,0 +1,38 @@
+---
+import WindowBar from "../../common/WindowBar.astro";
+import { pick, type Localized } from "../../../data/types";
+import { useTranslations, type Lang } from "../../../i18n/ui";
+
+/**
+ * Mini panel de CI: los checks del workflow, todos en verde, con el punto de estado
+ * pulsando (sin reduced-motion). Dos columnas en todos los anchos, como el prototipo.
+ */
+interface Props {
+  window: string;
+  checks: readonly Localized[];
+  lang: Lang;
+}
+
+const { window: title, checks, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="overflow-hidden rounded-[14px] border border-line bg-term">
+  <WindowBar title={title} />
+  <ul class="m-0 grid list-none grid-cols-2 gap-2 p-3">
+    {
+      checks.map((check) => (
+        <li class="flex items-center gap-2.5 rounded-[10px] border border-line bg-surface-1 px-3 py-2.5 font-mono text-[12.5px] leading-[normal]">
+          <i
+            class="size-2 shrink-0 rounded-full bg-ok shadow-[0_0_0_0_color-mix(in_srgb,var(--color-ok)_55%,transparent)] motion-safe:animate-[pulse-ok_2.2s_infinite]"
+            aria-hidden="true"
+          />
+          <span class="min-w-0">{pick(check, lang)}</span>
+          <b class="ml-auto font-medium text-ok" aria-hidden="true">✓</b>
+          {" "}
+          <span class="sr-only">{t("home.services.ciPass")}</span>
+        </li>
+      ))
+    }
+  </ul>
+</div>

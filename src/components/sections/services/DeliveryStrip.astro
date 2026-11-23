@@ -1,0 +1,50 @@
+---
+import { Icon } from "astro-icon/components";
+import type { DeliveryStep } from "../../../data/services";
+import { pick, type Localized } from "../../../data/types";
+import type { Lang } from "../../../i18n/ui";
+
+/**
+ * Franja estática bajo el panel de CI: qué publica el repo de práctica (imágenes en GHCR que
+ * los manifiestos referencian). Lista vertical en todos los anchos; los conectores son decorativos.
+ */
+interface Props {
+  source: string;
+  label: Localized;
+  steps: readonly DeliveryStep[];
+  lang: Lang;
+}
+
+const { source, label, steps, lang } = Astro.props;
+
+const icons: Record<DeliveryStep["icon"], string> = {
+  push: "lucide:git-commit-horizontal",
+  image: "lucide:container",
+  registry: "lucide:package",
+  manifest: "lucide:ship-wheel",
+};
+---
+
+<div class="rounded-[14px] border border-line bg-term p-3 font-mono text-[12.5px] leading-[normal]">
+  <p class="mb-2 text-com">{source}</p>
+  <ol class="m-0 flex list-none flex-col p-0" aria-label={pick(label, lang)}>
+    {
+      steps.map((step, i) => (
+        <li class="flex flex-col items-start">
+          <span class="inline-flex items-center gap-1.5 rounded-[10px] border border-line bg-surface-1 px-2.5 py-1 text-ink-2">
+            <Icon name={icons[step.icon]} class="size-3.5 shrink-0 text-accent *:stroke-[1.75]" aria-hidden="true" />
+            <span>{pick(step.label, lang)}</span>
+            {step.note && (
+              <>
+                {" "}
+                <span class="sr-only">{pick(step.note, lang)}</span>
+              </>
+            )}
+          </span>
+          {/* Conector decorativo, alineado con el centro del ícono. */}
+          {i < steps.length - 1 && <span aria-hidden="true" class="ml-4.5 h-2 w-px bg-line-strong" />}
+        </li>
+      ))
+    }
+  </ol>
+</div>

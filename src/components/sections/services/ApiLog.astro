@@ -1,0 +1,64 @@
+---
+import WindowBar from "../../common/WindowBar.astro";
+import type { ApiLogStep } from "../../../data/services";
+import { pick } from "../../../data/types";
+import { useTranslations, type Lang } from "../../../i18n/ui";
+
+/**
+ * Log de solicitudes y respuestas. Es evidencia: se lee completo con lector de pantalla,
+ * sin JS y con reduced-motion. La cascada (una sola vez) la dispara `api-log.ts`.
+ */
+interface Props {
+  window: string;
+  steps: readonly ApiLogStep[];
+  lang: Lang;
+}
+
+const { window: title, steps, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const methodClass = { GET: "text-ok", POST: "text-warn" } as const;
+// Texto oscuro sobre el color del badge (AA), también en 403/409.
+const statusClass = { 200: "bg-num", 201: "bg-ok", 204: "bg-ok", 403: "bg-bad", 409: "bg-bad" } as const;
+---
+
+<figure
+  data-api-log
+  class="m-0 flex flex-col self-stretch overflow-hidden rounded-[14px] border border-line bg-term font-mono text-[12.5px] leading-[1.9]"
+>
+  <figcaption class="sr-only">{t("home.services.apiLogCaption")}</figcaption>
+  <WindowBar title={title} />
+  <ol class="m-0 list-none px-4 pt-3 pb-3">
+    {
+      steps.map((step, i) => (
+        <li style={`--i:${i}`} class:list={["break-words [overflow-wrap:anywhere]", step.type === "response" && "mb-2 pl-3.5"]}>
+          {step.type === "comment" ? (
+            <span class="text-com">{step.text}</span>
+          ) : step.type === "request" ? (
+            <>
+              <span class:list={["font-semibold", methodClass[step.method]]}>{step.method}</span>
+              {" "}
+              <span class="text-ink">{step.path}</span>
+              {step.note && (
+                <>
+                  {" "}
+                  <span class="text-ink-2">{pick(step.note, lang)}</span>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <span class:list={["rounded-[5px] px-[7px] py-px font-semibold whitespace-nowrap text-bg", statusClass[step.status]]}>
+                {step.status} {step.reason}
+              </span>
+              {" "}
+              <span class="text-ink-2">{pick(step.note, lang)}</span>
+            </>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</figure>
+
+<script src="../../../scripts/api-log.ts"></script>

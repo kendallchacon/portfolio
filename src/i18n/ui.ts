@@ -1,5 +1,5 @@
 import { getAbsoluteLocaleUrl } from "astro:i18n";
-import type { SectionId } from "../data/types";
+import type { ExperienceId, SectionId } from "../data/types";
 
 export const defaultLang = "es";
 export const locales = ["es", "en"] as const;
@@ -49,6 +49,15 @@ const es = {
     "Desarrollador backend y full stack disponible para proyectos y empleo en Costa Rica o remoto. APIs, bases de datos y apps web y móviles con .NET y Laravel.",
   "home.logos.label": "Tecnologías con las que trabajo",
   "home.evidence.label": "Logros y evidencias",
+  "home.services.path": "cd ~/servicios",
+  "home.services.title": "Qué puedo hacer por tu equipo",
+  "home.services.lead":
+    "Cuatro áreas donde ya entregué trabajo. Debajo de cada una están las referencias donde puedes comprobarlo.",
+  "home.services.tech": "Tecnologías",
+  "home.services.refs": "Referencias",
+  "home.services.privateRepo": "(repositorio privado)",
+  "home.services.apiLogCaption": "Registro de solicitudes y respuestas de autenticación e invitaciones de equipo; rutas bajo /api/v1",
+  "home.services.ciPass": "pasa",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -95,6 +104,15 @@ const en: Record<keyof typeof es, string> = {
     "Backend and full stack developer available for projects and roles in Costa Rica or remote. APIs, databases and web and mobile apps with .NET and Laravel.",
   "home.logos.label": "Technologies I work with",
   "home.evidence.label": "Achievements and evidence",
+  "home.services.path": "cd ~/servicios",
+  "home.services.title": "What I can do for your team",
+  "home.services.lead":
+    "Four areas where I've already delivered work. Under each one are the references where you can check it.",
+  "home.services.tech": "Technologies",
+  "home.services.refs": "References",
+  "home.services.privateRepo": "(private repository)",
+  "home.services.apiLogCaption": "Request and response log of authentication and team invitations; routes under /api/v1",
+  "home.services.ciPass": "passes",
 };
 
 export const ui = { es, en } as const;
@@ -158,6 +176,18 @@ export const paletteSections = [
 /** Enlace a una sección de la portada del idioma: "/#id" en español, "/en/#id" en inglés. */
 export function sectionHref(id: SectionId, lang: Lang): string {
   return lang === "en" ? `/en/#${id}` : `/#${id}`;
+}
+
+/**
+ * Entradas de experiencia con ancla publicada en la portada (`#xp-<id>`). Vacía hasta que
+ * llegue la sección de experiencia: mientras tanto, las referencias se muestran sin enlace.
+ */
+const publishedExperience: readonly ExperienceId[] = [];
+
+/** Enlace a una entrada de experiencia, o `undefined` si su ancla aún no existe. */
+export function experienceHref(id: ExperienceId, lang: Lang): string | undefined {
+  if (!publishedExperience.includes(id)) return undefined;
+  return lang === "en" ? `/en/#xp-${id}` : `/#xp-${id}`;
 }
 
 /**

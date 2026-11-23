@@ -87,7 +87,7 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 3A | `feat/shell` | Hecha (PR #8): navbar en cápsula con indicador, menú móvil (incluye CV), selector de idioma, barra de progreso, footer; páginas viejas con `layout="legacy"`. |
 | 3B | `feat/shell-palette` | Hecha (PR #9): paleta `Ctrl K` / `Cmd K`. |
 | 4A | `feat/hero` | Hecha: portada, canvas de contribuciones y franja de evidencias. |
-| 4B | `feat/services` | Bento de servicios con log de API animado y referencias. |
+| 4B | `feat/services` | Hecha: bento de servicios con log de API (cascada única), panel de CI y chips de referencia; capturas activadas por decisión del autor; reveal, tecleo y brillo como el prototipo. |
 | 5 | `feat/about-experience` | Foto + terminal interactiva; git log con filtros, KPIs, desplegables y visor de adjuntos. |
 | 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
@@ -148,6 +148,19 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - La navbar usa el breakpoint `min-[980px]`. Por debajo, menú hoja con foco atrapado y el CV como último ítem.
 - La paleta de comandos se monta una sola vez en `BaseLayout`.
 - Pendientes: el selector de idioma pierde el `#hash`, y `hreflang` asume que toda página tiene su par `/en/`.
+
+**Servicios (iteración 4B)**
+- `SectionHead` (`common/`) es el encabezado de sección nuevo; `SectionHeader` es legacy y se borra en la iteración 7.
+- Las capturas de servicios se leen de `src/assets/services/` (no de `docs/`): captura de web y dos teléfonos de mobile, activadas por decisión del autor.
+- `experienceHref()` (`i18n/ui.ts`) devuelve `undefined` mientras no haya anclas `#xp-<id>`; al publicar la experiencia (iteración 5), agregar los ids a `publishedExperience` y los chips pasan a ser enlaces.
+- El log (`matchgo · api · /api/v1`, rutas relativas a esa base) muestra dos flujos verificados en `matchgo-backend`, separados por comentarios visibles: Identity (`/api/v1/auth/login`, `/refresh`, `/logout`: 200, 200, 204) y Competition (`POST /api/v1/teams/{teamId}/invitations`, mostrado como `/teams/{id}/invitations`: 201 Created y 403 Forbidden cuando quien invita no es capitán, `TeamInvitationsController`). La cascada usa `html.js` y `api-log.ts`.
+- Desviación pedida por el autor: bajo el panel de CI de ops hay una franja estática con lo que publica `docker-kubernetes-lab` (`publish-images.yml`): push a main → imágenes Docker → GHCR → manifiestos K8s, que solo referencian esas imágenes (no hay despliegue automático). La franja es una lista vertical con conectores decorativos; ninguna fila del log hace wrap a 390, 1000 ni 1440 px.
+- Fidelidad al prototipo: columnas texto | panel `1fr 1.05fr`, h3 de Infraestructura en dos líneas, refs a 6 px de los logos en las tarjetas anchas y al fondo en web/mobile, CI en dos columnas.
+- Etiquetas del CI acortadas para no hacer wrap a 1180 px ("build", "tests + PG", "compose cfg"); las notas del log van en `ink-2` (AA), no en `ink-3`.
+- Íconos de tarjetas y referencias: set `lucide` (`@iconify-json/lucide`); solo se incluyen los usados. Las referencias de experiencia aceptan `icon: "pr" | "issue"`.
+- Tokens `term`, `term-bar`, `term-line`, `term-ink` para ventanas de terminal y chips (`term-ink` sobre `term-bar`: contraste ≈ 5:1).
+- Interacciones reutilizables: `src/scripts/reveal.ts` (`data-rv`, `data-rv-stagger`, tecleo con `data-type` + `.pt`) y `src/scripts/glow.ts` (un listener por `[data-glow]`, solo `(hover:hover)`). El reveal solo oculta con `html.rv` (inline en `<head>` si hay IntersectionObserver) y sin reduced-motion; sin JS todo es visible. La iteración 8 solo debe añadir los atributos al resto de secciones.
+- Navbar: el indicador ya no lleva `-translate-y-1/2` (con el `transform` del script quedaba desplazado 17 px hacia arriba).
 
 **Pulido pendiente (iteración 9)**
 - Espacio de no separación en "full stack" de los titulares y `text-wrap: balance` en el `h1` (en inglés queda "production." sola a 1440 px).

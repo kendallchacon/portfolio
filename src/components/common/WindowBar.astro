@@ -1,0 +1,17 @@
+---
+/** Barra de ventana con los tres puntos y un título en mono. */
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="flex items-center gap-3.5 border-b border-term-line bg-term-bar px-3.5 py-2.5 font-mono text-xs leading-[normal] text-term-ink">
+  <span class="inline-flex gap-1.5" aria-hidden="true">
+    <i class="size-2.5 rounded-full bg-dot-close"></i>
+    <i class="size-2.5 rounded-full bg-dot-min"></i>
+    <i class="size-2.5 rounded-full bg-dot-max"></i>
+  </span>
+  <span>{title}</span>
+</div>

@@ -5,16 +5,31 @@ import { both, type ExperienceId, type HttpsUrl, type Localized, type MediaRef, 
 export type Reference =
   | { kind: "repo"; repo: RepoRef; detail?: Localized }
   | { kind: "link"; label: Localized; href: HttpsUrl }
-  | { kind: "experience"; label: Localized; id: ExperienceId };
+  | {
+      kind: "experience";
+      label: Localized;
+      id: ExperienceId;
+      /** Ícono de la referencia: PR o historia (issue). Sin él, ícono genérico de experiencia. */
+      icon?: "pr" | "issue";
+    };
 
 export type ApiLogStep =
+  /** Comentario visible entre flujos (p. ej. `# identity`). */
+  | { type: "comment"; text: string }
   | { type: "request"; method: "GET" | "POST"; path: string; note?: Localized }
   | {
       type: "response";
-      status: 200 | 201 | 204 | 409;
-      reason: "OK" | "Created" | "No Content" | "Conflict";
+      status: 200 | 201 | 204 | 403 | 409;
+      reason: "OK" | "Created" | "No Content" | "Forbidden" | "Conflict";
       note: Localized;
     };
+
+/** Paso de la franja de entrega de imágenes; `note` se lee solo con lector de pantalla. */
+export type DeliveryStep = {
+  icon: "push" | "image" | "registry" | "manifest";
+  label: Localized;
+  note?: Localized;
+};
 
 type ServiceBase = {
   title: Localized;
@@ -35,6 +50,8 @@ export type Service =
       id: "ops";
       /** Mini panel de CI: título de la ventana y checks que pasan. */
       ci: { window: string; checks: readonly Localized[] };
+      /** Franja bajo el CI: qué publica el repo de práctica (no despliega). */
+      delivery: { source: string; label: Localized; steps: readonly DeliveryStep[] };
     });
 
 export type ServiceId = Service["id"];
@@ -52,39 +69,56 @@ export const services: readonly Service[] = [
     },
     tech: ["dotnet", "laravel", "postgresql", "mysql"],
     references: [
-      { kind: "repo", repo: matchgoBackend, detail: both("Identity · Competition · Community") },
+      { kind: "repo", repo: matchgoBackend, detail: both("OpenAPI") },
       {
         kind: "experience",
         label: both("Flameware · CRH-150 corte quincenal"),
         id: "flameware",
+        icon: "issue",
       },
     ],
     apiLog: {
-      window: "matchgo · identity-api",
+      window: "matchgo · api · /api/v1",
+      // Rutas y códigos verificados en los controladores de Identity y Competition de matchgo-backend.
+      // La base común ([Route("api/v1")]) va en la barra; las filas muestran la ruta relativa.
+      // {id} = {teamId:guid} del controlador (con {teamId} la fila hace wrap a 1000 px).
       steps: [
-        { type: "request", method: "POST", path: "/api/v1/auth/login" },
+        { type: "comment", text: "# identity" },
+        { type: "request", method: "POST", path: "/auth/login" },
         {
           type: "response",
           status: 200,
           reason: "OK",
-          note: {
-            es: "access token RS256 + refresh token",
-            en: "RS256 access token + refresh token",
-          },
+          note: both("access + refresh"),
         },
-        { type: "request", method: "POST", path: "/api/v1/auth/refresh" },
+        { type: "request", method: "POST", path: "/auth/refresh" },
         {
           type: "response",
           status: 200,
           reason: "OK",
-          note: { es: "refresh rotado", en: "rotated refresh token" },
+          note: { es: "refresh rotado", en: "refresh rotated" },
         },
-        { type: "request", method: "POST", path: "/api/v1/auth/logout" },
+        { type: "request", method: "POST", path: "/auth/logout" },
         {
           type: "response",
           status: 204,
           reason: "No Content",
-          note: { es: "sesión revocada", en: "session revoked" },
+          note: { es: "revocada", en: "revoked" },
+        },
+        { type: "comment", text: "# competition" },
+        { type: "request", method: "POST", path: "/teams/{id}/invitations" },
+        {
+          type: "response",
+          status: 201,
+          reason: "Created",
+          note: both("status: pending"),
+        },
+        { type: "request", method: "POST", path: "/teams/{id}/invitations" },
+        {
+          type: "response",
+          status: 403,
+          reason: "Forbidden",
+          note: { es: "solo capitán", en: "captain only" },
         },
       ],
     },
@@ -99,8 +133,9 @@ export const services: readonly Service[] = [
     tech: ["vue", "typescript", "inertia", "javascript"],
     references: [
       { kind: "link", label: both("betoymas.com"), href: "https://betoymas.com/" },
-      { kind: "experience", label: both("Flameware · PR #17"), id: "flameware" },
+      { kind: "experience", label: both("Flameware · PR #17"), id: "flameware", icon: "pr" },
     ],
+    // Captura activada por decisión del autor.
     media: [
       {
         file: "beto-juegos.jpg",
@@ -132,8 +167,7 @@ export const services: readonly Service[] = [
         },
       },
     ],
-    // Capturas decorativas (alt vacío). VERIFICAR: consentimiento de avatares de terceros
-    // en capturas de MatchGo (handoff §9, hoy solo mencionado para 09 y 10).
+    // Capturas decorativas (alt vacío), activadas por decisión del autor.
     media: [
       { file: "01.jpg", alt: both(""), width: 720, height: 1560 },
       { file: "06.jpg", alt: both(""), width: 720, height: 1560 },
@@ -161,16 +195,37 @@ export const services: readonly Service[] = [
       },
       { kind: "repo", repo: matchgoBackend, detail: { es: "CI inicial", en: "Initial CI" } },
     ],
-    // Los 6 checks coinciden con el workflow de matchgo-backend.
+    // Los 6 checks coinciden con el workflow de matchgo-backend (restore+build, estilo, tests con
+    // PostgreSQL, auditoría NuGet, config de Compose e imágenes). Etiquetas cortas: caben en una
+    // línea en las celdas de 2 columnas del prototipo.
     ci: {
       window: "Backend CI · validate",
       checks: [
-        both("restore · build"),
+        both("build"),
         both("code style"),
-        both("tests + PostgreSQL"),
+        both("tests + PG"),
         both("audit NuGet"),
-        both("compose config"),
+        both("compose cfg"),
         both("docker images"),
+      ],
+    },
+    // Verificado en docker-kubernetes-lab: publish-images.yml construye y publica en GHCR al hacer
+    // push a main; los manifiestos de kubernetes/ referencian esas imágenes, no se aplican solos.
+    delivery: {
+      source: "# docker-kubernetes-lab",
+      label: {
+        es: "Publicación de imágenes en docker-kubernetes-lab",
+        en: "Image publishing in docker-kubernetes-lab",
+      },
+      steps: [
+        { icon: "push", label: { es: "push a main", en: "push to main" } },
+        { icon: "image", label: { es: "imágenes Docker", en: "Docker images" } },
+        { icon: "registry", label: both("GHCR") },
+        {
+          icon: "manifest",
+          label: { es: "manifiestos K8s", en: "K8s manifests" },
+          note: { es: "(usan las imágenes de GHCR)", en: "(use the GHCR images)" },
+        },
       ],
     },
   },

@@ -1,0 +1,33 @@
+---
+import SectionHead from "../common/SectionHead.astro";
+import ServiceCard from "./services/ServiceCard.astro";
+import { services } from "../../data/services";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{/* El desfase del header sticky lo da `scroll-padding-top` en <html> (global.css). */}
+<section id="servicios" aria-labelledby="servicios-title" class="pt-[88px] pb-6 min-[980px]:pt-[120px] min-[980px]:pb-10">
+  <div class="wrap">
+    <SectionHead
+      path={t("home.services.path")}
+      title={t("home.services.title")}
+      lead={t("home.services.lead")}
+      headingId="servicios-title"
+    />
+    <div data-rv-stagger data-glow class="grid grid-cols-1 gap-3.5 min-[980px]:grid-cols-3">
+      {services.map((service) => <ServiceCard service={service} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/reveal";
+  import "../../scripts/glow";
+</script>
