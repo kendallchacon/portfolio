@@ -58,6 +58,26 @@ const es = {
   "home.services.privateRepo": "(repositorio privado)",
   "home.services.apiLogCaption": "Registro de solicitudes y respuestas de autenticación e invitaciones de equipo; rutas bajo /api/v1",
   "home.services.ciPass": "pasa",
+  "home.xp.path": "cd ~/experiencia",
+  "home.xp.title": "Experiencia",
+  "home.xp.lead":
+    "Mi historial como un git log: trabajo profesional, proyectos, logros, docencia y formación, con sus evidencias adjuntas. Filtra por rama.",
+  "home.xp.filter": "Filtrar por rama",
+  "home.xp.all": "todas las ramas",
+  "home.xp.count.one": "{n} entrada",
+  "home.xp.count.other": "{n} entradas",
+  "home.xp.showing": "Mostrando {n} de {total}",
+  "home.xp.branch.profesional": "profesional",
+  "home.xp.branch.proyectos": "proyectos",
+  "home.xp.branch.logros": "logros",
+  "home.xp.branch.docencia": "docencia",
+  "home.xp.branch.formacion": "formación",
+  "home.xp.stories": "Historias destacadas",
+  "home.xp.view": "Ver",
+  "home.xp.viewer": "Evidencia",
+  "home.xp.close": "Cerrar",
+  "home.xp.prev": "Anterior",
+  "home.xp.next": "Siguiente",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -113,6 +133,26 @@ const en: Record<keyof typeof es, string> = {
   "home.services.privateRepo": "(private repository)",
   "home.services.apiLogCaption": "Request and response log of authentication and team invitations; routes under /api/v1",
   "home.services.ciPass": "passes",
+  "home.xp.path": "cd ~/experiencia",
+  "home.xp.title": "Experience",
+  "home.xp.lead":
+    "My history as a git log: professional work, projects, awards, teaching and education, with their evidence attached. Filter by branch.",
+  "home.xp.filter": "Filter by branch",
+  "home.xp.all": "all branches",
+  "home.xp.count.one": "{n} entry",
+  "home.xp.count.other": "{n} entries",
+  "home.xp.showing": "Showing {n} of {total}",
+  "home.xp.branch.profesional": "professional",
+  "home.xp.branch.proyectos": "projects",
+  "home.xp.branch.logros": "awards",
+  "home.xp.branch.docencia": "teaching",
+  "home.xp.branch.formacion": "education",
+  "home.xp.stories": "Highlighted stories",
+  "home.xp.view": "View",
+  "home.xp.viewer": "Evidence",
+  "home.xp.close": "Close",
+  "home.xp.prev": "Previous",
+  "home.xp.next": "Next",
 };
 
 export const ui = { es, en } as const;
@@ -179,10 +219,23 @@ export function sectionHref(id: SectionId, lang: Lang): string {
 }
 
 /**
- * Entradas de experiencia con ancla publicada en la portada (`#xp-<id>`). Vacía hasta que
- * llegue la sección de experiencia: mientras tanto, las referencias se muestran sin enlace.
+ * Entradas de experiencia con ancla publicada en la portada (`#xp-<id>`). Las referencias a
+ * un id que no esté aquí se muestran sin enlace.
  */
-const publishedExperience: readonly ExperienceId[] = [];
+const publishedExperience: readonly ExperienceId[] = [
+  "flameware",
+  "matchgo",
+  "beto-y-mas",
+  "cima",
+  "infocontexto",
+  "scrum-sfc",
+  "tutor",
+  "puertas-abiertas",
+  "campamento-tutores",
+  "bachillerato",
+  "diplomado",
+  "proyectos-java",
+];
 
 /** Enlace a una entrada de experiencia, o `undefined` si su ancla aún no existe. */
 export function experienceHref(id: ExperienceId, lang: Lang): string | undefined {

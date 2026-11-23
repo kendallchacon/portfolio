@@ -15,6 +15,10 @@
   --color-line-strong: rgba(255, 255, 255, 0.14);
 
   --color-ink: #edeff3;
+  /* Fondo de los tiles de logos con fondo blanco propio (p. ej. el de Flameware). */
+  --color-paper: #ffffff;
+  /* Texto de lectura larga (descripciones del git log): entre ink e ink-2. */
+  --color-ink-soft: #c9cfda;
   --color-ink-2: #a3aab8;
   --color-ink-3: #6c7484;
 
@@ -42,13 +46,6 @@
   --color-term-line: #21262d;
   --color-term-ink: #7d8590;
 
-  /* Ramas del git log */
-  --color-branch-profesional: #5b8cff;
-  --color-branch-proyectos: #3ddc97;
-  --color-branch-logros: #f5b451;
-  --color-branch-docencia: #ff6b9a;
-  --color-branch-formacion: #b58cff;
-
   --radius-1: 28px;
   --radius-2: 18px;
   --radius-3: 12px;
@@ -57,6 +54,16 @@
 
   --font-sans: "Geist Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Ramas del git log: `static` porque se usan desde `style` (--bc), no desde clases, y
+   Tailwind descartaría las variables que ninguna clase referencia. */
+@theme static {
+  --color-branch-profesional: #5b8cff;
+  --color-branch-proyectos: #3ddc97;
+  --color-branch-logros: #f5b451;
+  --color-branch-docencia: #ff6b9a;
+  --color-branch-formacion: #b58cff;
 }
 
 :root {
@@ -231,6 +238,19 @@
   html.rv [data-rv-stagger]:not(.vis) > * {
     opacity: 0;
     transform: translateY(24px);
+  }
+
+  /* Variante lateral (commits del git log): entra desde la derecha, sin blur ni escala. */
+  html.rv [data-rv="x"] {
+    transition:
+      opacity 0.5s var(--ease-brand),
+      transform 0.5s var(--ease-brand),
+      border-color 0.25s;
+  }
+
+  html.rv [data-rv="x"]:not(.vis) {
+    transform: translateX(12px);
+    filter: none;
   }
 }
 

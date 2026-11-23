@@ -1,0 +1,51 @@
+---
+import { Icon } from "astro-icon/components";
+import { useTranslations, type Lang } from "../../../i18n/ui";
+
+/**
+ * Visor de adjuntos de la experiencia (`showModal()`, lo maneja experience.ts).
+ * Esc cierra (nativo); el foco vuelve a la miniatura; ←/→ recorren los adjuntos de la entrada.
+ * La imagen la carga el script al abrir; sin JS las miniaturas enlazan a la imagen completa.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const navBtn =
+  "absolute top-1/2 grid size-[42px] -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-line-strong bg-surface-2 text-ink hover:bg-surface-3";
+---
+
+<dialog
+  data-xp-viewer
+  aria-label={t("home.xp.viewer")}
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-transparent p-[4vh_4vw] text-ink backdrop:bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] open:grid open:place-items-center"
+>
+  <button
+    type="button"
+    data-close
+    aria-label={t("home.xp.close")}
+    class="absolute top-[18px] right-[18px] z-1 grid size-[42px] cursor-pointer place-items-center rounded-full border border-line-strong bg-surface-2 hover:bg-surface-3"
+  >
+    <Icon name="lucide:x" aria-hidden="true" class="size-5" />
+  </button>
+  <figure class="m-0 grid max-h-full min-h-0 justify-items-center gap-3">
+    <img alt="" class="block h-auto max-h-[calc(92vh-40px)] w-auto max-w-full rounded-3 shadow-[0_40px_80px_var(--color-bg)]" />
+    <figcaption aria-hidden="true" class="text-center text-sm text-ink-2"></figcaption>
+  </figure>
+  <button type="button" data-step="-1" aria-label={t("home.xp.prev")} class={`${navBtn} left-[18px]`} hidden>
+    <Icon name="lucide:chevron-left" aria-hidden="true" class="size-5" />
+  </button>
+  <button type="button" data-step="1" aria-label={t("home.xp.next")} class={`${navBtn} right-[18px]`} hidden>
+    <Icon name="lucide:chevron-right" aria-hidden="true" class="size-5" />
+  </button>
+</dialog>
+
+<style is:global>
+  /* Scroll lock sin salto de layout (mismo patrón que la paleta de comandos). */
+  html:has(dialog[data-xp-viewer][open]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+</style>

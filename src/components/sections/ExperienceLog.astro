@@ -1,0 +1,99 @@
+---
+import SectionHead from "../common/SectionHead.astro";
+import CommitEntry from "./experience/CommitEntry.astro";
+import AttachmentViewer from "./experience/AttachmentViewer.astro";
+import { experienceLog } from "../../data/experience";
+import type { Branch } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Ramas en el orden del filtro; los contadores salen de los datos.
+const branchOrder: readonly Branch[] = ["profesional", "proyectos", "logros", "docencia", "formacion"];
+const total = experienceLog.length;
+const countLabel = (n: number) => t(n === 1 ? "home.xp.count.one" : "home.xp.count.other").replace("{n}", `${n}`);
+const filters = [
+  { key: "all", label: "--all", name: t("home.xp.all"), color: "var(--color-ink)", count: total },
+  ...branchOrder.map((b) => {
+    const label = t(`home.xp.branch.${b}`);
+    return {
+      key: b,
+      label,
+      name: label,
+      color: `var(--color-branch-${b})`,
+      count: experienceLog.filter((e) => e.branch === b).length,
+    };
+  }),
+];
+---
+
+{/* El desfase del header sticky lo da `scroll-padding-top` en <html> (global.css). */}
+<section id="experiencia" aria-labelledby="experiencia-title" class="pt-[88px] pb-6 min-[980px]:pt-[120px] min-[980px]:pb-10">
+  <div class="wrap">
+    <SectionHead
+      path={t("home.xp.path")}
+      title={t("home.xp.title")}
+      lead={t("home.xp.lead")}
+      headingId="experiencia-title"
+    />
+    <div data-xp class="grid grid-cols-1 items-start gap-5 min-[980px]:grid-cols-[270px_1fr] min-[980px]:gap-14 *:min-w-0">
+      {/* Sin JS el filtro no funciona: se oculta (y en móvil, todo el aside). */}
+      <aside
+        data-rv
+        class="z-5 max-[979px]:sticky max-[979px]:top-(--header-h) max-[979px]:-mx-6 max-[979px]:bg-bg max-[979px]:px-6 max-[979px]:py-2 max-[560px]:-mx-4 max-[560px]:px-4 min-[980px]:sticky min-[980px]:top-[calc(var(--header-h)+28px)] max-[979px]:[html:not(.js)_&]:hidden"
+      >
+        <p
+          aria-hidden="true"
+          class="mb-3.5 rounded-3 border border-line bg-term px-3.5 py-3 font-mono text-[13.5px] leading-[1.6] text-ink max-[979px]:hidden"
+        >
+          <span class="text-ok">$</span>{" "}git log --graph{" "}<span data-xp-brf class="whitespace-nowrap text-accent">--all</span><i
+            class="ml-0.5 inline-block h-[1.1em] w-[0.55em] bg-accent align-[-0.15em] motion-safe:animate-[blink_1s_steps(1)_infinite]"
+          ></i>
+        </p>
+        <div
+          role="group"
+          aria-label={t("home.xp.filter")}
+          class="flex gap-1 overflow-x-auto [scrollbar-width:none] min-[980px]:grid min-[980px]:overflow-visible [html:not(.js)_&]:hidden"
+        >
+          {
+            filters.map((f) => (
+              <button
+                type="button"
+                data-b={f.key}
+                data-label={f.label}
+                aria-pressed={f.key === "all" ? "true" : "false"}
+                class="flex shrink-0 cursor-pointer items-center gap-3 rounded-3 px-3 py-2 font-mono text-[14.5px] leading-[normal] font-medium whitespace-nowrap text-ink-2 transition-colors duration-200 hover:bg-surface-1 hover:text-ink focus-visible:-outline-offset-2 aria-pressed:bg-surface-2! aria-pressed:text-ink aria-pressed:shadow-[inset_0_0_0_1px_var(--color-line-strong)] max-[979px]:bg-surface-1 min-[980px]:px-3.5 min-[980px]:py-[11px]"
+              >
+                <i aria-hidden="true" class="size-2.5 shrink-0 rounded-full" style={`background:${f.color}`} />
+                <span aria-hidden="true">{f.label}</span>
+                <b aria-hidden="true" class="ml-auto text-[12.5px] font-medium text-ink-2 max-[979px]:hidden">
+                  {f.count}
+                </b>
+                <span class="sr-only">{`${f.name}, ${countLabel(f.count)}`}</span>
+              </button>
+            ))
+          }
+        </div>
+        {/* Vacía al cargar: solo se rellena cuando el usuario usa el filtro. */}
+        <p data-xp-status data-tpl={t("home.xp.showing").replace("{total}", `${total}`)} class="sr-only" aria-live="polite"></p>
+      </aside>
+
+      <ol
+        class="relative m-0 list-none p-0 pl-[30px] before:absolute before:top-2.5 before:bottom-2.5 before:left-[7px] before:w-0.5 before:bg-[linear-gradient(var(--color-line-strong),var(--color-line-strong)_90%,transparent)] min-[980px]:pl-10 min-[980px]:before:left-[11px]"
+      >
+        {experienceLog.map((entry, i) => <CommitEntry entry={entry} lang={lang} first={i === 0} />)}
+      </ol>
+    </div>
+  </div>
+  <AttachmentViewer lang={lang} />
+</section>
+
+<script>
+  import "../../scripts/reveal";
+  import "../../scripts/experience";
+</script>
