@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CaseContent from "../../components/cases/CaseContent.astro";
+import { cases } from "../../data/cases";
+import { projects } from "../../data/projects";
+import { pick } from "../../data/types";
+import { langFrom, publishedProjects, type PublishedSlug } from "../../i18n/ui";
+
+export function getStaticPaths() {
+  return publishedProjects.map((slug) => ({ params: { slug } }));
+}
+
+const lang = langFrom(Astro.currentLocale);
+const slug = Astro.params.slug as PublishedSlug;
+const study = cases[slug];
+const project = projects.find((p) => p.slug === slug)!;
+---
+
+<BaseLayout lang={lang} title={pick(study.seo.title, lang)} description={pick(study.seo.description, lang)}>
+  <CaseContent project={project} study={study} lang={lang} />
+</BaseLayout>

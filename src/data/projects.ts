@@ -118,7 +118,9 @@ export const projects = [
     // invitaciones y equipos (PR #29), moderación (PR #46), roles y permisos (PR #55, #79),
     // auth servicio a servicio (PR #80), directorio de miembros (PR #89); en matchgo-mobile,
     // base Flutter, lib/features/booking/ y dio_failure_mapper. No son de Kendall: restricción
-    // GiST/esquema de Booking, reservas/disponibilidad/409, mensajería, S3, ADR 0010.
+    // GiST/esquema de Booking, reservas/disponibilidad/409, mensajería, S3, ADR 0010 ni el
+    // modelo de emparejamiento (XGBoost/ONNX, ADR 0009): confirmación del autor, 23 nov 2026.
+    // Que Kendall lo «propuso» no tiene evidencia verificable en los repos: no se escribe.
     // VERIFICAR: «revisé el modelo de datos de los 4 servicios» sigue sin confirmar.
     myPart: {
       es: "Arranqué el backend .NET (arquitectura base, Docker Compose, ADR y CI inicial) y desarrollé autenticación, equipos, moderación y permisos; en la app Flutter, la base y el módulo de reservas.",

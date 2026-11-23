@@ -3,9 +3,10 @@ import { Icon } from "astro-icon/components";
 import { Image, getImage } from "astro:assets";
 import TechLogo from "../../common/TechLogo.astro";
 import type { experienceLog } from "../../../data/experience";
+import { projects } from "../../../data/projects";
 import { tech } from "../../../data/tech";
 import { pick } from "../../../data/types";
-import { useTranslations, type Lang } from "../../../i18n/ui";
+import { projectHref, useTranslations, type Lang } from "../../../i18n/ui";
 
 /**
  * Un commit del git log de experiencia. El hash es decorativo (`aria-hidden`).
@@ -20,6 +21,9 @@ interface Props {
 
 const { entry, lang, first } = Astro.props;
 const t = useTranslations(lang);
+// Enlace al caso solo si la entrada lo declara y la ruta está publicada.
+const caseHref = entry.project ? projectHref(entry.project, lang) : undefined;
+const caseName = projects.find((p) => p.slug === entry.project)?.name ?? "";
 
 // Las imágenes viven en src/assets/experience/ (no en docs/): el build no depende del prototipo.
 const assets = import.meta.glob<{ default: ImageMetadata }>("../../../assets/experience/*.{jpg,jpeg,png,webp}", {
@@ -187,6 +191,19 @@ const nf = (decimals = 0) =>
             </li>
           ))}
         </ul>
+      )
+    }
+
+    {
+      caseHref && (
+        <a
+          href={caseHref}
+          aria-label={t("case.openNamed").replace("{name}", caseName)}
+          class="btn mt-4 w-fit max-w-full border-accent/50 bg-accent-soft text-accent hover:border-accent hover:bg-accent/20"
+        >
+          {t("case.open")}
+          <Icon name="lucide:arrow-right" class="size-4 *:stroke-2" aria-hidden="true" />
+        </a>
       )
     }
   </div>

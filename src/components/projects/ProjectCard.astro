@@ -10,12 +10,13 @@ import type { Project } from "../../data/projects";
 import type { Reference } from "../../data/services";
 import { both, pick } from "../../data/types";
 import { tech as techData } from "../../data/tech";
-import { useTranslations, type Lang, type UiKey } from "../../i18n/ui";
+import { projectHref, useTranslations, type Lang, type UiKey } from "../../i18n/ui";
 
 /**
  * Tarjeta de proyecto: información (qué hizo Kendall, con su contexto) y escena decorativa.
  * Las filas alternan el lado de la escena (`flip`); por debajo de 980 px la escena va arriba.
- * La tarjeta no es un enlace: el enlace "Abrir el caso" llega con las rutas de los casos.
+ * La tarjeta no es un enlace entero: lleva un único "Abrir el caso" junto a la ruta, y solo si
+ * el caso está publicado (`projectHref`).
  * Escenas `aria-hidden`, salvo las capturas (alt) y el pipeline, que oculta sus ventanas pero
  * deja expuesto el botón de volver a ejecutar. Video y pipeline se animan en scripts/projects.ts.
  */
@@ -28,6 +29,8 @@ interface Props {
 const { project: p, flip, lang } = Astro.props;
 const t = useTranslations(lang);
 const headingId = `proyecto-${p.slug}`;
+// Solo los casos publicados llevan enlace (y comparten el view-transition-name con su cabecera).
+const caseHref = projectHref(p.slug, lang);
 
 const facts: [UiKey, string][] = [];
 if (p.myPart) facts.push(["home.projects.myPart", pick(p.myPart, lang)]);
@@ -96,9 +99,23 @@ if (p.scene.type === "code") {
         ))
       }
     </ul>
+
+    {
+      caseHref && (
+        <a
+          href={caseHref}
+          aria-label={t("case.openNamed").replace("{name}", p.name)}
+          class="btn mt-0.5 w-fit max-w-full border-accent/50 bg-accent-soft text-accent hover:border-accent hover:bg-accent/20"
+        >
+          {t("case.open")}
+          <Icon name="lucide:arrow-right" class="size-4 *:stroke-2" aria-hidden="true" />
+        </a>
+      )
+    }
   </div>
 
   <div
+    style={caseHref ? `view-transition-name:project-${p.slug}` : undefined}
     class="scene relative h-[520px] min-w-0 overflow-hidden rounded-[22px] border border-line max-[981px]:order-first max-[981px]:h-[420px] max-[561px]:h-[360px]"
     aria-hidden={p.scene.type === "browsers" || p.scene.type === "pipeline" ? undefined : "true"}>
     {p.scene.type === "phones" && <ScenePhones scene={p.scene} lang={lang} />}

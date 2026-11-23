@@ -1,0 +1,42 @@
+---
+import CaseHeader from "./CaseHeader.astro";
+import CaseSpec from "./CaseSpec.astro";
+import type { CaseStudy } from "../../data/cases";
+import type { Project } from "../../data/projects";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * Contenido compartido de las rutas `/proyectos/<slug>` y `/en/proyectos/<slug>`: cabecera,
+ * franja de datos y "Debajo del capó". La estructura es la misma para todos los casos.
+ * `data-case` activa el video de la cabecera en scripts/projects.ts (mismo observer que la
+ * portada, sin el pipeline). Con reduced-motion el video no se descarga: queda el poster.
+ */
+interface Props {
+  project: Project;
+  study: CaseStudy;
+  lang: Lang;
+}
+
+const { project, study, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<article data-case aria-labelledby="case-title" class="pb-10 [--wrap-max:1120px]">
+  <CaseHeader project={project} study={study} lang={lang} />
+  <CaseSpec project={project} study={study} lang={lang} />
+
+  <section id="capo" aria-labelledby="capo-title" class="pt-12 pb-6">
+    <div class="wrap">
+      <h2 id="capo-title" class="mb-[30px] text-[clamp(26px,2.6vw,34px)] tracking-[-0.035em]">{t("case.hood")}</h2>
+      <div class="rounded-2 border border-line bg-surface-1 p-7">
+        <h3 class="mb-3 text-[21px]">{t("case.problem")}</h3>
+        <p class="max-w-[70ch] text-ink-2">{pick(study.hood.problem, lang)}</p>
+      </div>
+    </div>
+  </section>
+</article>
+
+<script>
+  import "../../scripts/projects";
+</script>

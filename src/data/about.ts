@@ -1,5 +1,5 @@
 import type { Lang } from "../i18n/ui";
-import { experienceHref } from "../i18n/ui";
+import { experienceHref, projectHref } from "../i18n/ui";
 import { contact } from "./contact";
 import { experienceLog } from "./experience";
 import { evidence, profile } from "./profile";
@@ -171,7 +171,11 @@ export function aboutOutputs(lang: Lang): Record<AboutCommand, readonly Line[]> 
     }
     const parts = [ids.map((id) => tech[id].label).join(" · ")];
     if ("status" in project && project.status) parts.push(pick(project.status, lang));
-    return [pad(`${slug}/`, slugW) + parts.join(" · ")];
+    // El nombre del proyecto es un enlace solo si su caso está publicado.
+    const href = projectHref(slug, lang);
+    const name = `${slug}/`;
+    const rest = pad("", slugW - name.length) + parts.join(" · ");
+    return href ? [{ text: name, href }, rest] : [name + rest];
   });
 
   const keyW = Math.max(...about.stack.map((g) => g.key.length)) + 4;

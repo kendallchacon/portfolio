@@ -8,7 +8,8 @@
  *   `[data-ci-rerun]` los vuelve a ejecutar. Con reduced-motion el botón deja el estado final.
  */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const video = document.querySelector<HTMLVideoElement>("#proyectos video[data-src]");
+// También activa el video de la cabecera de un caso (`[data-case]`, CaseContent.astro).
+const video = document.querySelector<HTMLVideoElement>("#proyectos video[data-src], [data-case] video[data-src]");
 const ci = document.querySelector<HTMLElement>("#proyectos [data-ci]");
 const rerun = ci?.querySelector<HTMLButtonElement>("[data-ci-rerun]");
 const VISIBLE = 0.25;
