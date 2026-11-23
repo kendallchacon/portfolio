@@ -1,0 +1,129 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import TechLogo from "../../common/TechLogo.astro";
+import ApiLog from "./ApiLog.astro";
+import CiPanel from "./CiPanel.astro";
+import ReferenceChip from "./ReferenceChip.astro";
+import type { Service, ServiceId } from "../../../data/services";
+import { pick, type MediaRef } from "../../../data/types";
+import { useTranslations, type Lang } from "../../../i18n/ui";
+
+/**
+ * Tarjeta del bento de servicios. `api` y `ops` ocupan dos columnas (texto | panel);
+ * `web` y `mobile` una, con media opcional. La tarjeta no es un enlace: solo los chips
+ * de referencia tienen foco. El hover de la tarjeta solo es decorativo (brillo del borde,
+ * zoom de la captura y movimiento de los teléfonos), sin reduced-motion.
+ */
+interface Props {
+  service: Service;
+  lang: Lang;
+}
+
+const { service, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const icons: Record<ServiceId, string> = {
+  api: "lucide:server",
+  web: "lucide:app-window",
+  mobile: "lucide:smartphone",
+  ops: "lucide:boxes",
+};
+
+// Las capturas viven en src/assets/services/ (no en docs/): el build no depende del prototipo.
+const assets = import.meta.glob<{ default: ImageMetadata }>(
+  "../../../assets/services/*.{jpg,jpeg,png,webp}",
+  { eager: true },
+);
+function resolve(ref: MediaRef) {
+  return assets[`../../../assets/services/${ref.file}`]?.default;
+}
+
+const wide = service.id === "api" || service.id === "ops";
+const media =
+  service.id === "web" || service.id === "mobile"
+    ? (service.media ?? []).flatMap((ref) => {
+        const src = resolve(ref);
+        return src ? [{ ref, src }] : [];
+      })
+    : [];
+const headingId = `servicio-${service.id}`;
+---
+
+<article
+  aria-labelledby={headingId}
+  class:list={[
+    "glow group relative overflow-hidden rounded-1 border border-line bg-linear-to-b from-surface-1 to-bg-2 p-[22px] min-[561px]:p-7",
+    wide
+      ? "grid grid-cols-1 items-start gap-7 min-[980px]:col-span-2 min-[980px]:grid-cols-[1fr_1.05fr]"
+      : "flex flex-col gap-[18px]",
+  ]}
+>
+  <div class={wide ? "flex flex-col gap-[18px]" : "contents"}>
+    <div class="flex items-center gap-3">
+      <Icon name={icons[service.id]} class="size-[22px] shrink-0 text-accent *:stroke-[1.75]" aria-hidden="true" />
+      <h3 id={headingId} class="text-[22px]">{pick(service.title, lang)}</h3>
+    </div>
+    <p class="text-base/[1.6] text-ink-2">{pick(service.description, lang)}</p>
+
+    {
+      service.id === "web" && media.length > 0 && (
+        <div class="h-[150px] overflow-hidden rounded-[14px] border border-line">
+          <Image
+            src={media[0].src}
+            alt={pick(media[0].ref.alt, lang)}
+            width={700}
+            loading="lazy"
+            decoding="async"
+            class="block size-full object-cover object-top transition-transform duration-800 ease-brand motion-safe:group-hover:scale-[1.04]"
+          />
+        </div>
+      )
+    }
+    {
+      service.id === "mobile" && media.length > 0 && (
+        <div class="flex h-[150px] justify-center gap-2.5 overflow-hidden mask-[linear-gradient(#000_60%,transparent)]">
+          {media.slice(0, 2).map(({ ref, src }, i) => (
+            <Image
+              src={src}
+              alt={pick(ref.alt, lang)}
+              width={260}
+              loading="lazy"
+              decoding="async"
+              class:list={[
+                "h-auto w-[46%] max-w-[130px] self-start rounded-2xl border-4 border-surface-3 transition-transform duration-800 ease-brand",
+                i === 0 ? "motion-safe:group-hover:-translate-y-2" : "mt-[22px]",
+              ]}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    <ul class="lrow" aria-label={t("home.services.tech")}>
+      {
+        service.tech.map((id) => (
+          <li class="flex">
+            <TechLogo id={id} />
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul
+      class:list={["flex flex-wrap gap-1.5", wide ? "mt-1.5" : "mt-auto"]}
+      aria-label={t("home.services.refs")}
+    >
+      {
+        service.references.map((reference) => (
+          <li class="max-w-full">
+            <ReferenceChip reference={reference} lang={lang} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  {service.id === "api" && <ApiLog window={service.apiLog.window} steps={service.apiLog.steps} lang={lang} />}
+  {service.id === "ops" && <CiPanel window={service.ci.window} checks={service.ci.checks} lang={lang} />}
+</article>

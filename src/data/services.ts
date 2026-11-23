@@ -5,7 +5,13 @@ import { both, type ExperienceId, type HttpsUrl, type Localized, type MediaRef, 
 export type Reference =
   | { kind: "repo"; repo: RepoRef; detail?: Localized }
   | { kind: "link"; label: Localized; href: HttpsUrl }
-  | { kind: "experience"; label: Localized; id: ExperienceId };
+  | {
+      kind: "experience";
+      label: Localized;
+      id: ExperienceId;
+      /** Ícono de la referencia: PR o historia (issue). Sin él, ícono genérico de experiencia. */
+      icon?: "pr" | "issue";
+    };
 
 export type ApiLogStep =
   | { type: "request"; method: "GET" | "POST"; path: string; note?: Localized }
@@ -52,11 +58,12 @@ export const services: readonly Service[] = [
     },
     tech: ["dotnet", "laravel", "postgresql", "mysql"],
     references: [
-      { kind: "repo", repo: matchgoBackend, detail: both("Identity · Competition · Community") },
+      { kind: "repo", repo: matchgoBackend, detail: both("OpenAPI") },
       {
         kind: "experience",
         label: both("Flameware · CRH-150 corte quincenal"),
         id: "flameware",
+        icon: "issue",
       },
     ],
     apiLog: {
@@ -67,10 +74,7 @@ export const services: readonly Service[] = [
           type: "response",
           status: 200,
           reason: "OK",
-          note: {
-            es: "access token RS256 + refresh token",
-            en: "RS256 access token + refresh token",
-          },
+          note: { es: "access + refresh token", en: "access + refresh tokens" },
         },
         { type: "request", method: "POST", path: "/api/v1/auth/refresh" },
         {
@@ -99,8 +103,9 @@ export const services: readonly Service[] = [
     tech: ["vue", "typescript", "inertia", "javascript"],
     references: [
       { kind: "link", label: both("betoymas.com"), href: "https://betoymas.com/" },
-      { kind: "experience", label: both("Flameware · PR #17"), id: "flameware" },
+      { kind: "experience", label: both("Flameware · PR #17"), id: "flameware", icon: "pr" },
     ],
+    // Captura activada por decisión del autor.
     media: [
       {
         file: "beto-juegos.jpg",
@@ -132,8 +137,7 @@ export const services: readonly Service[] = [
         },
       },
     ],
-    // Capturas decorativas (alt vacío). VERIFICAR: consentimiento de avatares de terceros
-    // en capturas de MatchGo (handoff §9, hoy solo mencionado para 09 y 10).
+    // Capturas decorativas (alt vacío), activadas por decisión del autor.
     media: [
       { file: "01.jpg", alt: both(""), width: 720, height: 1560 },
       { file: "06.jpg", alt: both(""), width: 720, height: 1560 },
@@ -161,15 +165,17 @@ export const services: readonly Service[] = [
       },
       { kind: "repo", repo: matchgoBackend, detail: { es: "CI inicial", en: "Initial CI" } },
     ],
-    // Los 6 checks coinciden con el workflow de matchgo-backend.
+    // Los 6 checks coinciden con el workflow de matchgo-backend (restore+build, estilo, tests con
+    // PostgreSQL, auditoría NuGet, config de Compose e imágenes). Etiquetas cortas: caben en una
+    // línea en las celdas de 2 columnas del prototipo.
     ci: {
       window: "Backend CI · validate",
       checks: [
-        both("restore · build"),
+        both("build"),
         both("code style"),
-        both("tests + PostgreSQL"),
+        both("tests + PG"),
         both("audit NuGet"),
-        both("compose config"),
+        both("compose cfg"),
         both("docker images"),
       ],
     },
