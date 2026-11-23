@@ -78,45 +78,47 @@ export const services: readonly Service[] = [
       },
     ],
     apiLog: {
-      window: "matchgo · api",
+      window: "matchgo · api · /api/v1",
       // Rutas y códigos verificados en los controladores de Identity y Competition de matchgo-backend.
+      // La base común ([Route("api/v1")]) va en la barra; las filas muestran la ruta relativa.
+      // {id} = {teamId:guid} del controlador (con {teamId} la fila hace wrap a 1000 px).
       steps: [
         { type: "comment", text: "# identity" },
-        { type: "request", method: "POST", path: "/api/v1/auth/login" },
+        { type: "request", method: "POST", path: "/auth/login" },
         {
           type: "response",
           status: 200,
           reason: "OK",
-          note: { es: "access + refresh token", en: "access + refresh tokens" },
+          note: both("access + refresh"),
         },
-        { type: "request", method: "POST", path: "/api/v1/auth/refresh" },
+        { type: "request", method: "POST", path: "/auth/refresh" },
         {
           type: "response",
           status: 200,
           reason: "OK",
-          note: { es: "refresh rotado", en: "rotated refresh token" },
+          note: { es: "refresh rotado", en: "refresh rotated" },
         },
-        { type: "request", method: "POST", path: "/api/v1/auth/logout" },
+        { type: "request", method: "POST", path: "/auth/logout" },
         {
           type: "response",
           status: 204,
           reason: "No Content",
-          note: { es: "sesión revocada", en: "session revoked" },
+          note: { es: "revocada", en: "revoked" },
         },
         { type: "comment", text: "# competition" },
-        { type: "request", method: "POST", path: "/api/v1/teams/{teamId}/invitations" },
+        { type: "request", method: "POST", path: "/teams/{id}/invitations" },
         {
           type: "response",
           status: 201,
           reason: "Created",
-          note: { es: "invitación pendiente", en: "pending invitation" },
+          note: both("status: pending"),
         },
-        { type: "request", method: "POST", path: "/api/v1/teams/{teamId}/invitations" },
+        { type: "request", method: "POST", path: "/teams/{id}/invitations" },
         {
           type: "response",
           status: 403,
           reason: "Forbidden",
-          note: { es: "solo el capitán invita", en: "only the captain invites" },
+          note: { es: "solo capitán", en: "captain only" },
         },
       ],
     },

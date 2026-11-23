@@ -56,7 +56,7 @@ const es = {
   "home.services.tech": "Tecnologías",
   "home.services.refs": "Referencias",
   "home.services.privateRepo": "(repositorio privado)",
-  "home.services.apiLogCaption": "Registro de solicitudes y respuestas de autenticación e invitaciones de equipo",
+  "home.services.apiLogCaption": "Registro de solicitudes y respuestas de autenticación e invitaciones de equipo; rutas bajo /api/v1",
   "home.services.ciPass": "pasa",
 } as const;
 
@@ -111,7 +111,7 @@ const en: Record<keyof typeof es, string> = {
   "home.services.tech": "Technologies",
   "home.services.refs": "References",
   "home.services.privateRepo": "(private repository)",
-  "home.services.apiLogCaption": "Request and response log of authentication and team invitations",
+  "home.services.apiLogCaption": "Request and response log of authentication and team invitations; routes under /api/v1",
   "home.services.ciPass": "passes",
 };
 
