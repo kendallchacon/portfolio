@@ -320,6 +320,22 @@
   }
 }
 
+/* ─── Transiciones entre páginas (CSS cross-document) ──────────────────────────────────────
+   Portada ↔ caso: la escena de la tarjeta y la figura de la cabecera comparten
+   `view-transition-name: project-<slug>` (ProjectCard.astro y CaseHeader.astro). Con
+   reduced-motion no se activa: la navegación es la normal. Los navegadores sin soporte
+   ignoran la regla. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: 0.5s;
+    animation-timing-function: var(--ease-brand);
+  }
+}
+
 /* ─── Escenas de proyectos (prototipo #proyectos) ──────────────────────────────────────────
    El resto de estilos van como utilidades en src/components/projects/. Aquí solo el fondo con
    trama de puntos, el posicionamiento de los hijos (en % como el prototipo) y el check del CI. */
