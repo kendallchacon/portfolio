@@ -88,7 +88,8 @@ Efectos globales: títulos que se escriben (`$ cd ~/…`), revelado al hacer scr
 | 3B | `feat/shell-palette` | Hecha (PR #9): paleta `Ctrl K` / `Cmd K`. |
 | 4A | `feat/hero` | Hecha: portada, canvas de contribuciones y franja de evidencias. |
 | 4B | `feat/services` | Hecha: bento de servicios con log de API (cascada única), panel de CI y chips de referencia; capturas activadas por decisión del autor; reveal, tecleo y brillo como el prototipo. |
-| 5 | `feat/about-experience` | Foto + terminal interactiva; git log con filtros, KPIs, desplegables y visor de adjuntos. |
+| 5A | `feat/experience` | Hecha: git log de experiencia con filtro por rama, KPIs con contador, historias desplegables y visor de adjuntos. |
+| 5B | `feat/about` | Foto + terminal interactiva (Sobre mí). |
 | 6 | `feat/projects-cases` | Tarjetas de proyecto y escenas (celulares, navegadores, código, CI); rutas `/proyectos/[slug]` con View Transitions y contenido de cada caso. |
 | 7 | `feat/judgment-contact` | Sección Criterio con visor sincronizado; contacto con copiar correo; borrar páginas viejas y `src/data/legacy/`, y dejar redirecciones. |
 | 8 | `feat/motion-polish` | Revelados, títulos que se escriben, spotlight global, bordes con cursor, riel de progreso, reduced-motion. |
@@ -161,6 +162,19 @@ Al terminar: npm run build y npx astro check, resume los cambios y propón los m
 - Tokens `term`, `term-bar`, `term-line`, `term-ink` para ventanas de terminal y chips (`term-ink` sobre `term-bar`: contraste ≈ 5:1).
 - Interacciones reutilizables: `src/scripts/reveal.ts` (`data-rv`, `data-rv-stagger`, tecleo con `data-type` + `.pt`) y `src/scripts/glow.ts` (un listener por `[data-glow]`, solo `(hover:hover)`). El reveal solo oculta con `html.rv` (inline en `<head>` si hay IntersectionObserver) y sin reduced-motion; sin JS todo es visible. La iteración 8 solo debe añadir los atributos al resto de secciones.
 - Navbar: el indicador ya no lleva `-translate-y-1/2` (con el `transform` del script quedaba desplazado 17 px hacia arriba).
+
+**Experiencia (iteración 5A)**
+- `ExperienceLog` (`sections/`) con `experience/CommitEntry` y `experience/AttachmentViewer`; interacción en `src/scripts/experience.ts` (filtro, ancla, contador y visor; ≈2,5 KB minificado).
+- `publishedExperience` (`i18n/ui.ts`) tiene los 12 ids: todos los chips de experiencia de Servicios son enlaces a `#xp-<id>`. Si se agrega una entrada, sumar su id ahí.
+- Las imágenes de los adjuntos se leen de `src/assets/experience/` (no de `docs/`); miniaturas WebP de 168 a 640 px y versión completa WebP para el visor (y para el enlace sin JS).
+- `cert-diplomado.jpg` tiene la línea "Identificación" borrada en los píxeles (también en `public/images/` y `docs/prototype/media/`). El historial de git conserva la versión anterior.
+- Valores por defecto de los VERIFICAR que siguen abiertos: MatchGo usa la fecha "2026" y el título y el cuerpo sin la revisión del modelo de datos; la entrada del tutor va sin fecha (`both("")`, el componente omite la fecha vacía).
+- Logo de la organización: campo opcional `logo` (PNG, JPG, WebP o SVG en `src/assets/experience/logos/`), solo en Flameware (`flameware.png`, copia del PNG del prototipo). Tile de 92×46 sobre `paper` (#fff), radio 10 y padding 6×8, igual en móvil; `<Image>` de 76×36 con densidades 1,5x/2x/3x y `alt=""`. Sin `logo` no hay tile.
+- Sin enlace "Abrir el caso" hasta que existan las rutas `/proyectos/<slug>` (iteración 6); el campo `project` sigue en los datos.
+- Los tokens `--color-branch-*` van en un `@theme static`: se usan desde `style` (`--bc`) y Tailwind descarta las variables que ninguna clase referencia. Token nuevo `ink-soft` (#C9CFDA) para descripciones e historias.
+- Reveal lateral con `data-rv="x"` (misma utilidad reveal.ts, solo cambia el desplazamiento). Contador de KPIs con observer propio; el valor final ya está en el HTML (sin JS y con reduced-motion no cambia).
+- Notas, fechas y contadores en `ink-2` (AA); el prototipo usaba `ink-3` (≈4:1).
+- Filtro: la región `aria-live` arranca vacía y solo anuncia tras usar el filtro. Un enlace a una entrada oculta devuelve el filtro a `--all` antes del scroll. En móvil las entradas llevan `scroll-margin-top` extra por la barra de filtro sticky.
 
 **Pulido pendiente (iteración 9)**
 - Espacio de no separación en "full stack" de los titulares y `text-wrap: balance` en el `h1` (en inglés queda "production." sola a 1440 px).
