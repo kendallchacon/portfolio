@@ -1,5 +1,7 @@
 ---
+import { Icon } from "astro-icon/components";
 import TechLogo from "../common/TechLogo.astro";
+import CaseSegments from "./CaseSegments.astro";
 import type { CaseStudy } from "../../data/cases";
 import type { Project } from "../../data/projects";
 import { pick } from "../../data/types";
@@ -7,10 +9,17 @@ import { tech as techData } from "../../data/tech";
 import { useTranslations, type Lang } from "../../i18n/ui";
 
 /**
- * Franja de datos del caso, a ancho completo bajo la cabecera: equipo, commits y estado
- * (etiqueta arriba, valor abajo; tantas columnas como datos haya, hasta 3), stack del proyecto
- * en una fila que envuelve y evidencia como párrafo. La prosa larga ("Mi parte") vive en la
- * cabecera, nunca en una tabla angosta. Todo se deriva de `projects.ts`, salvo la evidencia.
+ * Ficha del caso, a ancho completo bajo la cabecera. Todo son tarjetas sueltas (`.case-card` de
+ * global.css, con borde que sigue al cursor por glow.ts) separadas por gap, sin líneas internas:
+ * - 3 tarjetas de datos. Cada cifra cuenta de 0 al valor al verse (count.ts) y lleva debajo su
+ *   medidor: barra al `percent` % o `of` segmentos con `on` encendidos; la de estado lleva el punto
+ *   verde de la tarjeta de proyecto.
+ * - Contexto del equipo como línea de texto.
+ * - "Stack del proyecto": encabezado suelto y 4 tarjetas por capa en una sola fila desde 1100 px
+ *   (Backend ocupa 2 columnas; Móvil, Web e Infra, 1), con los chips en horizontal y wrap, a la
+ *   misma altura. La nota de evidencia, con candado, es una línea de texto bajo ellas.
+ * Las tarjetas entran en cascada (`data-rv-stagger`, reveal.ts). Todo sale de `cases.ts`, salvo el
+ * equipo (`projects.ts`). Sin JS se ve el estado final.
  */
 interface Props {
   project: Project;
@@ -20,43 +29,83 @@ interface Props {
 
 const { project: p, study, lang } = Astro.props;
 const t = useTranslations(lang);
-
-const facts: { label: string; value: string }[] = [];
-if (p.team) facts.push({ label: t("home.projects.team"), value: pick(p.team.label, lang) });
-if (p.commits) facts.push({ label: t("home.projects.commits"), value: pick(p.commits, lang) });
-if (p.status) facts.push({ label: t("home.projects.status"), value: pick(p.status, lang) });
+const nf = new Intl.NumberFormat(lang);
 ---
 
 <section aria-label={t("case.data")} class="wrap mt-10">
-  {
-    facts.length > 0 && (
-      <dl class="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-x-8 gap-y-6 border-t border-line pt-8">
-        {facts.map((f) => (
-          <div class="min-w-0">
-            <dt class="mb-1.5 font-mono text-[13px] text-ink-2">{f.label}</dt>
-            <dd class="text-base">{f.value}</dd>
+  <dl data-rv-stagger class="grid grid-cols-1 gap-4 min-[760px]:grid-cols-3">
+    {
+      study.facts.map((f) => {
+        const bar = f.kind === "count" && f.meter.type === "bar" ? f.meter.percent : undefined;
+        const seg = f.kind === "count" && f.meter.type === "segments" ? f.meter : undefined;
+        return (
+          <div class="case-card glow flex min-w-0 flex-col-reverse justify-end gap-2">
+            <dt class="text-sm text-ink-2">{pick(f.label, lang)}</dt>
+            <dd>
+              {f.kind === "count" ? (
+                <>
+                  <span class="block font-mono text-[clamp(32px,3.4vw,46px)] leading-[1.1] tracking-[-0.03em] tabular-nums">
+                    <span aria-hidden="true" data-count={f.value} data-dec="0" data-suf="">
+                      {nf.format(f.value)}
+                    </span>
+                    <span class="sr-only">{nf.format(f.value)}</span>
+                  </span>
+                  {bar !== undefined ? (
+                    <span aria-hidden="true" class="mt-4 block h-1 overflow-hidden rounded-full bg-surface-3">
+                      <span class="block h-full rounded-full bg-accent" style={`width:${bar}%`} />
+                    </span>
+                  ) : (
+                    seg && (
+                      <div class="mt-4">
+                        <CaseSegments of={seg.of} on={seg.on} />
+                      </div>
+                    )
+                  )}
+                </>
+              ) : (
+                <span class="flex items-center gap-3 font-mono text-[clamp(32px,3.4vw,46px)] leading-[1.1] tracking-[-0.03em]">
+                  <i aria-hidden="true" class="size-2.5 shrink-0 rounded-full bg-ok" />
+                  {pick(f.value, lang)}
+                </span>
+              )}
+            </dd>
           </div>
-        ))}
-      </dl>
-    )
-  }
+        );
+      })
+    }
+  </dl>
+  {p.team && <p class="mt-4 text-sm text-ink-2">{pick(p.team.label, lang)}</p>}
 
-  <div class:list={["border-line", facts.length > 0 ? "mt-8" : "border-t pt-8"]}>
-    <p id="case-stack" class="mb-2.5 font-mono text-[13px] text-ink-2">{t("home.projects.stack")}</p>
-    <ul class="flex flex-wrap gap-2" aria-labelledby="case-stack">
-      {
-        p.tech.map((id) => (
-          <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-2 py-[5px] pr-3 pl-[5px] text-[13.5px] font-medium">
-            <TechLogo id={id} class="size-6 rounded-full" decorative />
-            <span>{techData[id].label}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
+  <p id="case-stack" class="mt-10 mb-4 font-mono text-[13px] text-ink-2">{t("home.projects.stack")}</p>
+  <ul
+    role="list"
+    aria-labelledby="case-stack"
+    data-rv-stagger
+    class="grid grid-cols-1 gap-4 min-[640px]:grid-cols-3 min-[1100px]:grid-cols-[2.2fr_1fr_1fr_1fr]"
+  >
+    {
+      study.stack.map((g, i) => (
+        <li class:list={["case-card glow min-w-0", i === 0 && "min-[640px]:col-span-3 min-[1100px]:col-span-1"]}>
+          <p class="mb-4 flex items-center gap-2 font-mono text-[13px] text-ink-2">
+            <Icon name={g.icon} class="size-[18px] shrink-0 text-accent *:stroke-[1.75]" aria-hidden="true" />
+            {pick(g.layer, lang)}
+          </p>
+          <ul role="list" class="flex flex-wrap gap-x-2.5 gap-y-1.5">
+            {g.tech.map((id) => (
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-line bg-surface-2 py-1.5 pr-3.5 pl-1.5 text-[14.5px] font-medium">
+                <TechLogo id={id} class="size-7 rounded-full" decorative />
+                <span>{techData[id].label}</span>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
 
-  <div class="mt-8">
-    <h2 class="mb-1.5 font-mono text-[13px] font-normal text-ink-2">{t("case.evidence")}</h2>
-    <p class="max-w-[70ch] text-base">{pick(study.evidence, lang)}</p>
+  <div class="mt-4 flex items-center gap-2.5 text-sm text-ink-2">
+    <Icon name="lucide:lock" class="size-4 shrink-0 text-ink-3 *:stroke-[1.75]" aria-hidden="true" />
+    <h2 class="sr-only">{t("case.evidence")}</h2>
+    <p>{pick(study.evidence, lang)}</p>
   </div>
 </section>

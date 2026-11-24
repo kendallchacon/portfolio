@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import type { CaseShot } from "../../data/cases";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+import { projectImage } from "../projects/media";
+
+/**
+ * "Capturas": pantallas de la app en una cuadrícula (2 columnas en móvil, 4 en escritorio), cada
+ * una con su pie visible. Sin reproductor ni capítulos. Imágenes lazy con `astro:assets`; el
+ * `aspect-ratio` reserva el hueco, así que no hay salto de layout.
+ */
+interface Props {
+  shots: readonly CaseShot[];
+  lang: Lang;
+}
+
+const { shots, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="mt-12">
+  <h3 id="case-shots" class="mb-4 text-[21px]">{t("case.shots")}</h3>
+  <ul role="list" aria-labelledby="case-shots" class="grid grid-cols-2 gap-x-4 gap-y-6 min-[900px]:grid-cols-4 min-[900px]:gap-x-5">
+    {
+      shots.map((shot) => (
+        <li class="min-w-0">
+          <figure>
+            <div class="aspect-[9/19.5] overflow-hidden rounded-[22px] border border-line bg-paper">
+              <Image
+                src={projectImage(shot.file)}
+                alt={pick(shot.alt, lang)}
+                widths={[240, 480]}
+                sizes="(max-width: 899px) 45vw, 260px"
+                loading="lazy"
+                decoding="async"
+                class="block size-full object-cover"
+              />
+            </div>
+            <figcaption class="mt-3 text-sm text-ink-2">{pick(shot.caption, lang)}</figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="mt-5 font-mono text-[13px] text-ink-3">{t("case.shotsNote")}</p>
+</div>

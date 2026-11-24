@@ -1,0 +1,42 @@
+---
+import { Icon } from "astro-icon/components";
+import CaseSegments from "./CaseSegments.astro";
+import type { CaseLimit } from "../../data/cases";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * "Límites": máximo dos tarjetas sueltas lado a lado (apiladas en móvil), con el tono ámbar de
+ * `.case-card-warn`, icono y etiqueta mono. La que tiene `segments` dibuja los segmentos de la
+ * ficha. Entran en cascada (reveal.ts) y su borde sigue al cursor (glow.ts).
+ */
+interface Props {
+  items: readonly CaseLimit[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="mt-12">
+  <h3 id="case-limits" class="mb-4 text-[21px]">{t("case.limits")}</h3>
+  <ul role="list" aria-labelledby="case-limits" data-rv-stagger class="grid gap-4 min-[900px]:grid-cols-2">
+    {
+      items.map((item) => (
+        <li class="case-card case-card-warn glow flex min-w-0 flex-col">
+          <p class="mb-3 flex items-center gap-2 font-mono text-[13px] text-warn">
+            <Icon name={item.icon} class="size-[18px] shrink-0 *:stroke-[1.75]" aria-hidden="true" />
+            {pick(item.label, lang)}
+          </p>
+          <p class="text-ink">{pick(item.text, lang)}</p>
+          {item.segments && (
+            <div class="mt-auto pt-5">
+              <CaseSegments of={item.segments.of} on={item.segments.on} tone="warn" />
+            </div>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
