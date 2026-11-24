@@ -46,6 +46,9 @@ export const tech = {
   flutter: { label: "Flutter", icon: "simple-icons:flutter", brandColor: "#02569B" },
   postgresql: { label: "PostgreSQL", icon: "simple-icons:postgresql", brandColor: "#4169E1" },
   docker: { label: "Docker", icon: "simple-icons:docker", brandColor: "#2496ED" },
+  // Almacenamiento de objetos con API S3. En MatchGo corre local sobre LocalStack (compose.yml del
+  // backend); la etiqueta es corta para que la píldora quepa en las tarjetas del stack.
+  s3: { label: "S3", icon: "simple-icons:amazons3", brandColor: "#569A31" },
   mysql: { label: "MySQL", icon: "simple-icons:mysql", brandColor: "#4479A1" },
   rabbitmq: { label: "RabbitMQ", icon: "simple-icons:rabbitmq", brandColor: "#FF6600" },
   inertia: { label: "Inertia", icon: "simple-icons:inertia", brandColor: "#9553E9" },

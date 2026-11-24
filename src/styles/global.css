@@ -286,6 +286,41 @@
   }
 }
 
+/* Tarjeta de los casos de proyecto (la de "Mi parte" de la cabecera y todas las de la página):
+   radio grande, borde neutro en reposo (--color-line) y degradado de superficie teñido con --tone
+   (azul de acento por defecto). `.case-card-accent` tiñe también el borde de azul y
+   `.case-card-warn` tiñe borde y degradado de ámbar. Con `.glow` (glow.ts) el borde sigue al
+   cursor: ahí aparece el azul. */
+@layer components {
+  .case-card {
+    --tone: var(--color-accent);
+    position: relative;
+    padding: 1.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-2);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--tone) 12%, transparent),
+      var(--color-surface-1) 60%
+    );
+  }
+
+  .case-card-accent,
+  .case-card-warn {
+    border-color: color-mix(in srgb, var(--tone) 35%, transparent);
+  }
+
+  .case-card-warn {
+    --tone: var(--color-warn);
+  }
+
+  @media (max-width: 560px) {
+    .case-card {
+      padding: 1.25rem;
+    }
+  }
+}
+
 @keyframes blink {
   50% {
     opacity: 0;
