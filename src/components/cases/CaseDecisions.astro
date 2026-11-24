@@ -1,0 +1,50 @@
+---
+import type { CaseDecision } from "../../data/cases";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * "Decisiones": máximo dos tarjetas sueltas (`.case-card`) con índice mono grande (01, 02),
+ * título, un chip con la referencia (ADR o archivo, solo texto: los repos son privados) y el texto
+ * en dos partes con etiqueta mono (qué es / efecto). Entran en cascada (reveal.ts) y su borde
+ * sigue al cursor (glow.ts).
+ */
+interface Props {
+  items: readonly CaseDecision[];
+  lang: Lang;
+}
+
+const { items, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="mt-12">
+  <h3 id="case-decisions" class="mb-4 text-[21px]">{t("case.decisions")}</h3>
+  <ul role="list" aria-labelledby="case-decisions" data-rv-stagger class="grid gap-4 min-[900px]:grid-cols-2">
+    {
+      items.map((item, i) => (
+        <li class="case-card glow flex min-w-0 flex-col">
+          <p aria-hidden="true" class="mb-4 font-mono text-[clamp(36px,4vw,52px)] leading-none tracking-[-0.04em] text-accent">
+            {String(i + 1).padStart(2, "0")}
+          </p>
+          <h4 class="mb-3 text-[20px]">{pick(item.title, lang)}</h4>
+          <p class="mb-5">
+            <span class="inline-block rounded-full border border-line bg-surface-2 px-2.5 py-0.5 font-mono text-[12.5px] text-ink-2">
+              {item.ref}
+            </span>
+          </p>
+          <dl class="grid gap-4">
+            <div>
+              <dt class="mb-1 font-mono text-[12.5px] text-ink-3">{t("case.decisionWhat")}</dt>
+              <dd class="text-ink-2">{pick(item.what, lang)}</dd>
+            </div>
+            <div>
+              <dt class="mb-1 font-mono text-[12.5px] text-ink-3">{t("case.decisionEffect")}</dt>
+              <dd class="text-ink-2">{pick(item.effect, lang)}</dd>
+            </div>
+          </dl>
+        </li>
+      ))
+    }
+  </ul>
+</div>

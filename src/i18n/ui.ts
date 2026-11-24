@@ -104,8 +104,15 @@ const es = {
   "case.openNamed": "Abrir el caso de {name}",
   "case.evidence": "Evidencia",
   "case.data": "Datos del proyecto",
-  "case.hood": "Debajo del capó",
+  "case.hood": "El proyecto en detalle",
   "case.problem": "El problema",
+  "case.built": "Qué construí",
+  "case.shots": "Capturas",
+  "case.shotsNote": "Datos de demostración.",
+  "case.decisions": "Decisiones",
+  "case.limits": "Límites",
+  "case.decisionWhat": "Qué es",
+  "case.decisionEffect": "Efecto",
 } as const;
 
 const en: Record<keyof typeof es, string> = {
@@ -208,6 +215,13 @@ const en: Record<keyof typeof es, string> = {
   "case.data": "Project data",
   "case.hood": "Under the hood",
   "case.problem": "The problem",
+  "case.built": "What I built",
+  "case.shots": "Screenshots",
+  "case.shotsNote": "Demo data.",
+  "case.decisions": "Decisions",
+  "case.limits": "Limits",
+  "case.decisionWhat": "What it is",
+  "case.decisionEffect": "Effect",
 };
 
 export const ui = { es, en } as const;

@@ -1,0 +1,115 @@
+---
+import TechLogo from "../common/TechLogo.astro";
+import type { CaseBuilt } from "../../data/cases";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * "Qué construí": dos grupos de tarjetas sueltas (`.case-card`), cada uno con su encabezado
+ * suelto encima, sin cajas envolventes ni líneas internas. Sin enlaces (repos privados).
+ * - Móvil Flutter, primero: encabezado con icono, nombre, insignia "Donde más construí" y, a la
+ *   derecha en mono, "170 commits · 65 % del repo" (la cifra grande ya está en la ficha). Debajo,
+ *   3 tarjetas iguales y de la misma altura (1 columna en móvil); la de reservas, con su cifra
+ *   propia, lleva el único borde de acento. Contenido arriba, chip abajo.
+ * - Backend .NET, después: 4 tarjetas en una fila (2 desde 640 px, 1 en móvil) y la nota
+ *   «uno de 4 contribuyentes» junto al encabezado.
+ * Las cifras cuentan de 0 al valor (count.ts); las tarjetas entran en cascada (reveal.ts) y su
+ * borde sigue al cursor (glow.ts).
+ */
+interface Props {
+  built: CaseBuilt;
+  lang: Lang;
+}
+
+const { built, lang } = Astro.props;
+const t = useTranslations(lang);
+const { mobile, backend } = built;
+const nf = new Intl.NumberFormat(lang);
+
+const chip = "rounded-full border border-line bg-surface-2 px-2.5 py-0.5 font-mono text-[12.5px] break-all text-ink-2";
+const bigNumber = "font-mono text-[clamp(32px,3.4vw,46px)] leading-none tracking-[-0.03em] tabular-nums";
+---
+
+<div class="mt-12 min-w-0">
+  <h3 id="case-built" class="mb-6 text-[21px]">{t("case.built")}</h3>
+
+  <div class="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+    <div class="flex items-center gap-3">
+      <TechLogo id={mobile.tech} class="size-10 shrink-0 rounded-xl" decorative />
+      <h4 id="case-built-mobile" class="text-[24px]">{pick(mobile.area, lang)}</h4>
+    </div>
+    <p class="inline-flex items-center rounded-full bg-accent-soft px-3 py-1 font-mono text-[12.5px] font-medium text-accent">
+      {pick(mobile.badge, lang)}
+    </p>
+    <p class="font-mono text-[13px] text-ink-2 min-[900px]:ml-auto">
+      {nf.format(mobile.hero.value)} {pick(mobile.hero.label, lang)}
+    </p>
+  </div>
+
+  <div data-rv-stagger class="grid gap-4 min-[900px]:grid-cols-3">
+    {
+      mobile.cells.map((c) => (
+        <div class:list={["case-card glow flex min-w-0 flex-col", c.stat && "border-accent"]}>
+          {c.stat ? (
+            <>
+              <div class="mb-2 flex items-baseline justify-between gap-3">
+                <h5 class="text-[18px]">{pick(c.title, lang)}</h5>
+                <p class="flex items-baseline gap-2">
+                  <span aria-hidden="true" class={bigNumber} data-count={c.stat.value} data-dec="0" data-suf="">
+                    {nf.format(c.stat.value)}
+                  </span>
+                  {c.stat.suffix && (
+                    <span aria-hidden="true" class="text-[20px] text-ink-2">
+                      {pick(c.stat.suffix, lang)}
+                    </span>
+                  )}
+                  <span class="sr-only">
+                    {nf.format(c.stat.value)} {c.stat.suffix ? pick(c.stat.suffix, lang) : ""}
+                  </span>
+                </p>
+              </div>
+              <p class="mb-2 text-sm text-ink-2">{pick(c.stat.label, lang)}</p>
+            </>
+          ) : (
+            <h5 class="mb-2 text-[18px]">{pick(c.title, lang)}</h5>
+          )}
+          <p class="text-ink-2">{pick(c.line, lang)}</p>
+          <ul role="list" class="mt-auto flex flex-wrap gap-2 pt-4">
+            {c.chips.map((x) => (
+              <li class={chip}>{pick(x, lang)}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="mt-10 mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+    <div class="flex items-center gap-3">
+      <TechLogo id={backend.tech} class="size-9 shrink-0 rounded-[10px]" decorative />
+      <h4 id="case-built-backend" class="text-[20px]">{pick(backend.area, lang)}</h4>
+    </div>
+    <p class="font-mono text-[13px] text-ink-2">· {pick(backend.note, lang)}</p>
+  </div>
+
+  <ul
+    role="list"
+    aria-labelledby="case-built-backend"
+    data-rv-stagger
+    class="grid gap-4 min-[640px]:grid-cols-2 min-[1100px]:grid-cols-4"
+  >
+    {
+      backend.cells.map((c) => (
+        <li class="case-card glow flex min-w-0 flex-col">
+          <h5 class="mb-2 text-[18px]">{pick(c.title, lang)}</h5>
+          <p class="text-ink-2">{pick(c.line, lang)}</p>
+          <ul role="list" class="mt-auto flex flex-wrap gap-2 pt-4">
+            {c.chips.map((x) => (
+              <li class={chip}>{pick(x, lang)}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</div>

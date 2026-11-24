@@ -1,0 +1,21 @@
+---
+/**
+ * Fila fina de `of` segmentos con `on` encendidos: la de la celda «uno de 4» de la ficha
+ * (CaseSpec) y la del aviso «Mi parte» de Límites. Decorativa: el texto ya dice el dato.
+ */
+interface Props {
+  of: number;
+  on: number;
+  tone?: "accent" | "warn";
+}
+
+const { of, on, tone = "accent" } = Astro.props;
+---
+
+<span aria-hidden="true" class="flex h-1 gap-1">
+  {
+    Array.from({ length: of }, (_, i) => (
+      <span class:list={["h-full flex-1 rounded-full", i < on ? (tone === "warn" ? "bg-warn" : "bg-accent") : "bg-surface-3"]} />
+    ))
+  }
+</span>

@@ -1,0 +1,40 @@
+---
+import { Icon } from "astro-icon/components";
+import type { CaseProblem } from "../../data/cases";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * "El problema": dos tarjetas sueltas (`.case-card`), una columna en móvil. Izquierda: la etiqueta
+ * y la primera frase, en grande. Derecha: la segunda frase («MatchGo reúne… en una sola
+ * plataforma») con sus 4 módulos en 2×2, cada uno con su icono lucide. Es el mismo texto de
+ * siempre, repartido. Entran en cascada (reveal.ts) y su borde sigue al cursor (glow.ts).
+ */
+interface Props {
+  problem: CaseProblem;
+  lang: Lang;
+}
+
+const { problem, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div data-rv-stagger class="grid gap-4 min-[900px]:grid-cols-2">
+  <div class="case-card glow min-w-0">
+    <h3 class="mb-4 font-mono text-[13px] font-medium text-accent">{t("case.problem")}</h3>
+    <p class="text-[clamp(24px,2.6vw,34px)]/[1.2] tracking-[-0.03em] text-ink">{pick(problem.statement, lang)}</p>
+  </div>
+  <div class="case-card glow min-w-0">
+    <p class="mb-4 text-[19px]/[1.4] text-ink-2">{pick(problem.lead, lang)}</p>
+    <ul role="list" class="grid grid-cols-2 gap-3">
+      {
+        problem.modules.map((m) => (
+          <li class="flex min-w-0 items-center gap-3 rounded-3 bg-surface-2 px-4 py-3.5 font-medium">
+            <Icon name={m.icon} class="size-5 shrink-0 text-accent *:stroke-[1.75]" aria-hidden="true" />
+            {pick(m.label, lang)}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
