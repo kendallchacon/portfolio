@@ -6,6 +6,8 @@
  * - KPIs: el valor final está en el HTML; aquí solo se anima desde 0 al verse (sin reduced-motion).
  * - Visor de adjuntos con `<dialog>`: Esc nativo, ←/→ dentro de la entrada, foco de vuelta a la miniatura.
  */
+import { countUp } from "./count";
+
 const root = document.querySelector<HTMLElement>("[data-xp]");
 
 if (root) {
@@ -48,32 +50,8 @@ if (root) {
     }
   });
 
-  // Contador de KPIs.
-  if (!matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
-    const lang = document.documentElement.lang;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (!e.isIntersecting) continue;
-          io.unobserve(e.target);
-          const el = e.target as HTMLElement;
-          const to = +el.dataset.count!;
-          const dec = +el.dataset.dec!;
-          const nf = new Intl.NumberFormat(lang, { minimumFractionDigits: dec, maximumFractionDigits: dec });
-          const t0 = performance.now();
-          const tick = (now: number) => {
-            const p = Math.min(1, (now - t0) / 1200);
-            el.textContent = nf.format(to * (1 - (1 - p) ** 3)) + el.dataset.suf;
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      },
-      // Arranca en cuanto asoma: así nunca queda un "0" visible si el KPI no llega a verse entero.
-      { threshold: 0 },
-    );
-    for (const el of root.querySelectorAll<HTMLElement>("[data-count]")) io.observe(el);
-  }
+  // Contador de KPIs (count.ts).
+  countUp(root);
 }
 
 // Visor de adjuntos.
