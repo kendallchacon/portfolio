@@ -78,6 +78,8 @@ export type Project = {
   summary: Localized;
   /** Qué hizo Kendall. */
   myPart?: Localized;
+  /** Versión corta de `myPart` para la tarjeta de la portada; sin ella se usa `myPart`. La cabecera del caso usa siempre el largo. */
+  myPartShort?: Localized;
   /** Qué contiene el proyecto, cuando no hay "mi parte" (Lab). */
   contents?: Localized;
   /** `size` solo cuando es un dato confirmado. */
@@ -193,10 +195,14 @@ export const projects = [
       es: "Plataforma de fidelización con juegos, recompensas y panel administrativo para un negocio real.",
       en: "Loyalty platform with games, rewards and an admin panel for a real business.",
     },
-    // Áreas comprobadas en el historial (iteración 6). Sin cifras de PR (no se conocen).
+    // Texto de «Mi parte» del caso (6B.2), dado por el autor. Sin cifras de PR (no se conocen).
     myPart: {
-      es: "Full stack: Bubble Shooter (Phaser y puente Vue–Phaser), recompensas, ubicaciones y usuarios, y vistas de home, perfil y administración.",
-      en: "Full stack: Bubble Shooter (Phaser and a Vue–Phaser bridge), rewards, locations and users, and the home, profile and admin views.",
+      es: "Implementé de punta a punta el juego Bubble Shooter (escena Phaser, integración con Vue y TypeScript, validación y liquidación del puntaje en el backend) y el flujo de recompensas con movimientos administrativos; en el cliente, ubicaciones, verificación de correo y el rediseño de home, perfil y catálogo.",
+      en: "I built the Bubble Shooter game end to end (Phaser scene, Vue and TypeScript integration, score validation and settlement on the backend) and the rewards flow with administrative movements; on the client, locations, email verification and the redesign of home, profile and catalog.",
+    },
+    myPartShort: {
+      es: "Implementé de punta a punta Bubble Shooter (Phaser, Vue y backend) y el flujo de recompensas con sus movimientos administrativos.",
+      en: "I implemented Bubble Shooter end to end (Phaser, Vue and backend) and the rewards flow with its admin movements.",
     },
     team: {
       size: 5,
