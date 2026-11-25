@@ -15,9 +15,9 @@ export type CaseShot = MediaRef & { caption: Localized };
 
 /**
  * Decisión de diseño: título, qué es y su efecto (el mismo texto, repartido en dos), y un chip de
- * referencia (solo texto, sin enlace: ADR o archivo de un repo privado).
+ * referencia opcional (solo texto, sin enlace: ADR o archivo de un repo privado).
  */
-export type CaseDecision = { title: Localized; what: Localized; effect: Localized; ref: string };
+export type CaseDecision = { title: Localized; what: Localized; effect: Localized; ref?: string };
 
 /**
  * Aviso de "Límites": etiqueta mono, icono y el texto del límite. `segments` dibuja los segmentos
@@ -31,15 +31,17 @@ export type CaseLimit = {
 };
 
 /**
- * Celda de la franja de datos. `count`: cifra con contador y, debajo, una barra al `percent` % o
- * `of` segmentos con `on` encendidos. `status`: dato corto con el punto de estado.
+ * Celda de la franja de datos. `count`: cifra con contador (`suffix` pegado, p. ej. «de 5») y,
+ * si hay `meter`, debajo una barra al `percent` % o `of` segmentos con `on` encendidos.
+ * `status`: dato corto con el punto de estado.
  */
 export type CaseFact =
   | {
       kind: "count";
       value: number;
+      suffix?: Localized;
       label: Localized;
-      meter: { type: "bar"; percent: number } | { type: "segments"; of: number; on: number };
+      meter?: { type: "bar"; percent: number } | { type: "segments"; of: number; on: number };
     }
   | { kind: "status"; value: Localized; label: Localized };
 
@@ -72,31 +74,36 @@ export type CaseStat = {
   percent?: number;
 };
 
-/** Celda de un panel de "Qué construí": título, una línea y chips mono (PR, rutas, archivos). */
+/** Celda de un panel de "Qué construí": título, una línea y, si los hay, chips mono (PR, rutas, archivos). */
 export type CaseBuiltCell = {
   title: Localized;
   line: Localized;
-  chips: readonly Localized[];
-  /** Cifra propia de la celda (la hace ancha en el bento de Móvil). */
+  chips?: readonly Localized[];
+  /** Cifra propia de la celda. */
   stat?: CaseStat;
+  /** Tarjeta destacada del caso: la única con el borde de acento. */
+  featured?: true;
+};
+
+/** Grupo de "Qué construí": encabezado con el logo de su tecnología y 3 o 4 tarjetas. */
+export type CaseBuiltGroup = {
+  tech: TechId;
+  area: Localized;
+  /** Insignia junto al encabezado (solo el grupo principal). */
+  badge?: Localized;
+  /** Cifra en mono a la derecha del encabezado del grupo principal. */
+  hero?: CaseStat;
+  /** Nota junto al encabezado (p. ej. «uno de 4 contribuyentes»). */
+  note?: Localized;
+  cells: readonly CaseBuiltCell[];
 };
 
 /**
- * "Qué construí": dos grupos de tarjetas sueltas, Móvil Flutter primero (acento, insignia, cifra
- * grande y bento) y Backend .NET después (una fila, con su nota junto al encabezado). Sin enlaces: los
- * repos son privados; el chip lleva el repo donde el número es ambiguo («PR móvil #1»).
+ * "Qué construí": dos grupos de tarjetas sueltas. El principal va primero (insignia, cifra y tarjeta
+ * destacada con borde de acento); el secundario, después, en una fila. Sin enlaces: los repos son
+ * privados; el chip lleva el repo donde el número es ambiguo («PR móvil #1»).
  */
-export type CaseBuilt = {
-  mobile: {
-    tech: TechId;
-    area: Localized;
-    badge: Localized;
-    /** Cifra grande de la tarjeta alta. */
-    hero: CaseStat;
-    cells: readonly CaseBuiltCell[];
-  };
-  backend: { tech: TechId; area: Localized; note: Localized; cells: readonly CaseBuiltCell[] };
-};
+export type CaseBuilt = { primary: CaseBuiltGroup; secondary: CaseBuiltGroup };
 
 export type CaseStudy = {
   /** Metadatos de la página (title, description). */
@@ -104,9 +111,18 @@ export type CaseStudy = {
   /** Línea sobre el título: tipo de proyecto, contexto y año. */
   meta: Localized;
   lead: Localized;
+  /** Oculta bajo la ficha la línea de equipo de `projects.ts` cuando repite una tarjeta de datos. */
+  omitTeamLine?: true;
+  /**
+   * Px que la figura de la cabecera puede acompañar al scroll (sticky, ≥1024 px). Sin él, el
+   * recorrido es lo que la columna izquierda excede a la figura: con un «Mi parte» largo la figura
+   * quedaría fija decenas de px mientras la página baja. Con él, la figura vive en un contenedor
+   * de su alto + este valor y baja con la página.
+   */
+  figureTravel?: number;
   /** Franja de datos de la ficha: 3 celdas. */
   facts: readonly [CaseFact, CaseFact, CaseFact];
-  /** Stack del proyecto por capas; repite las de `projects.ts` más las anotadas en el caso. */
+  /** Stack del proyecto por capas (3 o 4); repite las de `projects.ts` más las anotadas en el caso. */
   stack: readonly CaseStackGroup[];
   /** Nota de "Evidencia" de la ficha: repositorios, sin enlaces a repos privados. */
   evidence: Localized;
@@ -118,6 +134,8 @@ export type CaseStudy = {
     built: CaseBuilt;
     /** "Capturas": 3 a 4, sin reproductor ni capítulos. */
     shots: readonly CaseShot[];
+    /** Nota bajo las capturas; por defecto, «Datos de demostración». */
+    shotsNote?: Localized;
     /** "Decisiones": máximo 2. */
     decisions: readonly [CaseDecision] | readonly [CaseDecision, CaseDecision];
     /** "Límites": máximo 2. */
@@ -227,7 +245,7 @@ export const cases = {
       //   total del repo: ningún filtro simple da 19. Origen del 19: handoff §4 / about.ts, sin
       //   fórmula. Candidato: { value: 19, label: { es: "PRs integrados", en: "merged PRs" } }.
       built: {
-        mobile: {
+        primary: {
           tech: "flutter",
           area: { es: "Móvil Flutter", en: "Flutter mobile" },
           badge: { es: "Donde más construí", en: "Where I built the most" },
@@ -252,6 +270,7 @@ export const cases = {
                 en: "The complete feature, from start to finish.",
               },
               chips: [both("lib/features/booking/")],
+              featured: true,
               stat: {
                 value: 33,
                 suffix: { es: "de 33", en: "of 33" },
@@ -271,7 +290,7 @@ export const cases = {
             },
           ],
         },
-        backend: {
+        secondary: {
           tech: "dotnet",
           area: { es: "Backend .NET", en: ".NET backend" },
           note: { es: "uno de 4 contribuyentes", en: "one of 4 contributors" },
@@ -399,6 +418,227 @@ export const cases = {
             en: "Four people built the backend and I am one of them: this case covers only my part.",
           },
           segments: { of: 4, on: 1 },
+        },
+      ],
+    },
+  },
+  "beto-y-mas": {
+    seo: {
+      title: {
+        es: "Beto y Más · caso de proyecto | Kendall Chacón",
+        en: "Beto y Más · project case | Kendall Chacón",
+      },
+      description: {
+        es: "Plataforma de fidelización con juegos, recompensas y panel administrativo para un cliente real. Mi parte: el juego Bubble Shooter, el flujo de recompensas y varias vistas del cliente.",
+        en: "Loyalty platform with games, rewards and an admin panel for a real client. My part: the Bubble Shooter game, the rewards flow and several client views.",
+      },
+    },
+    // Fuente: projects.summary y experience.ts («Proyecto de graduación para un cliente real»). Sin
+    // año: no hay fuente verificada para él (solo «3 semestres»).
+    meta: {
+      es: "Plataforma de fidelización · Proyecto de graduación · Cliente real",
+      en: "Loyalty platform · Capstone · Real client",
+    },
+    lead: {
+      es: "Plataforma de fidelización con juegos, recompensas y panel administrativo para un negocio real.",
+      en: "Loyalty platform with games, rewards and an admin panel for a real business.",
+    },
+    // La tarjeta «1 de 5» ya dice «equipo de 5 · 3 semestres»: no se repite bajo la ficha.
+    omitTeamLine: true,
+    // «Mi parte» de Beto es largo: la columna izquierda excede a la figura en ~70 px a 1440 px y la
+    // figura quedaría pegada ese tramo. En MatchGo la columna excede a la figura en 5 px, así que
+    // baja con la página; 5 reproduce ese recorrido.
+    figureTravel: 5,
+    // - 150: commits propios de Kendall. Comando: `git shortlog -sne --all`; corte: 12 jun 2026;
+    //   fuente: auditoría local. Sin barra: no hay total del repo contra el cual medirlo.
+    // - «1 de 5» con 5 segmentos y 1 encendido: equipo de 5 (projects.team.size) y 3 semestres.
+    // - Estado: projects.status y links (betoymas.com, en producción).
+    facts: [
+      {
+        kind: "count",
+        value: 150,
+        label: { es: "commits propios", en: "own commits" },
+      },
+      {
+        kind: "count",
+        value: 1,
+        suffix: { es: "de 5", en: "of 5" },
+        label: { es: "equipo de 5 · 3 semestres", en: "team of 5 · 3 semesters" },
+        meter: { type: "segments", of: 5, on: 1 },
+      },
+      {
+        kind: "status",
+        value: { es: "En producción", en: "In production" },
+        label: both("betoymas.com"),
+      },
+    ],
+    // Stack del proyecto, por capa (projects.tech): ninguna tecnología nueva.
+    stack: [
+      { layer: { es: "Backend", en: "Backend" }, icon: "lucide:server", tech: ["php", "laravel", "mysql"] },
+      {
+        layer: { es: "Web", en: "Web" },
+        icon: "lucide:globe",
+        tech: ["vue", "typescript", "inertia", "phaser"],
+      },
+      { layer: { es: "Pruebas", en: "Testing" }, icon: "lucide:flask-conical", tech: ["phpunit"] },
+    ],
+    evidence: {
+      es: "Repositorio privado del cliente, sin enlaces.",
+      en: "Client's private repository, no links.",
+    },
+    hood: {
+      // Fuente: projects.summary y la instrucción del autor (6B.2): plataforma web de un cliente real
+      // con experiencia de cliente, administración, recompensas y juegos. Contexto, no autoría.
+      problem: {
+        statement: {
+          es: "Una plataforma web para un cliente real: experiencia de cliente, administración, recompensas y juegos.",
+          en: "A web platform for a real client: customer experience, administration, rewards and games.",
+        },
+        lead: {
+          es: "Beto y Más reúne en una sola plataforma",
+          en: "Beto y Más brings into one platform",
+        },
+        modules: [
+          { icon: "lucide:users", label: { es: "Clientes", en: "Customers" } },
+          { icon: "lucide:gift", label: { es: "Recompensas", en: "Rewards" } },
+          { icon: "lucide:gamepad-2", label: { es: "Juegos", en: "Games" } },
+          { icon: "lucide:settings", label: { es: "Administración", en: "Administration" } },
+        ],
+      },
+      // Fuente: «Mi parte» (projects.ts) y la lista de áreas del autor (6B.2). Sin números de PR, sin
+      // nombres de archivo ni arquitectura interna del cliente (repo privado).
+      built: {
+        primary: {
+          tech: "phaser",
+          area: { es: "Juegos", en: "Games" },
+          badge: { es: "Donde más construí", en: "Where I built the most" },
+          cells: [
+            {
+              title: { es: "Bubble Shooter", en: "Bubble Shooter" },
+              line: {
+                es: "Juego completo: escena Phaser e input táctil.",
+                en: "A complete game: Phaser scene and touch input.",
+              },
+              featured: true,
+            },
+            {
+              title: { es: "Configuración y métricas", en: "Settings and metrics" },
+              line: {
+                es: "Configuración por juego, políticas de acceso, sesiones y métricas administrativas.",
+                en: "Per-game settings, access policies, sessions and administrative metrics.",
+              },
+            },
+            {
+              title: { es: "Pruebas", en: "Tests" },
+              line: {
+                es: "Tres tipos de prueba: Feature, Unit y de escena.",
+                en: "Three kinds of test: Feature, Unit and scene.",
+              },
+            },
+          ],
+        },
+        secondary: {
+          tech: "laravel",
+          area: { es: "Plataforma", en: "Platform" },
+          cells: [
+            {
+              title: { es: "Recompensas", en: "Rewards" },
+              line: {
+                es: "Detalle y canje, panel administrativo y exportación CSV de movimientos.",
+                en: "Detail and redemption, admin panel and CSV export of movements.",
+              },
+            },
+            {
+              title: { es: "Cuenta del cliente", en: "Customer account" },
+              line: {
+                es: "Verificación de correo, ubicaciones y direcciones con datos INEC.",
+                en: "Email verification, locations and addresses with INEC data.",
+              },
+            },
+            {
+              title: { es: "Rediseño", en: "Redesign" },
+              line: {
+                es: "Home, perfil, layout y catálogo de juegos.",
+                en: "Home, profile, layout and game catalog.",
+              },
+            },
+          ],
+        },
+      },
+      // Capturas existentes en el repo: beto-inicio y beto-juegos (la cuenta y el avatar son de
+      // Kendall; sin datos de terceros). beto-landing NO se usa: la foto de portada muestra personas
+      // identificables (cliente y personal del comercio) y no consta autorización.
+      shots: [
+        {
+          file: "beto-inicio.jpg",
+          width: 1400,
+          height: 729,
+          caption: { es: "Inicio del cliente", en: "Customer home" },
+          alt: {
+            es: "Inicio de Beto y Más: puntos acumulados, progreso semanal, accesos a juegos, recompensas, promociones y perfil, y recompensas destacadas.",
+            en: "Beto y Más home: points balance, weekly progress, shortcuts to games, rewards, promotions and profile, and featured rewards.",
+          },
+        },
+        {
+          file: "beto-juegos.jpg",
+          width: 1400,
+          height: 732,
+          caption: { es: "Catálogo de juegos", en: "Game catalog" },
+          alt: {
+            es: "Catálogo de juegos de Beto y Más con Bubble Shooter como juego destacado y el progreso semanal.",
+            en: "Beto y Más game catalog with Bubble Shooter as the featured game and the weekly progress.",
+          },
+        },
+      ],
+      shotsNote: {
+        es: "Capturas de mi cuenta en producción.",
+        en: "Screenshots of my account in production.",
+      },
+      decisions: [
+        {
+          title: {
+            es: "El puntaje se valida y liquida en el backend",
+            en: "The score is validated and settled on the backend",
+          },
+          what: {
+            es: "La partida se valida y el puntaje se liquida en el servidor.",
+            en: "The game is validated and the score is settled on the server.",
+          },
+          effect: {
+            es: "Las reglas y los resultados son consistentes.",
+            en: "Rules and results are consistent.",
+          },
+        },
+        {
+          title: { es: "Phaser dentro de Vue con un bridge", en: "Phaser inside Vue through a bridge" },
+          what: {
+            es: "La escena se conecta a Vue mediante un bridge.",
+            en: "The scene connects to Vue through a bridge.",
+          },
+          effect: {
+            es: "El ciclo de vida de la escena se limpia al desmontar o navegar.",
+            en: "The scene lifecycle is cleaned up on unmount or navigation.",
+          },
+        },
+      ],
+      // Los 5 segmentos con 1 encendido son los de la ficha («1 de 5»).
+      limits: [
+        {
+          label: { es: "Alcance", en: "Scope" },
+          icon: "lucide:lock",
+          text: {
+            es: "El código es privado del cliente, por eso no hay enlace al repositorio.",
+            en: "The code is the client's and private, so there is no link to the repository.",
+          },
+        },
+        {
+          label: { es: "Mi parte", en: "My part" },
+          icon: "lucide:users",
+          text: {
+            es: "Éramos un equipo de 5: este caso cuenta solo mi parte y no reclama métricas de negocio ni de usuarios.",
+            en: "We were a team of 5: this case covers only my part and claims no business or user metrics.",
+          },
+          segments: { of: 5, on: 1 },
         },
       ],
     },

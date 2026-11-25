@@ -37,7 +37,7 @@ const t = useTranslations(lang);
       <CaseProblem problem={study.hood.problem} lang={lang} />
       <CaseBuilt built={study.hood.built} lang={lang} />
       <div>
-        <CaseShots shots={study.hood.shots} lang={lang} />
+        <CaseShots shots={study.hood.shots} note={study.hood.shotsNote} lang={lang} />
         <CaseDecisions items={study.hood.decisions} lang={lang} />
         <CaseLimits items={study.hood.limits} lang={lang} />
       </div>

@@ -314,9 +314,9 @@ export function experienceHref(id: ExperienceId, lang: Lang): string | undefined
 
 /**
  * Casos de proyecto con ruta `/proyectos/<slug>` publicada. Un proyecto fuera de esta lista no
- * recibe enlace desde ninguna tarjeta ni referencia. Beto y Más y CIMA entran en 6B.2.
+ * recibe enlace desde ninguna tarjeta ni referencia. CIMA entra en 6B.2.
  */
-export const publishedProjects = ["matchgo"] as const satisfies readonly ProjectSlug[];
+export const publishedProjects = ["matchgo", "beto-y-mas"] as const satisfies readonly ProjectSlug[];
 export type PublishedSlug = (typeof publishedProjects)[number];
 
 /** Enlace al caso de un proyecto, o `undefined` si todavía no está publicado. */
