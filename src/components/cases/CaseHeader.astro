@@ -29,6 +29,18 @@ interface Props {
 const { project: p, study, lang } = Astro.props;
 const t = useTranslations(lang);
 const scene = p.scene;
+// Con `figureTravel` la figura sticky vive en un contenedor de su alto + ese recorrido (ver cases.ts).
+// Sin él no hay contenedor y la figura es hija directa de la cuadrícula, como siempre.
+const travel = study.figureTravel;
+const Holder = travel === undefined ? Fragment : "div";
+const holderProps =
+  travel === undefined
+    ? {}
+    : {
+        style: `--figure-travel:${travel}px`,
+        class:
+          "min-w-0 min-[1024px]:col-start-2 min-[1024px]:row-span-2 min-[1024px]:row-start-1 min-[1024px]:h-[calc(540px+var(--figure-travel))] min-[1024px]:self-start",
+      };
 // "Mi parte" es la evidencia principal; sin ella (Lab) se muestra "Qué hay".
 const main = p.myPart
   ? { label: t("home.projects.myPart"), text: pick(p.myPart, lang) }
@@ -56,16 +68,18 @@ const main = p.myPart
       </header>
     </div>
 
-    <div
-      aria-hidden={scene.type === "browsers" || scene.type === "pipeline" ? undefined : "true"}
-      style={`view-transition-name:project-${p.slug}`}
-      class="scene relative h-[540px] min-w-0 overflow-hidden rounded-1 border border-line max-[1023px]:h-[440px] max-[560px]:h-[360px] min-[1024px]:sticky min-[1024px]:top-[calc(var(--header-h)+24px)] min-[1024px]:col-start-2 min-[1024px]:row-span-2 min-[1024px]:row-start-1 min-[1024px]:self-start"
-    >
-      {scene.type === "phones" && <ScenePhones scene={scene} lang={lang} />}
-      {scene.type === "browsers" && <SceneBrowsers scene={scene} lang={lang} />}
-      {scene.type === "code" && <SceneCode scene={scene} lang={lang} />}
-      {scene.type === "pipeline" && <ScenePipeline scene={scene} lang={lang} />}
-    </div>
+    <Holder {...holderProps}>
+      <div
+        aria-hidden={scene.type === "browsers" || scene.type === "pipeline" ? undefined : "true"}
+        style={`view-transition-name:project-${p.slug}`}
+        class="scene relative h-[540px] min-w-0 overflow-hidden rounded-1 border border-line max-[1023px]:h-[440px] max-[560px]:h-[360px] min-[1024px]:sticky min-[1024px]:top-[calc(var(--header-h)+24px)] min-[1024px]:col-start-2 min-[1024px]:row-span-2 min-[1024px]:row-start-1 min-[1024px]:self-start"
+      >
+        {scene.type === "phones" && <ScenePhones scene={scene} lang={lang} />}
+        {scene.type === "browsers" && <SceneBrowsers scene={scene} lang={lang} />}
+        {scene.type === "code" && <SceneCode scene={scene} lang={lang} />}
+        {scene.type === "pipeline" && <ScenePipeline scene={scene} lang={lang} />}
+      </div>
+    </Holder>
 
     {
       main && (
