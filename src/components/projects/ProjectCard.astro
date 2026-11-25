@@ -33,7 +33,7 @@ const headingId = `proyecto-${p.slug}`;
 const caseHref = projectHref(p.slug, lang);
 
 const facts: [UiKey, string][] = [];
-if (p.myPart) facts.push(["home.projects.myPart", pick(p.myPart, lang)]);
+if (p.myPart) facts.push(["home.projects.myPart", pick(p.myPartShort ?? p.myPart, lang)]);
 if (p.contents) facts.push(["home.projects.contents", pick(p.contents, lang)]);
 if (p.team) facts.push(["home.projects.team", pick(p.team.label, lang)]);
 if (p.commits) facts.push(["home.projects.commits", pick(p.commits, lang)]);
