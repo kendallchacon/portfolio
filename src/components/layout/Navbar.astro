@@ -15,7 +15,11 @@ const t = useTranslations(lang);
 const cv = contact.channels.find((channel) => channel.id === "cv");
 ---
 
-<header class="pointer-events-none fixed inset-x-0 top-0 z-70 px-3 pt-2.5">
+{/* data-hidden (lo pone el script) lo saca por arriba. Sin el atributo no hay translate: un
+    transform en el header haría de bloque contenedor de la hoja móvil (position: fixed). */}
+<header
+  class="pointer-events-none fixed inset-x-0 top-0 z-70 px-3 pt-2.5 transition-transform duration-250 ease-brand motion-reduce:transition-none data-hidden:-translate-y-full"
+>
   {/* El fondo con blur va en ::before: un backdrop-filter en el contenedor haría de bloque
       contenedor de la hoja móvil (position: fixed) y la descolocaría. */}
   <div
@@ -161,5 +165,99 @@ const cv = contact.channels.find((channel) => channel.id === "cv");
     // El ancho de los enlaces cambia al cargar la fuente y al redimensionar.
     new ResizeObserver(place).observe(nav);
     document.fonts?.ready.then(place);
+  }
+
+  // --- Navbar que se oculta al bajar y reaparece al subir ---
+  // Un listener de scroll pasivo con rAF; en scroll solo lee scrollY (nada de layout).
+  // Siempre visible arriba del todo, con el foco de teclado dentro, con la paleta o el menú
+  // móvil abiertos y durante el viaje a una sección elegida en el navbar o la paleta.
+  const header = nav?.closest("header");
+
+  if (header) {
+    const palette = document.querySelector<HTMLDialogElement>("dialog[data-palette]");
+    const menuButton = header.querySelector<HTMLElement>("[data-menu-button]");
+    const TOP = 80; // por debajo, siempre visible
+    const HIDE_FROM = 120; // solo se oculta pasado este punto
+    const DELTA = 8; // px acumulados en una dirección para cambiar de estado
+    const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "]);
+
+    let lastY = scrollY;
+    let acc = 0;
+    let hidden = false;
+    let focused = false;
+    let travelling = false;
+    let queued = false;
+
+    const pinned = () =>
+      focused || travelling || !!palette?.open || menuButton?.getAttribute("aria-expanded") === "true";
+
+    const setHidden = (value: boolean) => {
+      if (value === hidden) return;
+      hidden = value;
+      header.toggleAttribute("data-hidden", value);
+    };
+
+    const update = () => {
+      queued = false;
+      const y = scrollY;
+      const dy = y - lastY;
+      lastY = y;
+      if (pinned() || y < TOP) {
+        acc = 0;
+        setHidden(false);
+        return;
+      }
+      if (!dy) return;
+      // Cambio de dirección: el acumulado empieza de cero.
+      if (Math.sign(dy) !== Math.sign(acc)) acc = 0;
+      acc += dy;
+      if (acc >= DELTA && y > HIDE_FROM) setHidden(true);
+      else if (acc <= -DELTA) setHidden(false);
+    };
+
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    };
+
+    addEventListener("scroll", schedule, { passive: true });
+
+    // Foco de teclado (focus-visible): un clic con el ratón en un enlace no lo fija.
+    header.addEventListener("focusin", (e) => {
+      focused = (e.target as Element).matches(":focus-visible");
+      schedule();
+    });
+    header.addEventListener("focusout", (e) => {
+      if (header.contains(e.relatedTarget as Node | null)) return;
+      focused = false;
+      schedule();
+    });
+
+    // Paleta o menú móvil abiertos.
+    const watch = new MutationObserver(schedule);
+    if (palette) watch.observe(palette, { attributes: true, attributeFilter: ["open"] });
+    if (menuButton) watch.observe(menuButton, { attributes: true, attributeFilter: ["aria-expanded"] });
+
+    // Viaje a una sección: visible hasta que termina el scroll suave o el usuario vuelve a
+    // desplazarse por su cuenta.
+    const startTravel = (e: Event) => {
+      if (!(e.target as Element).closest('a[href*="#"]')) return;
+      travelling = true;
+      schedule();
+    };
+    const endTravel = () => {
+      if (!travelling) return;
+      travelling = false;
+      schedule();
+    };
+    header.addEventListener("click", startTravel);
+    palette?.addEventListener("click", startTravel);
+    addEventListener("scrollend", endTravel);
+    addEventListener("wheel", endTravel, { passive: true });
+    addEventListener("touchstart", endTravel, { passive: true });
+    addEventListener("keydown", (e) => {
+      if (SCROLL_KEYS.has(e.key)) endTravel();
+    });
   }
 </script>
