@@ -12,21 +12,36 @@ interface Props {
   headingId: string;
   /** Variante compacta (columna de Sobre mí): margen inferior de 24 px. */
   tight?: boolean;
+  /** Título con text-wrap: balance en lugar de pretty (Contacto). */
+  balance?: boolean;
+  /** Cursor del prompt fijo, sin parpadeo (Contacto). */
+  steadyCursor?: boolean;
+  /** "$" del prompt en acento en lugar de verde (Contacto). */
+  accentPrompt?: boolean;
+  /** Última frase del título, en acento (Contacto). */
+  titleAccent?: string;
 }
 
-const { path, title, lead, headingId, tight } = Astro.props;
+const { path, title, lead, headingId, tight, balance, steadyCursor, accentPrompt, titleAccent } = Astro.props;
 ---
 
 <header data-rv class={tight ? "mb-6" : "mb-[34px] min-[980px]:mb-11"}>
   <p data-type class="inline-flex min-h-[1.6em] items-center gap-[0.5em] font-mono text-sm font-medium text-accent">
-    <span aria-hidden="true" class="text-ok">$</span>
+    <span aria-hidden="true" class={accentPrompt ? "text-accent" : "text-ok"}>$</span>
     <span class="pt">{path}</span><i
       aria-hidden="true"
-      class="ml-0.5 inline-block h-[1em] w-[0.55em] bg-accent motion-safe:animate-[blink_1s_steps(1)_infinite]"
+      class={steadyCursor
+        ? "ml-0.5 inline-block h-[1em] w-[0.55em] bg-accent"
+        : "ml-0.5 inline-block h-[1em] w-[0.55em] bg-accent motion-safe:animate-[blink_1s_steps(1)_infinite]"}
     ></i>
   </p>
-  {/* text-pretty (no balance): solo evita una palabra huérfana en la última línea. */}
-  <h2 id={headingId} class="mt-2.5 text-[clamp(32px,3.6vw,48px)] tracking-[-0.04em] text-pretty">{title}</h2>
+  {/* text-pretty por defecto: solo evita una palabra huérfana; `balance` reparte las líneas. */}
+  <h2
+    id={headingId}
+    class={`mt-2.5 text-[clamp(32px,3.6vw,48px)] tracking-[-0.04em] ${balance ? "text-balance" : "text-pretty"}`}
+  >
+    {title}{titleAccent && <>{" "}<span class="text-accent">{titleAccent}</span></>}
+  </h2>
   {lead && <p class="mt-3.5 max-w-[62ch] text-lg leading-[1.55] text-ink-2">{lead}</p>}
 </header>
 

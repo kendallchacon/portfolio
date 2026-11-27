@@ -4,19 +4,68 @@ import { contact } from "../../data/contact";
 import { profile } from "../../data/profile";
 import { pick } from "../../data/types";
 import { useTranslations, type Lang } from "../../i18n/ui";
+import { buildCommit } from "./build-commit";
 
 interface Props {
   lang?: Lang;
+  /**
+   * "default": nombre, canales de contacto y tagline.
+   * "home": la portada ya tiene la sección Contacto; muestra el commit real del build.
+   */
+  variant?: "default" | "home";
 }
 
-const { lang = "es" } = Astro.props;
+const { lang = "es", variant = "default" } = Astro.props;
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
+const commit = buildCommit;
+const commitLabel = commit.short
+  ? `${t("footer.commitLink").replace("{sha}", commit.short)} ${t("a11y.newTab")}`
+  : undefined;
 
 const linkClass =
   "inline-flex min-h-11 items-center gap-2 rounded-full text-ink-2 transition-colors hover:text-ink";
 ---
 
+{variant === "home" ? (
+<footer class="mt-24 border-t border-line">
+  <div class="wrap flex flex-col gap-6 py-8 text-sm text-ink-2">
+    <div>
+      <p class="text-base font-semibold text-ink">{profile.name}</p>
+      <p>{pick(profile.role, lang)}</p>
+    </div>
+
+    <div class="border-t border-line pt-6">
+      <div class="rounded-3 border border-term-line bg-term px-4 py-3 font-mono text-[12.5px] leading-[1.75]">
+        <p class="text-ink-2">
+          <span class="text-accent" aria-hidden="true">$</span>{" "}<span class="text-ink">git</span>{" "}<span
+            class="text-accent">commit</span>{" "}-m{" "}<span class="text-str">"{t("footer.commitMsg")}"</span>
+        </p>
+        <p class="text-ink-2">
+          [{commit.branch ?? (commit.short ? "" : "dev")}{commit.branch && commit.short ? " " : ""}{
+            commit.short && (
+              <a
+                href={commit.url}
+                target="_blank"
+                rel="noopener"
+                aria-label={commitLabel}
+                class="rounded-sm text-accent no-underline underline-offset-4 hover:underline">{commit.short}</a>
+            )
+          }]{" "}{t("footer.commitMsg")}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+      <p>© {year} {profile.name}</p>
+      <a href="#" class={linkClass}>
+        <Icon name="heroicons:arrow-up" class="size-4 shrink-0" aria-hidden="true" />
+        <span>{t("footer.top")}</span>
+      </a>
+    </div>
+  </div>
+</footer>
+) : (
 <footer class="mt-24 border-t border-line">
   <div class="wrap flex flex-col gap-6 py-8 text-sm text-ink-2">
     <div class="flex flex-wrap items-start justify-between gap-x-8 gap-y-4">
@@ -69,3 +118,4 @@ const linkClass =
     </div>
   </div>
 </footer>
+)}

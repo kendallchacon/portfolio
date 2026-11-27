@@ -13,10 +13,16 @@ export type CriterioFile = {
   snippet: CodeSnippet;
   /** Enlace al archivo: solo para repos públicos. Los privados no llevan enlaces. */
   fileUrl?: HttpsUrl;
+  /** Número real, en el archivo fuente, de la primera línea del fragmento (gutter del visor). */
+  startLine: number;
+  /** Líneas resaltadas: rangos `[desde, hasta]` 1-based dentro del fragmento. */
+  highlight: readonly (readonly [from: number, to: number])[];
 };
 
 export type Principle = {
   id: string;
+  /** Tipo de archivo que muestra el visor (fila de la guía: "tipo · repo"). */
+  kind: Localized;
   title: Localized;
   body: Localized;
   file: CriterioFile;
@@ -31,39 +37,16 @@ const lab: RepoRef = {
   url: "https://github.com/kendallchacon/docker-kubernetes-lab",
 };
 
-// VERIFICAR (todos los fragmentos de repos privados): confirmar si son literales o adaptados.
+// Fragmentos literales, verificados el 2026-11-26 contra:
+// - matchgo-backend, rama dev: docs/decisions/0003-use-database-per-service.md
+// - matchgo-mobile, rama dev: lib/core/network/dio_failure_mapper.dart y lib/features/booking/
+// - docker-kubernetes-lab, rama main: kubernetes/orders-deployment.yaml
+// El YAML va sin la sangría común del archivo (10 espacios); el árbol omite carpetas con "…".
+// `startLine` verificado contra los mismos archivos (ADR 10, dart 34, YAML 23).
 export const criterio = [
   {
-    id: "regla-en-la-base",
-    title: {
-      es: "La regla vive donde no se puede saltar",
-      en: "The rule lives where it can't be skipped",
-    },
-    body: {
-      es: "Dos personas pueden reservar la misma cancha a la vez. En MatchGo, el equipo no lo dejó a un if: lo evita PostgreSQL con una restricción de exclusión sobre el rango de la reserva.",
-      en: "Two people can book the same court at once. In MatchGo, the team didn't leave it to an if: PostgreSQL prevents it, with an exclusion constraint over the booking range.",
-    },
-    file: {
-      // La restricción GiST la escribió un compañero: NO atribuírsela a Kendall.
-      authorship: "team",
-      snippet: {
-        kind: "sql",
-        repo: matchgoBackend,
-        path: "Booking/.../InitialBookingSchema.cs",
-        lines: [
-          "ALTER TABLE magt_reservations",
-          "    ADD CONSTRAINT ex_reservations_no_overlap",
-          "    EXCLUDE USING gist (",
-          "        sports_space_id WITH =,",
-          "        tstzrange(starts_at, ends_at, '[)') WITH &&",
-          "    )",
-          "    WHERE (status IN ('pending','confirmed'));",
-        ],
-      },
-    },
-  },
-  {
     id: "base-por-servicio",
+    kind: { es: "ADR", en: "ADR" },
     title: { es: "Cada servicio es dueño de sus datos", en: "Each service owns its data" },
     body: {
       es: "Una base de datos por servicio, sin llaves foráneas ni joins entre servicios. Lo que cruza fronteras viaja por APIs o eventos con IDs estables. La decisión la dejé escrita en un ADR, con sus costos.",
@@ -71,56 +54,25 @@ export const criterio = [
     },
     file: {
       authorship: "own",
+      startLine: 10,
+      highlight: [[5, 5]],
       snippet: {
         kind: "md",
         repo: matchgoBackend,
         path: "docs/decisions/0003-use-database-per-service.md",
         lines: [
           "## Decision",
-          "Each service owns an independent PostgreSQL database.",
-          "Booking additionally uses PostGIS.",
           "",
-          "Services cannot access another service's database,",
-          "tables, DbContext or migrations.",
+          "Each service owns an independent PostgreSQL database. Booking additionally uses PostGIS for geospatial capabilities.",
           "",
-          "## Consequences",
-          "- Independent schema evolution and migrations.",
-          "- No cross-service joins or foreign keys.",
-          "- Cross-service workflows may be eventually consistent.",
-        ],
-      },
-    },
-  },
-  {
-    id: "reintentar-sin-duplicar",
-    title: { es: "Reintentar sin duplicar", en: "Retry without duplicating" },
-    body: {
-      es: "Aceptar un reto toca dos bases de datos. En lugar de una transacción distribuida, el ID del reto es la llave de idempotencia de la reserva: si la red falla y se reintenta, no aparece una segunda reserva.",
-      en: "Accepting a challenge touches two databases. Instead of a distributed transaction, the challenge ID is the reservation's idempotency key: if the network fails and the request is retried, no second booking appears.",
-    },
-    file: {
-      // ADR 0010 es del equipo: sin primera persona en el texto.
-      authorship: "team",
-      snippet: {
-        kind: "md",
-        repo: matchgoBackend,
-        path: "docs/decisions/0010-coordinate-competitive-booking-with-idempotent-http.md",
-        lines: [
-          "## Decision",
-          "Competition coordinates the immediate workflow",
-          "through Booking HTTP APIs. The Challenge ID is the",
-          "Booking `externalReferenceId` and therefore the",
-          "idempotency key.",
-          "",
-          "The ACCEPT operation may be retried after the",
-          "invitation is already accepted. Retry resumes",
-          "coordination instead of repeating the state transition.",
+          "Services cannot access another service's database, tables, DbContext or migrations. Cross-service information uses APIs or integration events and stable IDs.",
         ],
       },
     },
   },
   {
     id: "errores-tipados",
+    kind: { es: "Dart", en: "Dart" },
     title: { es: "Los errores también son contrato", en: "Errors are part of the contract" },
     body: {
       es: "En las apps que construí, cada respuesta del servidor se convierte en un error tipado. La pantalla sabe si fue validación, conflicto o límite de solicitudes, y un 504 se marca como resultado incierto para no repetir un cobro o una reserva.",
@@ -128,45 +80,55 @@ export const criterio = [
     },
     file: {
       authorship: "own",
+      // 17–18: el comentario del 504 y `outcomeUnknown` (líneas 50–51 del archivo).
+      startLine: 34,
+      highlight: [[17, 18]],
       snippet: {
         kind: "dart",
         repo: matchgoMobile,
         path: "lib/core/network/dio_failure_mapper.dart",
         lines: [
-          "AppFailure _fromResponse(Response<dynamic>? response) {",
-          "  final statusCode = response?.statusCode;",
-          "",
           "  final kind = switch (statusCode) {",
           "    400 || 422 => FailureKind.validation,",
           "    401 => FailureKind.unauthorized,",
+          "    403 => FailureKind.forbidden,",
+          "    404 => FailureKind.notFound,",
           "    409 => FailureKind.conflict,",
           "    429 => FailureKind.rateLimited,",
-          "    final int code when code >= 500 => FailureKind.server,",
+          "    final int code when code >= 500 && code <= 599 => FailureKind.server,",
           "    _ => FailureKind.unknown,",
           "  };",
           "",
           "  return AppFailure(",
           "    kind: kind,",
+          "    statusCode: statusCode,",
+          "    fieldErrors: fieldErrors,",
           "    retryAfter: _retryAfter(response),",
           "    // The gateway gave up waiting for the service, which may still finish.",
           "    outcomeUnknown: statusCode == 504,",
+          "    code: _extractCode(response?.data),",
           "  );",
-          "}",
         ],
       },
     },
   },
   {
     id: "capas",
+    kind: { es: "Estructura", en: "Structure" },
     title: { es: "Cada capa con una sola responsabilidad", en: "One responsibility per layer" },
-    // VERIFICAR (principio 4): la anécdota de la revisión de PR en Flameware viene solo del
-    // prototipo; no está en el handoff §4 (que respalda únicamente historias, subtareas y pruebas).
     body: {
-      es: "En Flameware, una revisión de PR me pidió mover lógica del controlador al servicio. Desde entonces lo aplico en todo: en matchgo-mobile cada funcionalidad separa datos, dominio y presentación, y las pantallas nunca llaman a la red.",
-      en: "At Flameware, a PR review asked me to move logic from the controller to the service. Since then I apply it everywhere: in matchgo-mobile each feature separates data, domain and presentation, and screens never call the network.",
+      es: "En matchgo-mobile cada funcionalidad separa datos, dominio y presentación, y las pantallas no llaman a la red.",
+      en: "In matchgo-mobile each feature separates data, domain and presentation, and screens don't call the network.",
     },
     file: {
       authorship: "own",
+      // Árbol de carpetas, no un archivo: numeración desde 1. data/, domain/ y presentation/.
+      startLine: 1,
+      highlight: [
+        [2, 2],
+        [7, 7],
+        [13, 13],
+      ],
       snippet: {
         kind: "tree",
         repo: matchgoMobile,
@@ -174,54 +136,58 @@ export const criterio = [
         lines: [
           "lib/features/booking/",
           "├── data/",
-          "│   ├── datasources/      # Dio vive aquí",
-          "│   ├── dto/              # contrato con el backend",
-          "│   ├── mappers/          # DTO → dominio",
+          "│   ├── datasources/",
+          "│   ├── dto/",
+          "│   ├── mappers/",
           "│   └── repositories/",
           "├── domain/",
-          "│   ├── policies/         # reglas de negocio",
-          "│   ├── repositories/     # abstracciones",
-          "│   └── usecases/",
+          "│   ├── entities/",
+          "│   ├── policies/",
+          "│   ├── repositories/",
+          "│   ├── usecases/",
+          "│   └── …",
           "└── presentation/",
-          "    ├── controllers/      # Riverpod",
-          "    ├── screens/          # sin lógica de negocio",
-          "    └── widgets/",
+          "    ├── controllers/",
+          "    ├── screens/",
+          "    └── …",
         ],
       },
     },
   },
   {
     id: "reproducible",
+    kind: { es: "YAML", en: "YAML" },
     title: {
       es: "Si no se puede reproducir, no está listo",
       en: "If it can't be reproduced, it isn't done",
     },
     body: {
-      es: "Cada entorno arranca con un comando y cada cambio pasa por CI. En el lab, cada push publica imágenes en GHCR y Kubernetes solo envía tráfico cuando el servicio responde en /health.",
-      en: "Every environment starts with one command and every change goes through CI. In the lab, every push publishes images to GHCR and Kubernetes only routes traffic once the service answers on /health.",
+      es: "Cada entorno arranca con un comando (docker compose up) y cada push a main publica las imágenes en GHCR. Kubernetes solo envía tráfico cuando el servicio responde en /health.",
+      en: "Every environment starts with one command (docker compose up) and every push to main publishes the images to GHCR. Kubernetes only routes traffic once the service answers on /health.",
     },
     file: {
       authorship: "own",
       fileUrl:
         "https://github.com/kendallchacon/docker-kubernetes-lab/blob/main/kubernetes/orders-deployment.yaml",
+      startLine: 23,
+      highlight: [[1, 4]],
       snippet: {
         kind: "yaml",
         repo: lab,
         path: "kubernetes/orders-deployment.yaml",
         lines: [
-          "containers:",
-          "  - name: orders-service",
-          "    image: ghcr.io/kendallchacon/docker-kubernetes-lab-orders-service:latest",
-          "    ports:",
-          "      - containerPort: 3001",
-          "    readinessProbe:",
-          "      httpGet:",
-          "        path: /health",
-          "        port: 3001",
-          "    livenessProbe:",
-          "      httpGet:",
-          "        path: /health",
-          "        port: 3001",
+          "readinessProbe:",
+          "  httpGet:",
+          "    path: /health",
+          "    port: 3001",
+          "  initialDelaySeconds: 2",
+          "  periodSeconds: 5",
+          "livenessProbe:",
+          "  httpGet:",
+          "    path: /health",
+          "    port: 3001",
+          "  initialDelaySeconds: 5",
+          "  periodSeconds: 10",
         ],
       },
     },

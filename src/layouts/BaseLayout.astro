@@ -17,6 +17,8 @@ interface Props {
    * "legacy": páginas del sitio anterior, con <main> acotado y page-enter. Se borra con ellas.
    */
   layout?: "legacy" | "full";
+  /** Variante del footer: la portada usa "home" (ya tiene la sección Contacto). */
+  footer?: "default" | "home";
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   image = "/images/project-preview.jpg",
   type = "website",
   layout = "full",
+  footer = "default",
 } = Astro.props;
 const t = useTranslations(lang);
 const { title = t("meta.title"), description = t("meta.description") } = Astro.props;
@@ -87,7 +90,7 @@ const alternates = alternateUrls(Astro.url.pathname);
       >
         <slot />
       </main>
-      <Footer lang={lang} />
+      <Footer lang={lang} variant={footer} />
     </div>
     <CommandPalette />
     <script src="../scripts/site-interactions.js"></script>

@@ -18,7 +18,7 @@ Portafolio personal en Astro 7 + Tailwind 4, desplegado en Vercel. Diseño aprob
 - Con compressHTML 'jsx' (Astro 7) no se renderizan los espacios entre elementos en línea: sepáralos con gap/flex o {' '} explícito.
 
 ## Contenido (no inventar)
-- Kendall es bachiller (promedio 9,0), práctica concluida en Flameware, disponible para empleo y proyectos. No decir que busca práctica.
+- Kendall es bachiller (promedio 9,0), práctica concluida en Flameware, disponible para empleo y proyectos. Puede decir que está disponible para prácticas profesionales y empleo.
 - Tutorías: Java. No Cálculo.
 - No atribuir a Kendall trabajo de compañeros (p. ej. la restricción GiST de MatchGo).
 - Repositorios privados: fragmentos cortos, sin enlaces.

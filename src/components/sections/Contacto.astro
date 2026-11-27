@@ -1,0 +1,135 @@
+---
+import { Icon } from "astro-icon/components";
+import SectionHead from "../common/SectionHead.astro";
+import { contact } from "../../data/contact";
+import { pick } from "../../data/types";
+import { useTranslations, type Lang } from "../../i18n/ui";
+
+/**
+ * Contacto: caja de correo con botón de copiar y un panel con los canales de contact.ts.
+ * El botón confirma con "Copiado" visible durante 2 s y lo anuncia en una región aria-live.
+ * En móvil el correo y el botón bajan de tamaño para dejar 22 px entre ambos también en
+ * estado "Copiado"; bajo 380 px se oculta el icono de correo.
+ * Sin portapapeles (contexto no seguro) abre el cliente de correo. Sin JS, el correo sigue
+ * siendo un enlace mailto.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section id="contacto" aria-labelledby="contacto-title" class="pt-[88px] min-[980px]:pt-[120px]">
+  <div class="wrap grid grid-cols-1 items-center gap-10 min-[980px]:grid-cols-[1.1fr_0.9fr] min-[980px]:gap-16">
+    <div class="min-w-0">
+      <SectionHead
+        path={t("home.contact.path")}
+        title={t("home.contact.title")}
+        titleAccent={t("home.contact.titleAccent")}
+        lead={t("home.contact.lead")}
+        headingId="contacto-title"
+        tight
+        balance
+        steadyCursor
+        accentPrompt
+      />
+      <div data-rv class="max-w-[430px]">
+        <p aria-hidden="true" class="mb-2 font-mono text-[11px] leading-none text-accent">{t("home.contact.emailTag")}</p>
+        <div
+          class="flex items-center gap-[22px] rounded-[14px] border border-line-strong py-1.5 pr-1.5 pl-[18px] transition-colors duration-200 focus-within:border-accent/55 hover:border-accent/55"
+        >
+          <a
+            href={contact.email.href}
+            class="group/mail flex min-w-0 flex-1 items-center gap-2.5 font-mono text-[12.5px] font-medium text-ink no-underline min-[561px]:gap-3 min-[561px]:text-base"
+          >
+            <Icon name="lucide:mail" class="size-[18px] shrink-0 text-ink-2 *:stroke-[1.75] max-[380px]:hidden" aria-hidden="true" />
+            <span class="sr-only">{t("home.contact.email")}:</span>
+            <span class="truncate decoration-accent underline-offset-4 group-hover/mail:underline">{contact.email.address}</span>
+          </a>
+          <button
+            type="button"
+            data-copy-email={contact.email.address}
+            data-fallback={contact.email.href}
+            aria-label={t("home.contact.copyLabel")}
+            class="group inline-flex h-[38px] shrink-0 cursor-pointer items-center gap-1.5 rounded-[10px] border border-line-strong bg-surface-2 px-3 text-[13px] font-medium text-ink transition-colors duration-200 not-data-[done]:hover:bg-surface-3 data-[done]:border-accent/50 data-[done]:bg-accent/10 data-[done]:text-accent min-[561px]:gap-2 min-[561px]:px-4 min-[561px]:text-sm"
+          >
+            <Icon name="lucide:copy" class="size-4 group-data-[done]:hidden *:stroke-2" aria-hidden="true" />
+            <Icon name="lucide:check" class="hidden size-4 group-data-[done]:inline *:stroke-2" aria-hidden="true" />
+            <span class="group-data-[done]:hidden">{t("home.contact.copy")}</span>
+            <span class="hidden group-data-[done]:inline">{t("home.contact.copied")}</span>
+          </button>
+          <span data-copy-status data-done-text={t("home.contact.copied")} role="status" aria-live="polite" class="sr-only"></span>
+        </div>
+      </div>
+    </div>
+
+    <div data-rv class="min-w-0 overflow-hidden rounded-[16px] border border-line bg-surface-1">
+      <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-3 font-mono text-xs text-ink-2">
+        <span class="inline-flex items-center gap-2">
+          <Icon name="lucide:folder" class="size-4 text-accent *:stroke-[1.75]" aria-hidden="true" />
+          <span>{t("home.contact.folder")}</span>
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i aria-hidden="true" class="size-1.5 rounded-full bg-accent"></i>
+          <span>{t("home.contact.status")}</span>
+        </span>
+      </div>
+      <ul aria-label={t("home.contact.channels")}>
+        {
+          contact.channels.map((channel) => {
+            const external = "external" in channel;
+            return (
+              <li class="border-line not-first:border-t">
+                <a
+                  href={channel.href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
+                  download={"download" in channel ? "" : undefined}
+                  class="group grid h-14 grid-cols-[22px_78px_1fr_16px] items-center gap-3.5 px-5 no-underline transition-colors duration-200 hover:bg-[color-mix(in_srgb,var(--color-accent)_7%,var(--color-surface-1))] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
+                >
+                  <Icon name={channel.icon} class="size-5 text-ink-2 transition-colors group-hover:text-accent" aria-hidden="true" />
+                  <span class="text-[15px] font-medium text-ink">{pick(channel.label, lang)}</span>
+                  <span class="truncate font-mono text-[12.5px] text-ink-2 transition-colors group-hover:text-ink">
+                    {pick(channel.value, lang)}
+                  </span>
+                  <Icon
+                    name={"download" in channel ? "lucide:download" : "lucide:arrow-up-right"}
+                    class="size-4 text-ink-3 transition-colors group-hover:text-accent *:stroke-[1.75]"
+                    aria-hidden="true"
+                  />
+                  {external && <span class="sr-only">{t("a11y.newTab")}</span>}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../../scripts/reveal";
+
+  const button = document.querySelector<HTMLButtonElement>("[data-copy-email]");
+  const status = document.querySelector<HTMLElement>("[data-copy-status]");
+  let timer = 0;
+
+  button?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.copyEmail ?? "");
+    } catch {
+      if (button.dataset.fallback) location.href = button.dataset.fallback;
+      return;
+    }
+    button.dataset.done = "";
+    if (status) status.textContent = status.dataset.doneText ?? "";
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      delete button.dataset.done;
+      if (status) status.textContent = "";
+    }, 2000);
+  });
+</script>
