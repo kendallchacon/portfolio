@@ -82,8 +82,19 @@ export const about = {
       commits: 13,
       note: { es: "uno de 4 contribuyentes", en: "one of 4 contributors" },
     },
-    // VERIFICAR: cima-mobile 52 y cima-backend 40 (handoff §4) no constan como commits de
-    // Kendall; en GitHub (contributors, rama por defecto) coinciden con otros autores.
+    // Fuente: DevTeam-DAKFC/cima-mobile y DevTeam-DAKFC/cima-backend, rama dev,
+    // `git shortlog -sne --all` sumando las dos identidades de git de Kendall (mismo correo):
+    // cima-mobile 60 de 331 commits, cima-backend 49 de 242; equipo de 5 (24 nov 2026).
+    {
+      repo: "cima-mobile",
+      commits: 60,
+      note: { es: "uno de 5 contribuyentes", en: "one of 5 contributors" },
+    },
+    {
+      repo: "cima-backend",
+      commits: 49,
+      note: { es: "uno de 5 contribuyentes", en: "one of 5 contributors" },
+    },
     // Fuente: kendallchacon/docker-kubernetes-lab (público), rama main (por defecto),
     // `gh api repos/kendallchacon/docker-kubernetes-lab/contributors` → kendallchacon 4,
     // único contribuyente (23 nov 2026).

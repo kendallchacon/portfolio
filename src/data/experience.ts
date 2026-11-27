@@ -142,18 +142,21 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
     hash: "b8c276d",
     date: both("2026"),
     branch: "proyectos",
-    title: { es: "CIMA · cliente Android", en: "CIMA · Android client" },
+    title: { es: "CIMA · Android y .NET", en: "CIMA · Android and .NET" },
     subtitle: {
       es: "Proyecto académico en equipo · DevTeam-DAKFC",
       en: "Team academic project · DevTeam-DAKFC",
     },
     body: {
-      es: "Historial de movimientos, comparativo mensual, reportes y notificaciones sobre un backend .NET, con errores de red tipados en el cliente.",
-      en: "Movements history, monthly comparison, reports and notifications over a .NET backend, with typed network errors on the client.",
+      es: "Presupuestos por categoría, gastos, historial, comparativo mensual y reportes, en el cliente Android y en el backend .NET, con errores de red tipados en el cliente.",
+      en: "Budgets by category, expenses, history, monthly comparison and reports, on the Android client and the .NET backend, with typed network errors on the client.",
     },
     kpis: [
-      { value: 52, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
-      { value: 40, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
+      // Fuente: DevTeam-DAKFC/cima-mobile (60 de 331 commits) y DevTeam-DAKFC/cima-backend
+      // (49 de 242), rama dev, `git shortlog -sne --all` sumando las dos identidades de git de
+      // Kendall (mismo correo), 24 nov 2026. Equipo de 5.
+      { value: 60, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
+      { value: 49, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
     ],
     tech: ["kotlin", "jetpackCompose", "dotnet"],
     project: "cima",

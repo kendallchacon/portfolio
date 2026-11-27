@@ -132,8 +132,8 @@ export type CaseStudy = {
     problem: CaseProblem;
     /** "Qué construí": tarjetas por área (5 en total), solo lo verificado como propio. */
     built: CaseBuilt;
-    /** "Capturas": 3 a 4, sin reproductor ni capítulos. */
-    shots: readonly CaseShot[];
+    /** "Capturas": 3 a 4, sin reproductor ni capítulos. Sin capturas (o vacía), la sección no se renderiza. */
+    shots?: readonly CaseShot[];
     /** Nota bajo las capturas; por defecto, «Datos de demostración». */
     shotsNote?: Localized;
     /** "Decisiones": máximo 2. */
@@ -639,6 +639,194 @@ export const cases = {
             en: "We were a team of 5: this case covers only my part and claims no business or user metrics.",
           },
           segments: { of: 5, on: 1 },
+        },
+      ],
+    },
+  },
+  cima: {
+    seo: {
+      title: {
+        es: "CIMA · caso de proyecto | Kendall Chacón",
+        en: "CIMA · project case | Kendall Chacón",
+      },
+      description: {
+        es: "Finanzas personales para jóvenes en Costa Rica. Mi parte: presupuestos, gastos, historial, comparativo y reportes, en el cliente Android y en el backend .NET.",
+        en: "Personal finance for young people in Costa Rica. My part: budgets, expenses, history, comparison and reports, on the Android client and the .NET backend.",
+      },
+    },
+    // Fuente: projects.summary y experience.ts («Proyecto académico en equipo», 2026).
+    meta: {
+      es: "Finanzas personales · Proyecto académico en equipo · 2026",
+      en: "Personal finance · Team academic project · 2026",
+    },
+    lead: {
+      es: "Finanzas personales para jóvenes en Costa Rica: movimientos, comparativos mensuales y reportes.",
+      en: "Personal finance for young people in Costa Rica: movements, monthly comparisons and reports.",
+    },
+    // Fuente de todo el caso: repos públicos DevTeam-DAKFC/cima-mobile y cima-backend, rama dev.
+    // - 60 y 49: `git shortlog -sne --all` sumando las dos identidades de git de Kendall (mismo
+    //   correo), 24 nov 2026 (60 de 331 y 49 de 242). Sin barra ni porcentaje.
+    // - «1 de 5» con 5 segmentos y 1 encendido: equipo de 5.
+    facts: [
+      {
+        kind: "count",
+        value: 60,
+        label: { es: "commits en cima-mobile", en: "commits in cima-mobile" },
+      },
+      {
+        kind: "count",
+        value: 49,
+        label: { es: "commits en cima-backend", en: "commits in cima-backend" },
+      },
+      {
+        kind: "count",
+        value: 1,
+        suffix: { es: "de 5", en: "of 5" },
+        label: { es: "equipo de 5", en: "team of 5" },
+        meter: { type: "segments", of: 5, on: 1 },
+      },
+    ],
+    // Stack del proyecto, por capa (projects.tech): ninguna tecnología nueva.
+    stack: [
+      {
+        layer: { es: "Móvil", en: "Mobile" },
+        icon: "lucide:smartphone",
+        tech: ["kotlin", "jetpackCompose", "retrofit"],
+      },
+      { layer: { es: "Backend", en: "Backend" }, icon: "lucide:server", tech: ["dotnet", "efcore"] },
+      { layer: { es: "Gestión", en: "Management" }, icon: "lucide:kanban", tech: ["jira"] },
+    ],
+    evidence: {
+      es: "2 repositorios públicos: cima-mobile y cima-backend.",
+      en: "2 public repositories: cima-mobile and cima-backend.",
+    },
+    hood: {
+      // Contexto del proyecto (projects.summary), no autoría.
+      problem: {
+        statement: {
+          es: "Una app de finanzas personales para jóvenes en Costa Rica.",
+          en: "A personal finance app for young people in Costa Rica.",
+        },
+        lead: {
+          es: "CIMA reúne en una sola app",
+          en: "CIMA brings into one app",
+        },
+        modules: [
+          { icon: "lucide:arrow-left-right", label: { es: "Movimientos", en: "Movements" } },
+          { icon: "lucide:piggy-bank", label: { es: "Presupuestos", en: "Budgets" } },
+          { icon: "lucide:chart-column", label: { es: "Comparativos", en: "Comparisons" } },
+          { icon: "lucide:file-text", label: { es: "Reportes", en: "Reports" } },
+        ],
+      },
+      // Fuente: commits de Kendall en cima-mobile y cima-backend (rama dev, 24 nov 2026). Sin número
+      // de PR ni porcentajes. Las notificaciones solo van en el backend: no hay commits de Kendall
+      // en su pantalla móvil.
+      built: {
+        primary: {
+          tech: "kotlin",
+          area: { es: "Android", en: "Android" },
+          cells: [
+            {
+              title: { es: "Historial", en: "History" },
+              line: {
+                es: "Datos y dominio del endpoint, ViewModel con paginación y estado de filtros, pantalla con filtros por categoría y pruebas del ViewModel.",
+                en: "Data and domain for the endpoint, a ViewModel with pagination and filter state, a screen with category filters and ViewModel tests.",
+              },
+              featured: true,
+            },
+            {
+              title: { es: "Comparativo y reportes", en: "Comparison and reports" },
+              line: {
+                es: "Pantalla de comparativo mensual con gráfico, y lista y detalle de los reportes mensuales.",
+                en: "Monthly comparison screen with a chart, and list and detail of the monthly reports.",
+              },
+            },
+            {
+              title: { es: "Gastos y presupuestos", en: "Expenses and budgets" },
+              line: {
+                es: "Gastos (crear, ver, editar y eliminar) y presupuestos por categoría con pantalla mensual y subcategorías.",
+                en: "Expenses (create, view, edit and delete) and budgets by category with a monthly screen and subcategories.",
+              },
+            },
+          ],
+        },
+        secondary: {
+          tech: "dotnet",
+          area: { es: "Backend .NET", en: ".NET backend" },
+          cells: [
+            {
+              title: { es: "Historial y comparativo", en: "History and comparison" },
+              line: {
+                es: "Endpoints del historial de movimientos y del comparativo mensual, con sus DTO y pruebas.",
+                en: "Endpoints for the movements history and the monthly comparison, with their DTOs and tests.",
+              },
+            },
+            {
+              title: { es: "Reportes y notificaciones", en: "Reports and notifications" },
+              line: {
+                es: "Generación mensual de reportes; modelo, servicios, endpoints y pruebas de notificaciones.",
+                en: "Monthly report generation; notifications model, services, endpoints and tests.",
+              },
+            },
+            {
+              title: { es: "Gastos, presupuestos y subcategorías", en: "Expenses, budgets and subcategories" },
+              line: {
+                es: "CRUD de gastos, presupuestos por categoría (persistencia y consultas) y validación de la categoría padre.",
+                en: "Expense CRUD, budgets by category (persistence and queries) and parent category validation.",
+              },
+            },
+          ],
+        },
+      },
+      // Sin capturas en esta iteración: la sección «Capturas» no se renderiza.
+      // Fuente: Contracts/openapi.yaml y ReportService.cs de cima-backend (rama dev).
+      decisions: [
+        {
+          title: { es: "El contrato va primero", en: "The contract comes first" },
+          what: {
+            es: "Cada endpoint nuevo parte de sus DTO y del contrato OpenAPI.",
+            en: "Each new endpoint starts from its DTOs and the OpenAPI contract.",
+          },
+          effect: {
+            es: "Sobre ese contrato van después el servicio, el endpoint y las pruebas.",
+            en: "The service, the endpoint and the tests then build on that contract.",
+          },
+          ref: "Contracts/openapi.yaml",
+        },
+        {
+          title: {
+            es: "Un reporte fallido no frena a los demás",
+            en: "A failed report does not stop the others",
+          },
+          what: {
+            es: "Si falla un período, la generación mensual continúa y registra el error.",
+            en: "If one period fails, the monthly generation carries on and logs the error.",
+          },
+          effect: {
+            es: "Ese período se reintenta en la siguiente ejecución.",
+            en: "That period is retried on the next run.",
+          },
+          ref: "ReportService.cs",
+        },
+      ],
+      // Los 5 segmentos con 1 encendido son los de la ficha («1 de 5»).
+      limits: [
+        {
+          label: { es: "Alcance", en: "Scope" },
+          icon: "lucide:users",
+          text: {
+            es: "Fue un trabajo en equipo de 5: mis módulos son historial, comparativo, reportes, gastos y presupuestos.",
+            en: "It was the work of a team of 5: my modules are history, comparison, reports, expenses and budgets.",
+          },
+          segments: { of: 5, on: 1 },
+        },
+        {
+          label: { es: "Notificaciones", en: "Notifications" },
+          icon: "lucide:bell",
+          text: {
+            es: "Mi parte es el backend (modelo, servicios y endpoints); no tengo commits de su pantalla móvil.",
+            en: "My part is the backend (model, services and endpoints); I have no commits on its mobile screen.",
+          },
         },
       ],
     },
