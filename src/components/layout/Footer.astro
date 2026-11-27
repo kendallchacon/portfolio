@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { contact } from "../../data/contact";
+import { channelHref, contact } from "../../data/contact";
 import { profile } from "../../data/profile";
 import { pick } from "../../data/types";
 import { useTranslations, type Lang } from "../../i18n/ui";
@@ -86,7 +86,7 @@ const linkClass =
             contact.channels.map((channel) => (
               <li>
                 <a
-                  href={channel.href}
+                  href={channelHref(channel, lang)}
                   class={linkClass}
                   target={"external" in channel ? "_blank" : undefined}
                   rel={"external" in channel ? "noopener noreferrer" : undefined}

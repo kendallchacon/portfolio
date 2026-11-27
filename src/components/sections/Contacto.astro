@@ -1,7 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import SectionHead from "../common/SectionHead.astro";
-import { contact } from "../../data/contact";
+import { channelHref, contact } from "../../data/contact";
 import { pick } from "../../data/types";
 import { useTranslations, type Lang } from "../../i18n/ui";
 
@@ -83,7 +83,7 @@ const t = useTranslations(lang);
             return (
               <li class="border-line not-first:border-t">
                 <a
-                  href={channel.href}
+                  href={channelHref(channel, lang)}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
                   download={"download" in channel ? "" : undefined}

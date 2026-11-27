@@ -89,7 +89,7 @@ npm run preview
 - El contenido repetible se centraliza en archivos `.ts` dentro de `src/data`, lo que facilita agregar tecnologías, contactos, experiencias o proyectos sin tocar demasiado HTML.
 - Las secciones grandes se mantienen en `src/components/sections` para que la página principal pueda componerse de bloques legibles.
 - Las animaciones globales y utilidades transversales viven en `src/styles/global.css`; la lógica pequeña del cliente se separó en `src/scripts/site-interactions.js`.
-- El CV descargable se sirve desde `public/cv-kendall-chacon.pdf` para mantener una URL pública directa y simple.
+- El CV descargable se sirve desde `public/` con un PDF por idioma (`Kendall_Chacon_CV_2026_ES.pdf` y `Kendall_Chacon_CV_2026_EN.pdf`); cada página enlaza el de su idioma.
 - El layout base define metadatos SEO, URL canónica, Open Graph y Twitter Card para todas las páginas.
 - La navegación incluye una versión móvil para mejorar la experiencia responsive en pantallas pequeñas.
 - Se priorizó una arquitectura estática simple: es la elección correcta para un portafolio personal, sin sobreingeniería ni dependencias innecesarias.

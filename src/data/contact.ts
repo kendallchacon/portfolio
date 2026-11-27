@@ -1,3 +1,4 @@
+import type { Lang } from "../i18n/ui";
 import { both, type HttpsUrl, type Localized } from "./types";
 
 export type ContactChannelId = "linkedin" | "github" | "whatsapp" | "cv";
@@ -7,7 +8,8 @@ export type ContactChannel = {
   label: Localized;
   /** Texto secundario visible (usuario, teléfono o indicación de descarga). */
   value: Localized;
-  href: HttpsUrl | `/${string}`;
+  /** Un enlace para ambos idiomas, o uno por idioma (el CV). Se lee con `channelHref`. */
+  href: HttpsUrl | `/${string}` | { es: `/${string}`; en: `/${string}` };
   icon: `simple-icons:${string}` | `heroicons:${string}`;
   /** `external`: el enlace sale del sitio. `download`: descarga un archivo propio. */
   external?: boolean;
@@ -48,7 +50,8 @@ export const contact = {
       id: "cv",
       label: both("CV"),
       value: { es: "Descargar PDF", en: "Download PDF" },
-      href: "/Kendall_Chacon_CV_2026.pdf",
+      // Un PDF por idioma: cada página enlaza el de su idioma.
+      href: { es: "/Kendall_Chacon_CV_2026_ES.pdf", en: "/Kendall_Chacon_CV_2026_EN.pdf" },
       icon: "heroicons:document-arrow-down",
       download: true,
     },
@@ -57,3 +60,8 @@ export const contact = {
   email: { address: string; href: `mailto:${string}` };
   channels: readonly ContactChannel[];
 };
+
+/** Enlace del canal en el idioma de la página. */
+export function channelHref(channel: ContactChannel, lang: Lang): string {
+  return typeof channel.href === "string" ? channel.href : channel.href[lang];
+}

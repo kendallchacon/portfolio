@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { contact } from "../../data/contact";
+import { channelHref, contact } from "../../data/contact";
 import { pick } from "../../data/types";
 import { navSections, sectionHref, useTranslations, type Lang } from "../../i18n/ui";
 import LangSwitch from "./LangSwitch.astro";
@@ -86,7 +86,7 @@ const cv = contact.channels.find((channel) => channel.id === "cv");
       {
         cv && (
           <a
-            href={cv.href}
+            href={channelHref(cv, lang)}
             download
             aria-label={`${pick(cv.label, lang)}: ${pick(cv.value, lang)}`}
             class="btn pri sm hidden min-[980px]:inline-flex"
