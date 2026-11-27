@@ -22,9 +22,10 @@
   --color-ink-2: #a3aab8;
   --color-ink-3: #6c7484;
 
-  --color-accent: #5b8cff;
-  --color-accent-soft: rgba(91, 140, 255, 0.14);
-  --color-ok: #3ddc97;
+  /* Acento verde; "ok" es el mismo color (el mapa de commits del hero lee --color-ok). */
+  --color-accent: #3fb950;
+  --color-accent-soft: rgba(63, 185, 80, 0.14);
+  --color-ok: #3fb950;
   --color-warn: #f5b451;
   --color-bad: #ff6b6b;
 
@@ -59,7 +60,8 @@
 }
 
 /* Ramas del git log: `static` porque se usan desde `style` (--bc), no desde clases, y
-   Tailwind descartaría las variables que ninguna clase referencia. */
+   Tailwind descartaría las variables que ninguna clase referencia. Literales propios: la rama
+   profesional sigue en azul aunque el acento cambie (nunca var(--color-accent)). */
 @theme static {
   --color-branch-profesional: #5b8cff;
   --color-branch-proyectos: #3ddc97;
@@ -288,9 +290,9 @@
 
 /* Tarjeta de los casos de proyecto (la de "Mi parte" de la cabecera y todas las de la página):
    radio grande, borde neutro en reposo (--color-line) y degradado de superficie teñido con --tone
-   (azul de acento por defecto). `.case-card-accent` tiñe también el borde de azul y
+   (verde de acento por defecto). `.case-card-accent` tiñe también el borde de verde y
    `.case-card-warn` tiñe borde y degradado de ámbar. Con `.glow` (glow.ts) el borde sigue al
-   cursor: ahí aparece el azul. */
+   cursor: ahí aparece el verde. */
 @layer components {
   .case-card {
     --tone: var(--color-accent);
