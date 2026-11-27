@@ -240,10 +240,11 @@ export const cases = {
       //   170/262 = 65 % del repo. Mide commits, no líneas.
       // - «33 de 33»: commits en dev que tocan lib/features/booking/ (módulo móvil de reservas) y
       //   los 33 son de Kendall. Solo la app: no incluye la lógica de reservas del backend.
-      // VERIFICAR (no se renderiza): «19 PRs integrados». `gh pr list` en matchgo-mobile (23 nov 2026)
-      //   da 21 PR integrados de la cuenta de Kendall (20 hacia dev y el #45 de release a main), 25 en
-      //   total del repo: ningún filtro simple da 19. Origen del 19: handoff §4 / about.ts, sin
-      //   fórmula. Candidato: { value: 19, label: { es: "PRs integrados", en: "merged PRs" } }.
+      // - 21 PRs integrados (no se renderiza: la franja de datos del caso tiene 3 celdas). Repo:
+      //   MatchGo-UNA/matchgo-mobile; `gh pr list --state merged --author kendallchacon` → 21 (20
+      //   hacia dev y el #45 de release a main; 25 en total del repo), 26 nov 2026. Reemplaza al 19
+      //   del handoff §4, que ningún filtro respaldaba. Cifra lista para usar:
+      //   { value: 21, label: { es: "PRs integrados", en: "merged PRs" } }.
       built: {
         primary: {
           tech: "flutter",
