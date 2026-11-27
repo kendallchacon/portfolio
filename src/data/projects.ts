@@ -261,8 +261,8 @@ export const projects = [
       en: "Personal finance for young people in Costa Rica: movements, monthly comparisons and reports.",
     },
     myPart: {
-      es: "Cliente Android: historial, comparativo, reportes y notificaciones",
-      en: "Android client: history, comparison, reports and notifications",
+      es: "Full stack: presupuestos, gastos, historial, comparativo y reportes (Android y .NET)",
+      en: "Full stack: budgets, expenses, history, comparison and reports (Android and .NET)",
     },
     team: {
       label: {
@@ -270,17 +270,12 @@ export const projects = [
         en: "DevTeam-DAKFC · Jira with 30 stories",
       },
     },
-    // VERIFICAR (bloqueante del release, handoff §9): conteo de commits de Kendall en CIMA.
     status: { es: "En mejora continua", en: "Ongoing improvements" },
     tech: ["kotlin", "jetpackCompose", "retrofit", "dotnet", "efcore", "jira"],
     metrics: [
-      // VERIFICAR (no se renderiza): 52 commits en cima-mobile y 40 en cima-backend no son de
-      // Kendall (en GitHub coinciden con otros autores). Solo se ocultan, sin corregir.
-      // { value: 52, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
-      // { value: 40, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
-      // Jira CIMA: 30 historias en 6 épicas (handoff §4).
-      { value: 30, label: { es: "historias en Jira", en: "stories in Jira" } },
-      { value: 6, label: { es: "épicas", en: "epics" } },
+      // Fuente: ver `cima.kpis` en experience.ts (rama dev, `git shortlog -sne --all`, 24 nov 2026).
+      { value: 60, label: { es: "commits en cima-mobile", en: "commits in cima-mobile" } },
+      { value: 49, label: { es: "commits en cima-backend", en: "commits in cima-backend" } },
     ],
     repos: [
       { repo: cimaMobile },
