@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { contact } from "../../data/contact";
+import { channelHref, contact } from "../../data/contact";
 import { pick } from "../../data/types";
 import {
   defaultLang,
@@ -42,7 +42,7 @@ const channelItem = (id: "github" | "linkedin" | "cv"): Item[] => {
       id,
       label: `${t("palette.action.open")} ${pick(channel.label, lang)}`,
       meta: pick(channel.value, lang),
-      href: channel.href,
+      href: channelHref(channel, lang),
       external: "external" in channel,
       download: "download" in channel,
     },

@@ -79,19 +79,16 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
     hash: "19af078",
     date: both("2026"),
     branch: "proyectos",
-    // VERIFICAR: si se confirma la revisión del modelo de datos, agregar «y modelo de datos» /
-    // «and data model» al título (revisión del modelo de datos sin confirmar; ver projects.ts).
+    // Revisión del modelo de datos de los cuatro servicios .NET: confirmado por el autor el
+    // 26 nov 2026 (título y última frase del cuerpo; ver projects.ts).
     title: {
-      es: "MatchGo · app móvil y backend",
-      en: "MatchGo · mobile app and backend",
+      es: "MatchGo · app móvil, backend y modelo de datos",
+      en: "MatchGo · mobile app, backend and data model",
     },
     subtitle: { es: "Proyecto final en equipo · UNA", en: "Team capstone · UNA" },
-    // VERIFICAR: si se confirma, agregar «Antes de implementar, revisé el modelo de datos de los
-    // cuatro servicios .NET.» / «Before implementation, I reviewed the data model of the four
-    // .NET services.» (revisión del modelo de datos sin confirmar).
     body: {
-      es: "Desarrollé la app móvil en Flutter, con mayor peso en autenticación, reservas, comunidad y notificaciones, y colaboré en equipos y retos. En el backend .NET inicié la arquitectura de microservicios (monorepo, Gateway YARP, Docker Compose y CI inicial) y documenté las decisiones iniciales de arquitectura en ADR.",
-      en: "I developed the Flutter mobile app, mainly authentication, bookings, community and notifications, and contributed to teams and challenges. On the .NET backend I started the microservices architecture (monorepo, YARP Gateway, Docker Compose and initial CI) and documented the initial architecture decisions in ADRs.",
+      es: "Desarrollé la app móvil en Flutter, con mayor peso en autenticación, reservas, comunidad y notificaciones, y colaboré en equipos y retos. En el backend .NET inicié la arquitectura de microservicios (monorepo, Gateway YARP, Docker Compose y CI inicial) y documenté las decisiones iniciales de arquitectura en ADR. Antes de implementar, revisé el modelo de datos de los cuatro servicios .NET.",
+      en: "I developed the Flutter mobile app, mainly authentication, bookings, community and notifications, and contributed to teams and challenges. On the .NET backend I started the microservices architecture (monorepo, YARP Gateway, Docker Compose and initial CI) and documented the initial architecture decisions in ADRs. Before implementation, I reviewed the data model of the four .NET services.",
     },
     stories: [
       {
@@ -113,7 +110,9 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
     ],
     kpis: [
       { value: 170, label: { es: "commits en matchgo-mobile", en: "commits in matchgo-mobile" } },
-      { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
+      // Fuente: MatchGo-UNA/matchgo-mobile, `gh pr list --state merged --author kendallchacon`
+      // → 21 (20 hacia dev y el #45 de release a main; 25 en total del repo), 26 nov 2026.
+      { value: 21, label: { es: "PRs integrados", en: "merged PRs" } },
       { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
     ],
     // Backend: solo lo que Kendall implementó o inició; sin RabbitMQ ni MassTransit.
@@ -208,14 +207,14 @@ export const experience: Record<ExperienceId, ExperienceEntry> = {
 
   tutor: {
     hash: "7d4f2b1",
-    // VERIFICAR: fechas de la entrada del tutor (handoff §9). Vacía = no se renderiza.
-    date: both(""),
+    // Fechas confirmadas por el autor el 26 nov 2026.
+    date: { es: "ago 2024 – nov 2026 · 7 ciclos", en: "Aug 2024 – Nov 2026 · 7 terms" },
     branch: "docencia",
     title: { es: "Tutor de programación", en: "Programming tutor" },
     subtitle: both("Universidad Nacional"),
     body: {
-      es: "Acompaño a estudiantes de Programación I y II, principalmente en Java: programación orientada a objetos, MVC, manejo de archivos, herencia y polimorfismo, y preparación de exámenes.",
-      en: "I support Programming I and II students, mostly in Java: object-oriented programming, MVC, file handling, inheritance and polymorphism, and exam preparation.",
+      es: "Acompañé a estudiantes de Programación I y II, principalmente en Java: programación orientada a objetos, MVC, manejo de archivos, herencia y polimorfismo, y preparación de exámenes.",
+      en: "I supported Programming I and II students, mostly in Java: object-oriented programming, MVC, file handling, inheritance and polymorphism, and exam preparation.",
     },
     tech: ["java"],
     tags: [{ es: "POO", en: "OOP" }, both("MVC")],

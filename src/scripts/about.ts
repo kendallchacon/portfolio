@@ -33,9 +33,10 @@ if (log && tpl && form && input) {
   const later = (fn: () => void, ms: number) => {
     timer = window.setTimeout(fn, reduce ? 0 : ms);
   };
+  // Durante el intro el log no sigue el final: si no cabe (móvil), `$ whoami` queda a la vista.
   const add = (n: Node) => {
     log.append(n);
-    log.scrollTop = log.scrollHeight;
+    if (!introRunning) log.scrollTop = log.scrollHeight;
   };
 
   const run = (cmd: string) => {

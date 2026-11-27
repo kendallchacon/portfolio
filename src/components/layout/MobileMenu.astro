@@ -1,6 +1,6 @@
 ---
 import { Icon } from "astro-icon/components";
-import { contact } from "../../data/contact";
+import { channelHref, contact } from "../../data/contact";
 import { pick } from "../../data/types";
 import { navSections, sectionHref, useTranslations, type Lang, type NavSectionId } from "../../i18n/ui";
 
@@ -72,7 +72,7 @@ const icons: Record<NavSectionId, string> = {
           cv && (
             <li class="mt-2 border-t border-line pt-2">
               <a
-                href={cv.href}
+                href={channelHref(cv, lang)}
                 download
                 aria-label={`${pick(cv.label, lang)}: ${pick(cv.value, lang)}`}
                 class="flex min-h-12 items-center gap-3.5 rounded-3 p-3.5 font-medium transition-colors hover:bg-surface-2"

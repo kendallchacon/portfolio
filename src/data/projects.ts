@@ -123,7 +123,8 @@ export const projects = [
     // GiST/esquema de Booking, reservas/disponibilidad/409, mensajería, S3, ADR 0010 ni el
     // modelo de emparejamiento (XGBoost/ONNX, ADR 0009): confirmación del autor, 23 nov 2026.
     // Que Kendall lo «propuso» no tiene evidencia verificable en los repos: no se escribe.
-    // VERIFICAR: «revisé el modelo de datos de los 4 servicios» sigue sin confirmar.
+    // «Revisé el modelo de datos de los 4 servicios»: confirmado por el autor el 26 nov 2026; va en
+    // experience.ts (título y cuerpo de MatchGo), no en myPart.
     myPart: {
       es: "Arranqué el backend .NET (arquitectura base, Docker Compose, ADR y CI inicial) y desarrollé autenticación, equipos, moderación y permisos; en la app Flutter, la base y el módulo de reservas.",
       en: "Bootstrapped the .NET backend (base architecture, Docker Compose, ADRs and initial CI) and built authentication, teams, moderation and permissions; in the Flutter app, the foundation and the booking module.",
@@ -158,13 +159,15 @@ export const projects = [
     ],
     metrics: [
       { value: 170, label: { es: "commits en matchgo-mobile", en: "commits in matchgo-mobile" } },
-      { value: 19, label: { es: "PRs integrados", en: "merged PRs" } },
+      // 21 PRs: MatchGo-UNA/matchgo-mobile, `gh pr list --state merged --author kendallchacon`
+      // → 21 (20 hacia dev y el #45 de release a main), 26 nov 2026.
+      { value: 21, label: { es: "PRs integrados", en: "merged PRs" } },
       { value: 65, suffix: "%", label: { es: "de los commits", en: "of commits" } },
     ],
     // Repos privados: sin url.
     repos: [
       { repo: matchgoBackend, detail: both("Identity · Competition · Community") },
-      { repo: matchgoMobile, detail: both("19 PRs") },
+      { repo: matchgoMobile, detail: both("21 PRs") },
     ],
     links: [],
     // ADR 0003 está en el commit de arranque de Kendall («chore: bootstrap backend architecture»).
@@ -172,7 +175,7 @@ export const projects = [
     docs: [{ label: { es: "ADR 0003 · base por servicio", en: "ADR 0003 · database per service" } }],
     highlights: [
       { icon: "live", label: { es: "4 servicios · Docker Compose", en: "4 services · Docker Compose" } },
-      { icon: "commits", label: both("170 commits · 19 PRs") },
+      { icon: "commits", label: both("170 commits · 21 PRs") },
     ],
     scene: {
       type: "phones",
