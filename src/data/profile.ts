@@ -130,7 +130,8 @@ export const evidence: readonly Evidence[] = [
 
 /**
  * Idiomas del SITIO (handoff §1: español por defecto e inglés), con su nombre nativo.
- * VERIFICAR: ni el handoff ni el prototipo dan idiomas hablados ni niveles de Kendall.
+ * Idiomas de Kendall (no del sitio): español nativo e inglés para lectura de documentación
+ * técnica, confirmado por el autor el 26 nov 2026. Se muestra en about.ts (`cat sobre-mi.txt`).
  */
 export const languages: readonly { code: Lang; name: string }[] = [
   { code: "es", name: "Español" },

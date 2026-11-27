@@ -1,6 +1,6 @@
 import type { Lang } from "../i18n/ui";
 import { experienceHref, projectHref } from "../i18n/ui";
-import { contact } from "./contact";
+import { channelHref, contact } from "./contact";
 import { experienceLog } from "./experience";
 import { evidence, profile } from "./profile";
 import { projects, type ProjectSlug } from "./projects";
@@ -48,12 +48,20 @@ export const about = {
       es: "Concluí el bachillerato con promedio ponderado de 9,0 y mi práctica profesional en Flameware Technologies.",
       en: "I completed my bachelor's degree with a 9.0/10 weighted GPA and my professional internship at Flameware Technologies.",
     },
-    // VERIFICAR (no se renderiza hasta que el autor lo confirme):
-    // «Lo que más disfruto es el backend: cómo se guardan los datos, cómo se comunican los
-    // servicios y qué pasa cuando algo falla.» / «What I enjoy most is the backend: …»
-    // VERIFICAR (no se renderiza hasta que el autor lo confirme):
-    // «También construyo la parte que la gente toca, en web y en móvil, y trabajo por historias
-    // con revisión de código.» / «I also build the part people touch, on web and mobile, …»
+    // Las tres líneas siguientes: confirmado por el autor el 26 nov 2026 (EN de las dos primeras,
+    // tal como en docs/prototype/index.html).
+    {
+      es: "Lo que más disfruto es el backend: cómo se guardan los datos, cómo se comunican los servicios y qué pasa cuando algo falla.",
+      en: "What I enjoy most is the backend: how data is stored, how services talk to each other and what happens when something fails.",
+    },
+    {
+      es: "También construyo la parte que la gente toca, en web y en móvil, y trabajo por historias con revisión de código.",
+      en: "I also build the part people touch, on web and mobile, and work through stories with code review.",
+    },
+    {
+      es: "Español nativo; inglés para leer documentación técnica.",
+      en: "Native Spanish; English for reading technical documentation.",
+    },
     {
       es: "Disponible para empleo y proyectos, presencial o remoto.",
       en: "Available for employment and projects, on-site or remote.",
@@ -64,11 +72,12 @@ export const about = {
   shortlog: [
     // Fuente: MatchGo-UNA/matchgo-mobile, rama dev (por defecto),
     // `gh api repos/MatchGo-UNA/matchgo-mobile/contributors` → kendallchacon 170 (23 nov 2026).
-    // 65 % y 19 PRs: handoff §4.
+    // 65 %: handoff §4. 21 PRs: MatchGo-UNA/matchgo-mobile, `gh pr list --state merged
+    // --author kendallchacon` → 21 (20 hacia dev y el #45 de release a main), 26 nov 2026.
     {
       repo: "matchgo-mobile",
       commits: 170,
-      note: { es: "65 % de los commits · 19 PRs", en: "65% of commits · 19 PRs" },
+      note: { es: "65 % de los commits · 21 PRs", en: "65% of commits · 21 PRs" },
     },
     // Fuente: auditoría forense del repositorio, confirmada por el autor (iteración 5B).
     // Repo privado del cliente: la rama y el comando de esa auditoría no quedaron registrados.
@@ -165,7 +174,8 @@ export function aboutOutputs(lang: Lang): Record<AboutCommand, readonly Line[]> 
 
   const whoami: Line[] = [
     [`${profile.name} · ${pick(degree.title, lang)}, ${pick(degree.institution, lang)}`],
-    [`${pick(profile.role, lang)} · ${location.place} · ${pick(location.modality, lang)}`],
+    // Sin modalidad: «presencial o remoto» ya está en la bio (`cat sobre-mi.txt`).
+    [`${pick(profile.role, lang)} · ${location.place}`],
   ];
 
   const shortlog = [...about.shortlog].sort((a, b) => b.commits - a.commits);
@@ -213,7 +223,7 @@ export function aboutOutputs(lang: Lang): Record<AboutCommand, readonly Line[]> 
   const labelW = Math.max(5, ...channels.map((c) => c.id.length)) + 3;
   const contacto: Line[] = [
     [pad("email", labelW), { text: contact.email.address, href: contact.email.href }],
-    ...channels.map((c): Line => [pad(c.id, labelW), { text: pick(c.value, lang), href: c.href, external: true }]),
+    ...channels.map((c): Line => [pad(c.id, labelW), { text: pick(c.value, lang), href: channelHref(c, lang), external: true }]),
   ];
 
   return {
