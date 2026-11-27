@@ -1,12 +1,11 @@
 ---
-import SceneBar from "./SceneBar.astro";
+import CodeWindow from "../common/CodeWindow.astro";
 import type { Scene } from "../../data/projects";
 import { useTranslations, type Lang } from "../../i18n/ui";
 
 /**
- * Ventana de código con un extracto literal y la fila de capas debajo (oculta ≤980 px).
- * El resaltado se hace en el build con un tokenizador mínimo de Kotlin (cadenas, palabras
- * clave, tipos y llamadas); no hay JS en el cliente.
+ * Ventana de código (CodeWindow) con un extracto literal y la fila de capas debajo
+ * (oculta ≤980 px).
  */
 interface Props {
   scene: Extract<Scene, { type: "code" }>;
@@ -15,45 +14,17 @@ interface Props {
 
 const { scene, lang } = Astro.props;
 const t = useTranslations(lang);
-
-type Token = { text: string; cls?: string };
-const pattern =
-  /("(?:[^"\\]|\\.)*")|\b(catch|try|return|val|var|fun|private|suspend|if|else|when|in|is|null)\b|\b([A-Z][A-Za-z0-9_]*)\b|\b([a-z][A-Za-z0-9_]*)(?=\()/g;
-
-function tokenize(line: string): Token[] {
-  const out: Token[] = [];
-  let last = 0;
-  for (const m of line.matchAll(pattern)) {
-    if (m.index > last) out.push({ text: line.slice(last, m.index) });
-    const cls = m[1] ? "text-str" : m[2] ? "text-kw" : m[3] ? "text-typ" : "text-fn";
-    out.push({ text: m[0], cls });
-    last = m.index + m[0].length;
-  }
-  if (last < line.length) out.push({ text: line.slice(last) });
-  return out;
-}
-
-const escape = (text: string) =>
-  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-
 const { snippet } = scene;
-// Una sola cadena: dentro de <pre> cualquier espacio de la plantilla se vería.
-const html = snippet.lines
-  .map((line) =>
-    tokenize(line)
-      .map((tok) => (tok.cls ? `<span class="${tok.cls}">${escape(tok.text)}</span>` : escape(tok.text)))
-      .join(""),
-  )
-  .join("\n");
 ---
 
-<div class="top-[6%] right-[6%] bottom-[21%] left-[6%] flex flex-col overflow-hidden rounded-xl border border-line-strong bg-term shadow-[0_30px_60px_-24px_var(--color-shadow)]">
-  <SceneBar>
-    <span class="min-w-0 flex-1 truncate">{snippet.repo.name} › {snippet.path}</span>
-    <span class="shrink-0 text-ink-2">{t("home.projects.excerpt")} · {scene.range}</span>
-  </SceneBar>
-  <pre class="m-0 flex-1 overflow-hidden px-[18px] py-4 font-mono text-[11px]/[1.7] whitespace-pre text-term-text" set:html={html} />
-</div>
+<CodeWindow
+  snippet={snippet}
+  class="top-[6%] right-[6%] bottom-[21%] left-[6%] flex flex-col overflow-hidden rounded-xl border border-line-strong bg-term shadow-[0_30px_60px_-24px_var(--color-shadow)]"
+  codeClass="m-0 flex-1 overflow-hidden px-[18px] py-4 font-mono text-[11px]/[1.7] whitespace-pre text-term-text"
+>
+  <span class="min-w-0 flex-1 truncate">{snippet.repo.name} › {snippet.path}</span>
+  <span class="shrink-0 text-ink-2">{t("home.projects.excerpt")} · {scene.range}</span>
+</CodeWindow>
 <ol class="right-[6%] bottom-[6%] left-[6%] flex flex-wrap justify-center gap-3 max-[981px]:hidden">
   {
     scene.layers.map((layer) => (

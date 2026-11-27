@@ -1,0 +1,121 @@
+---
+import SceneBar from "../projects/SceneBar.astro";
+import type { CodeSnippet, SnippetKind } from "../../data/types";
+import lucide from "@iconify-json/lucide/icons.json";
+
+/**
+ * Visor de código: barra de ventana (contenido en el slot) y el fragmento literal con
+ * resaltado hecho en el build por un tokenizador mínimo por tipo; no hay JS en el cliente.
+ * Lo usan la escena de código de Proyectos (CIMA) y Criterio.
+ *
+ * Modo simple (sin `startLine` ni `highlight`): el `<pre>` lleva el HTML tal cual, con las
+ * clases que se le pasen; la escena de CIMA depende de que este marcado no cambie.
+ * Modo con gutter (`startLine` o `highlight`): una `<span class="cw-l">` por línea con su número
+ * real (`cw-n`, oculto a lectores) y el código (`cw-c`); las resaltadas llevan `cw-hl` y su orden
+ * en `--i`, y la primera, el icono de comentario (`cw-ico`). Esos estilos viven en Criterio.astro
+ * (solo la portada), para no tocar el CSS compartido de las demás páginas.
+ */
+interface Props {
+  snippet: CodeSnippet;
+  /** Clases completas del contenedor. Por defecto, la ventana base. */
+  class?: string;
+  /** Clases completas del `<pre>`. Por defecto, las base. */
+  codeClass?: string;
+  /**
+   * Nombre accesible del `<pre>`. Si se da, el bloque recibe foco con teclado para poder
+   * desplazarlo cuando desborda (fragmentos legibles; la escena de CIMA es decorativa).
+   */
+  label?: string;
+  /** Número real de la primera línea en el archivo fuente: activa el gutter. */
+  startLine?: number;
+  /** Líneas resaltadas: rangos `[desde, hasta]` 1-based dentro del fragmento. */
+  highlight?: readonly (readonly [number, number])[];
+}
+
+const {
+  snippet,
+  class: className = "flex flex-col overflow-hidden rounded-xl border border-line-strong bg-term",
+  codeClass = "m-0 flex-1 font-mono text-term-text",
+  label,
+  startLine,
+  highlight,
+} = Astro.props;
+
+type Group = "com" | "str" | "kw" | "num" | "typ" | "fn" | "head";
+const classes: Record<Group, string> = {
+  com: "text-com italic",
+  str: "text-str",
+  kw: "text-kw",
+  num: "text-num",
+  typ: "text-typ",
+  fn: "text-fn",
+  head: "text-ok",
+};
+
+// Un patrón por tipo, con grupos con nombre; gana el primer grupo que coincide.
+const patterns: Partial<Record<SnippetKind, RegExp>> = {
+  kotlin:
+    /(?<str>"(?:[^"\\]|\\.)*")|\b(?<kw>catch|try|return|val|var|fun|private|suspend|if|else|when|in|is|null)\b|\b(?<typ>[A-Z][A-Za-z0-9_]*)\b|\b(?<fn>[a-z][A-Za-z0-9_]*)(?=\()/g,
+  dart: /(?<com>\/\/.*$)|(?<str>'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")|\b(?<kw>final|switch|return|when|const|var|if|else|null|true|false)\b|\b(?<num>\d+)\b|\b(?<typ>[A-Z][A-Za-z0-9_]*)\b|\b(?<fn>_?[a-z][A-Za-z0-9_]*)(?=\()/g,
+  md: /(?<head>^#.*$)|(?<str>`[^`]+`)/g,
+  tree: /(?<fn>[\w.-]+\/)/g,
+  yaml: /(?<com>#.*$)|(?<typ>[\w.-]+)(?=:(?:\s|$))/g,
+};
+
+type Token = { text: string; cls?: string };
+
+function tokenize(line: string, pattern: RegExp | undefined): Token[] {
+  if (!pattern) return [{ text: line }];
+  const out: Token[] = [];
+  let last = 0;
+  for (const m of line.matchAll(pattern)) {
+    if (m.index > last) out.push({ text: line.slice(last, m.index) });
+    const group = Object.entries(m.groups ?? {}).find(([, v]) => v !== undefined)?.[0] as Group | undefined;
+    out.push({ text: m[0], cls: group ? classes[group] : undefined });
+    last = m.index + m[0].length;
+  }
+  if (last < line.length) out.push({ text: line.slice(last) });
+  return out;
+}
+
+const escape = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const pattern = patterns[snippet.kind];
+const render = (line: string) =>
+  tokenize(line, pattern)
+    .map((tok) => (tok.cls ? `<span class="${tok.cls}">${escape(tok.text)}</span>` : escape(tok.text)))
+    .join("");
+
+const gutter = startLine !== undefined || highlight !== undefined;
+const marked = new Set((highlight ?? []).flatMap(([from, to]) => Array.from({ length: to - from + 1 }, (_, k) => from + k)));
+const first = Math.min(...marked);
+const icon = `<svg class="cw-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">${lucide.icons["message-square"].body}</svg>`;
+let order = 0;
+
+// Una sola cadena: dentro de <pre> cualquier espacio de la plantilla se vería.
+const html = gutter
+  ? `<code>${snippet.lines
+      .map((line, i) => {
+        const n = i + 1;
+        const hl = marked.has(n);
+        const attrs = hl ? ` class="cw-l cw-hl" style="--i:${order++}"` : ` class="cw-l"`;
+        const num = `<span class="cw-n" aria-hidden="true">${n === first ? icon : ""}${(startLine ?? 1) + i}</span>`;
+        return `<span${attrs}>${num}<span class="cw-c">${render(line)}</span></span>`;
+      })
+      .join("")}</code>`
+  : snippet.lines.map(render).join("\n");
+---
+
+<div class={className}>
+  <SceneBar>
+    <slot />
+  </SceneBar>
+  <pre
+    class={codeClass}
+    tabindex={label ? 0 : undefined}
+    role={label ? "group" : undefined}
+    aria-label={label}
+    set:html={html}
+  />
+</div>
