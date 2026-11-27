@@ -287,14 +287,21 @@ function tail(path: string): string {
     overflow-wrap: anywhere;
   }
 
-  /* Banda resaltada: redondeada y con margen, detrás del código. */
+  /* Banda resaltada, detrás del código: fondo neutro muy suave (ink al 7 %) con una barra de
+     2 px de acento a la izquierda del texto; así no se lee como línea añadida de un diff. Empieza
+     donde termina el gutter (6ch, opaco y fijo encima) para que la barra se vea, y es recta a la
+     izquierda para que no se curve. */
   [data-criterio] .cw-hl::before {
     content: "";
     position: absolute;
-    inset: 0 10px 0 5.5ch;
+    inset: 0 10px 0 6ch;
     z-index: -1;
-    border-radius: 6px;
-    background: var(--color-accent-soft);
+    border-radius: 0 6px 6px 0;
+    background: linear-gradient(
+      to right,
+      var(--color-accent) 2px,
+      color-mix(in srgb, var(--color-ink) 7%, transparent) 2px
+    );
     transform-origin: left;
   }
 
